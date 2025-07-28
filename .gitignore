@@ -1,1 +1,4 @@
-.env
+#Ignorer les fichiers d'environnement contenant des données sensibles
+.env 
+# Ignorer les dépendances installées via Composer
+/vendor/
