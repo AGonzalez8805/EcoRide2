@@ -37,7 +37,7 @@ services:
       PMA_USER: ${PMA_USER}  
       PMA_PASSWORD: ${PMA_PASSWORD}  
     ports:
-      - "8000:80"  # Accès à phpMyAdmin sur le port 9000
+      - "8000:80"  # Accès à phpMyAdmin sur le port 8000
     depends_on:
       - db  # Attend que MySQL soit prêt
     networks:
