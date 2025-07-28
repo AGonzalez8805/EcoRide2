@@ -59,4 +59,10 @@ class AuthController extends Controller
     {
         $this->render('auth/registration');
     }
+
+    public function handleLogin() {}
+
+    public function logout() {}
+
+    public function handleRegister() {}
 }
