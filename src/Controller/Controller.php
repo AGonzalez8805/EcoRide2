@@ -26,8 +26,8 @@ class Controller
                         $controller->route();
                         break;
 
-                    case 'admin':
-                        $controller = new AdminController();
+                    case 'user':
+                        $controller = new UserController();
                         $controller->route();
                         break;
 

@@ -164,7 +164,7 @@ export class Registration {
           alert(result.message || "Erreur lors de l'inscription.");
         }
       } catch (e) {
-        console.error("Réponse invalide du serveur :", text);
+        console.error("Réponse invalide du serveur :", e);
       }
     } catch (err) {
       console.error("Erreur lors de la requête :", err);
