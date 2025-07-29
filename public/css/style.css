@@ -75,6 +75,61 @@ footer {
   color: white;
 }
 
+/* Page d'accueil */
+.title {
+  font-family: "Fira Code", monospace;
+  color: #457b9d;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  border: 4px solid #558e4d;
+  border-top-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  box-sizing: border-box;
+  padding: 20px 10px;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.search-form {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  z-index: 10;
+}
+
+.search-form input,
+.search-form button {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Page de inscription / regitration */
 section.login {
   background-color: #eef5ec;

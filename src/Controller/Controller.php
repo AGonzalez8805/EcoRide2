@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Controller\PageController;
+use App\Controller\AuthController;
+use App\Controller\UserController;
+use App\Controller\AdminController;
+
 class Controller
 {
     public function route(): void
@@ -33,7 +38,7 @@ class Controller
 
 
                     default:
-                        throw new \Exception("Le contrôleur n'existe pas");
+                        throw new \Exception("Le contrôleur n'existe pas", 404);
                 }
             } else {
                 $pageController = new PageController();
