@@ -89,8 +89,8 @@ class AuthController extends Controller
         $admin = $adminRepo->findByEmail($email);
 
         if ($admin && password_verify($password, $admin['password'])) {
-            $_SESSION['admin_id'] = $admin['id'];
-            $_SESSION['admin_pseudo'] = $admin['pseudo'];
+            $_SESSION['user_id'] = $admin['id'];
+            $_SESSION['pseudo'] = $admin['pseudo'];
             $_SESSION['role'] = 'admin';
 
             ob_end_clean();
@@ -127,7 +127,7 @@ class AuthController extends Controller
     {
         session_unset();    // Supprime toutes les variables de session
         session_destroy();  // Détruit la session
-        header('Location: /?controller=page&action=home');
+        header('Location: t/?controller=auth&action=login');
         exit;
     }
 
