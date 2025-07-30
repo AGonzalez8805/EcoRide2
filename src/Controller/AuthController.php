@@ -105,9 +105,9 @@ class AuthController extends Controller
             // Authentification réussie, on stocke les infos en session
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
+            $_SESSION['role'] = $user['role'] ?? 'utilisateur';
 
-            ob_end_clean(); // Nettoie le buffer de sortie
+            ob_end_clean();
 
             // Redirection conditionnelle selon le rôle
             $url = ($_SESSION['role'] === 'admin')
@@ -140,62 +140,65 @@ class AuthController extends Controller
 
         if (!$input) {
             echo json_encode(["success" => false, "message" => "Données invalides"]);
-            return;
+            exit;
         }
 
-        // Sécurité : nettoyage + validation
+        // Nettoyage et validation des champs
+        $pseudo = trim($input['pseudo'] ?? '');
         $name = trim($input['name'] ?? '');
         $firstName = trim($input['firstName'] ?? '');
         $email = trim($input['email'] ?? '');
         $password = $input['password'] ?? '';
         $validatePassword = $input['validatePassword'] ?? '';
 
-        // Vérification de champs obligatoires
         if (empty($name) || empty($firstName) || empty($email) || empty($password)) {
             echo json_encode(["success" => false, "message" => "Tous les champs sont requis."]);
-            return;
+            exit;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(["success" => false, "message" => "Adresse email invalide."]);
-            return;
+            exit;
         }
 
         if ($password !== $validatePassword) {
             echo json_encode(["success" => false, "message" => "Le mot de passe ne correspond pas."]);
-            return;
+            exit;
         }
 
         $userRepo = new UserRepository();
 
-        // Vérifie si c’est le premier admin à inscrire
-        $roleToAssign = 'utilisateur'; // Rôle par défaut
-        if (!$userRepo->findByRole('admin')) {
-            $roleToAssign = 'admin'; // Premier inscrit = admin
-        }
-
-        // Vérifie l’unicité de l’email
+        // Vérifier que l’email n’est pas déjà utilisé
         if ($userRepo->findByEmail($email)) {
             echo json_encode(["success" => false, "message" => "Cet email est déjà utilisé."]);
-            return;
+            exit;
         }
 
-        // Hashage sécurisé du mot de passe
+        // Déterminer le rôle à attribuer (si pas d’admin, on crée un admin, sinon utilisateur)
+        $roleToAssign = $userRepo->existsUserWithRole('admin') ? 'utilisateur' : 'admin';
+
+        // Hasher le mot de passe
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        // Création du nouvel utilisateur
-        $result = $userRepo->create([
+        // Créer le nouvel utilisateur
+        $newUserId = $userRepo->create([
+            'pseudo' => $pseudo,
             'name' => $name,
             'firstName' => $firstName,
             'email' => $email,
             'password' => $hashedPassword,
-            'role' => $roleToAssign
         ]);
 
-        if ($result) {
-            echo json_encode(["success" => true]);
-        } else {
+        if (!$newUserId) {
             echo json_encode(["success" => false, "message" => "Erreur lors de l'inscription."]);
+            exit;
         }
+
+        // Assigner le rôle à l’utilisateur créé
+        $userRepo->assignRoleToUser($newUserId, $roleToAssign);
+
+        // Répondre avec succès
+        echo json_encode(["success" => true]);
+        exit;
     }
 }
