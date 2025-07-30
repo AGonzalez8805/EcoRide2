@@ -1,5 +1,6 @@
 export class Login {
   constructor() {
+    console.log("Login class instanciée");
     // Récupération du formulaire
     this.form = document.getElementById("loginForm");
 
@@ -28,6 +29,7 @@ export class Login {
     // Gestion de la soumission du formulaire
     this.form.addEventListener("submit", (e) => {
       e.preventDefault(); // Empêche l'envoi classique
+      console.log("Submit intercepté");
       this.handleLogin(); // Déclenche la logique de connexion
     });
   }
@@ -50,6 +52,7 @@ export class Login {
 
   // Gère l'envoi des données au backend pour connexion
   async handleLogin() {
+    console.log("handleLogin appelée");
     // Re-valide les champs avant soumission
     const isMailValid = this.validateEmail(this.inputMail);
     const isPasswordValid = this.validatePassword(this.inputPassword);
@@ -64,19 +67,18 @@ export class Login {
     const data = {
       email: this.inputMail.value,
       password: this.inputPassword.value,
-      remember: document.getElementById("rememberMe").checked,
     };
 
     try {
       // Envoie les données au contrôleur backend
-      const response = await fetch(
-        "index.php?controller=auth&action=handleLogin",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("/?controller=auth&action=handleLogin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify(data),
+      });
 
       const text = await response.text();
 

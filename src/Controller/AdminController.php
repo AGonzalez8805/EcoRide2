@@ -20,7 +20,7 @@ class AdminController extends Controller
     public function dashboard(): void
     {
         // Vérifie que l'utilisateur est connecté et est administrateur
-        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'ADMINISTRATEUR') {
+        if (!isset($_SESSION['admin_id']) || $_SESSION['role'] !== 'admin') {
             header('Location: /?controller=auth&action=login');
             exit;
         }

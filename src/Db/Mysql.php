@@ -15,7 +15,7 @@ class Mysql
     private ?\PDO $pdo = null;
 
     // Instance unique de la classe (singleton)
-    private static ?self $_instance = null;
+    private static ?self $instance = null;
 
     /**
      * Constructeur privé pour empêcher l'instanciation directe (pattern Singleton).
@@ -40,11 +40,11 @@ class Mysql
      */
     public static function getInstance(): self
     {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new Mysql();
+        if (is_null(self::$instance)) {
+            self::$instance = new Mysql();
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
