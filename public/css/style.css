@@ -108,10 +108,10 @@ footer {
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.85);
-  padding: 15px;
+  padding: 10px;
   border-radius: 10px;
   display: flex;
-  gap: 20px;
+  gap: 15px;
   flex-wrap: wrap;
   justify-content: center;
   z-index: 10;
@@ -119,7 +119,7 @@ footer {
 
 .search-form input,
 .search-form button {
-  padding: 8px;
+  padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
@@ -130,6 +130,241 @@ footer {
   display: block;
 }
 
+/* Introduction */
+.intro-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.intro-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.intro-title h2,
+.works-section h2,
+.avis-section h2 {
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+  font-size: 3rem;
+  color: #457b9d;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.intro-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.text-intro {
+  flex: 1;
+  min-width: 0;
+}
+
+.text-intro p {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.photo-intro {
+  flex: 0 0 auto;
+  width: min(350px, 40vw);
+  max-width: 400px;
+}
+
+.photo-intro img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .intro-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+
+  .photo-intro {
+    width: min(300px, 80vw);
+    order: -1;
+  }
+
+  .text-intro {
+    text-align: center;
+  }
+
+  .intro-section {
+    margin: 20px auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .intro-section {
+    padding: 0 15px;
+  }
+
+  .photo-intro {
+    width: 90vw;
+  }
+}
+
+/* Section Comment ça marche */
+.works-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #6aaa64 0%, #457b9d 100%);
+  color: white;
+}
+
+.works-section h2 {
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+  font-size: 2.5rem;
+  color: white;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.step-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  height: 100%;
+  color: #333;
+}
+
+.step-number {
+  width: 60px;
+  height: 60px;
+  background-color: #457b9d;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 auto 20px;
+}
+
+.step-card h4 {
+  color: #457b9d;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* Section Témoignages simplifiée */
+.avis-section {
+  padding: 60px 0;
+  background-color: #f8f9fa;
+}
+
+.avis-section h2 {
+  font-family: "Fira Code", monospace;
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 50px;
+  color: #457b9d;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.testimonial-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.testimonial-author {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.testimonial-role {
+  color: #666;
+  font-size: 0.9rem;
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* Bouton Déposer un avis */
+.btn-review {
+  background-color: #6aaa64;
+  color: white;
+  border: 2px solid #6aaa64;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btn-review:hover {
+  background-color: #558e4d;
+  border-color: #558e4d;
+  color: white;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.4rem;
+    padding: 20px 15px;
+  }
+
+  .search-form {
+    grid-template-columns: 1fr;
+  }
+
+  .search-form input[type="date"] {
+    grid-column: span 1;
+  }
+
+  .search-form button {
+    grid-column: span 1;
+  }
+
+  .intro-title h2,
+  .works-section h2,
+  .avis-section h2 {
+    font-size: 2rem;
+  }
+
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
 /* Page de inscription / regitration */
 section.login {
   background-color: #eef5ec;

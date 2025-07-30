@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Description de la page (utile pour le SEO) -->
     <meta name="description" content="site de covoiturage">
-    <link rel="shortcut icon" href="/Asset/images/LOGO EcoRide  avec une voiture écologie.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/LOGO EcoRide  avec une voiture écologie.jpg" type="image/x-icon">
     <!-- Préconnexion pour améliorer le chargement des polices Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
