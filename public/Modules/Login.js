@@ -1,40 +1,35 @@
 export class Login {
   constructor() {
     console.log("Login class instanciée");
-    // Récupération du formulaire
     this.form = document.getElementById("loginForm");
 
-    // Si le formulaire n'existe pas (par exemple sur une autre page), on stoppe
     if (!this.form) return;
 
-    // Récupération des champs nécessaires
     this.inputMail = document.getElementById("email");
     this.inputPassword = document.getElementById("password");
+    this.errorDiv = document.getElementById("loginError");
 
-    // Lancement des écouteurs d'événements
     this.init();
   }
 
   init() {
-    // Événement sur l'email : validation en temps réel
-    this.inputMail.addEventListener("input", () =>
-      this.validateEmail(this.inputMail)
-    );
+    this.inputMail.addEventListener("input", () => {
+      this.validateEmail(this.inputMail);
+      this.hideLoginError();
+    });
 
-    // Événement sur le mot de passe : vérifie juste que le champ n'est pas vide
-    this.inputPassword.addEventListener("input", () =>
-      this.validatePassword(this.inputPassword)
-    );
+    this.inputPassword.addEventListener("input", () => {
+      this.validatePassword(this.inputPassword);
+      this.hideLoginError();
+    });
 
-    // Gestion de la soumission du formulaire
     this.form.addEventListener("submit", (e) => {
-      e.preventDefault(); // Empêche l'envoi classique
+      e.preventDefault();
       console.log("Submit intercepté");
-      this.handleLogin(); // Déclenche la logique de connexion
+      this.handleLogin();
     });
   }
 
-  // Vérifie que l'email est au bon format
   validateEmail(field) {
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
     field.classList.toggle("is-valid", isValid);
@@ -42,7 +37,6 @@ export class Login {
     return isValid;
   }
 
-  // Vérifie simplement que le champ n'est pas vide
   validatePassword(field) {
     const isValid = field.value.trim().length > 0;
     field.classList.toggle("is-valid", isValid);
@@ -50,27 +44,38 @@ export class Login {
     return isValid;
   }
 
-  // Gère l'envoi des données au backend pour connexion
+  hideLoginError() {
+    if (this.errorDiv) {
+      this.errorDiv.textContent = "";
+      this.errorDiv.classList.add("d-none");
+    }
+  }
+
+  showLoginError(message) {
+    if (this.errorDiv) {
+      this.errorDiv.textContent = message;
+      this.errorDiv.classList.remove("d-none");
+    }
+  }
+
   async handleLogin() {
     console.log("handleLogin appelée");
-    // Re-valide les champs avant soumission
     const isMailValid = this.validateEmail(this.inputMail);
     const isPasswordValid = this.validatePassword(this.inputPassword);
 
-    // Affiche une alerte si un champ est invalide
     if (!isMailValid || !isPasswordValid) {
-      alert("Merci de corriger les champs avant de vous connecter.");
+      this.showLoginError(
+        "Merci de corriger les champs avant de vous connecter."
+      );
       return;
     }
 
-    // Prépare les données du formulaire
     const data = {
       email: this.inputMail.value,
       password: this.inputPassword.value,
     };
 
     try {
-      // Envoie les données au contrôleur backend
       const response = await fetch("/?controller=auth&action=handleLogin", {
         method: "POST",
         headers: {
@@ -84,23 +89,21 @@ export class Login {
 
       let result;
       try {
-        result = JSON.parse(text); // Essaie de parser la réponse JSON
+        result = JSON.parse(text);
       } catch (err) {
         console.error("Erreur de parsing JSON :", err);
-        alert("La réponse du serveur n'est pas du JSON valide.");
+        this.showLoginError("La réponse du serveur est invalide.");
         return;
       }
 
-      // Si la connexion est un succès, on redirige
       if (result.success) {
-        window.location.href = result.redirect || "";
+        window.location.href = result.redirect || "/";
       } else {
-        // Affiche le message d'erreur personnalisé ou un message par défaut
-        alert(result.message || "Erreur d'identifiants.");
+        this.showLoginError(result.message || "Erreur d'identifiants.");
       }
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
-      alert("Une erreur technique est survenue.");
+      this.showLoginError("Une erreur technique est survenue.");
     }
   }
 }

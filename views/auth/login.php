@@ -4,6 +4,8 @@
     <!-- Carte contenant le formulaire -->
     <div class="ecoride-card-login p-4">
         <h2 class="form-title text-center mb-4">Se connecter à Ecoride</h2>
+        <div id="loginError" class="alert alert-danger d-none" role="alert"></div>
+
         <form id="loginForm">
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse email</label>
