@@ -41,6 +41,15 @@ class Controller
                         $controller->route();
                         break;
 
+                    case 'results':
+                        $controller = new SearchController();
+                        $controller->results();
+                        break;
+
+                    case 'covoiturage':
+                        $controller = new CovoiturageController();
+                        $controller->route();
+                        break;
 
                     default:
                         throw new \Exception("Le contrôleur n'existe pas", 404);
