@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use App\Db\Mysql;
+
 use App\Models\StringTools;
 
 class Models
 {
+
+    protected function getConnection(): \PDO
+    {
+        return Mysql::getInstance()->getPDO();
+    }
     public static function createAndHydrate(array $data): static
     {
         $entity = new static();

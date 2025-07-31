@@ -72,6 +72,23 @@ CREATE TABLE voiture(
     FOREIGN KEY (id_utilisateurs) REFERENCES utilisateurs(id)
 );
 
+INSERT INTO voiture (modele, immatriculation, energie, couleur, marque, 
+                    datePremierImmatriculation, nbPlaces, fumeur, animaux, 
+                    preferencesSupplementaires, id_utilisateurs)
+VALUES (
+    'Clio', 
+    'AB-123-CD', 
+    'Essence', 
+    'Rouge', 
+    'Renault', 
+    '2020-01-01', 
+    5, 
+    FALSE, 
+    FALSE, 
+    'Aucune', 
+    5
+);
+
 CREATE TABLE covoiturage (
     id INT AUTO_INCREMENT PRIMARY KEY,
     dateDepart DATE NOT NULL,
@@ -89,11 +106,23 @@ CREATE TABLE covoiturage (
     FOREIGN KEY (id_voiture) REFERENCES voiture(id)
 );
 
+INSERT INTO covoiturage(
+    dateDepart,heureDepart, lieuDepart,
+    dateArrivee, heureArrivee, lieuArrivee,
+    statut, nbPlace, prixPersonne,
+    id_utilisateurs, id_voiture
+) VALUES (
+    '2023-09-15', '14:00:00', 'Paris',
+    '2023-09-15', '15:00:00', 'Marseille',
+    'en_cours', 2, 100.0,
+    5, 1
+);
+
 CREATE TABLE participation (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_utilisateurs INT NOT NULL,
     id_covoiturage INT NOT NULL,
-    dateInscription DATE DEFAULT CURRENT_DATE,
+    dateInscription DATE DEFAULT (CURRENT_DATE),
     statut VARCHAR(50) DEFAULT 'en_attente',
     FOREIGN KEY (id_utilisateurs) REFERENCES utilisateurs(id),
     FOREIGN KEY (id_covoiturage) REFERENCES covoiturage(id)
