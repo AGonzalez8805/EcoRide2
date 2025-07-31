@@ -1,7 +1,7 @@
 .env
 .db.ini
-
 /vendor/
-
 generate-password.php
 log_debug.txt
+
+.vscode/
