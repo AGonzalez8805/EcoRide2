@@ -36,7 +36,7 @@ footer {
 .navbar .nav-link {
   color: #2e2e2e !important;
   font-weight: 500;
-  margin: 0 1rem;
+  margin: 0 15px;
   border-bottom: 2px solid transparent;
   transition: all 0.3s ease;
 }
@@ -53,7 +53,7 @@ footer {
   color: white;
   border: none;
   font-weight: 600;
-  padding: 0.5rem 1rem;
+  padding: 8px 15px;
   transition: 0.3s ease;
 }
 
@@ -66,7 +66,7 @@ footer {
   border: 2px solid #457b9d;
   color: #457b9d;
   font-weight: 600;
-  padding: 0.5rem 1rem;
+  padding: 8px 15px;
   transition: all 0.3s ease;
 }
 
@@ -83,51 +83,157 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
+  text-align: center;
+  font-size: 24px;
   border: 4px solid #558e4d;
-  border-top-left-radius: 70px;
-  border-bottom-right-radius: 70px;
+  border-top-left-radius: 50px;
+  border-bottom-right-radius: 50px;
   border-top-right-radius: 0;
   border-bottom-left-radius: 0;
   box-sizing: border-box;
-  padding: 20px 10px;
+  padding: 20px 15px;
   max-width: 800px;
   margin: 20px auto;
+  line-height: 1.4;
 }
 
+/* Section de recherche simplifiée et responsive */
 .search-container {
   position: relative;
   width: 100%;
-  max-height: 400px;
+  max-width: 1200px;
+  margin: 20px auto;
+  height: 350px;
   overflow: hidden;
+  border-radius: 15px;
 }
 
-.search-form {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.85);
-  padding: 10px;
-  border-radius: 10px;
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  justify-content: center;
-  z-index: 10;
-}
-
-.search-form input,
-.search-form button {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.search-image {
+  width: 100%;
+  height: 100%;
 }
 
 .search-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
+}
+
+.search-form {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  z-index: 10;
+  width: 90%;
+  max-width: 700px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.search-form input,
+.search-form button {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.search-form input:focus {
+  outline: none;
+  border-color: #457b9d;
+  box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.1);
+}
+
+.search-form button {
+  background: linear-gradient(135deg, #457b9d, #558e4d);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.search-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(69, 123, 157, 0.3);
+}
+
+/* Media queries pour une meilleure adaptation */
+@media (max-width: 768px) {
+  .title {
+    margin: 10px;
+    padding: 15px 10px;
+    font-size: 20px;
+  }
+
+  .search-container {
+    height: 250px;
+    margin: 15px 10px;
+  }
+
+  .search-form {
+    grid-template-columns: 1fr;
+    width: 95%;
+    max-width: 400px;
+    gap: 8px;
+    padding: 12px;
+    top: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 18px;
+    border-width: 3px;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    padding: 15px 10px;
+  }
+
+  .search-container {
+    height: 200px;
+    margin: 10px 5px;
+  }
+
+  .search-form {
+    top: 10px;
+    padding: 10px;
+    width: 95%;
+    max-width: 320px;
+    gap: 6px;
+  }
+
+  .search-form input,
+  .search-form button {
+    padding: 8px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .search-form {
+    grid-template-columns: 1.5fr 1.5fr 1fr auto;
+    gap: 12px;
+    padding: 15px;
+  }
 }
 
 /* Introduction */
@@ -147,7 +253,7 @@ footer {
 .avis-section h2 {
   font-family: "Fira Code", monospace;
   font-weight: 600;
-  font-size: 3rem;
+  font-size: 48px;
   color: #457b9d;
   line-height: 1.2;
   margin: 0;
@@ -167,7 +273,7 @@ footer {
 .text-intro p {
   font-family: "Inter", sans-serif;
   font-weight: 400;
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-size: 17px;
   line-height: 1.7;
   color: #555;
   margin-bottom: 16px;
@@ -175,7 +281,7 @@ footer {
 
 .photo-intro {
   flex: 0 0 auto;
-  width: min(350px, 40vw);
+  width: 350px;
   max-width: 400px;
 }
 
@@ -194,12 +300,23 @@ footer {
   }
 
   .photo-intro {
-    width: min(300px, 80vw);
+    width: 80%;
+    max-width: 300px;
     order: -1;
   }
 
   .text-intro {
     text-align: center;
+  }
+
+  .text-intro p {
+    font-size: 15px;
+  }
+
+  .intro-title h2,
+  .works-section h2,
+  .avis-section h2 {
+    font-size: 32px;
   }
 
   .intro-section {
@@ -213,7 +330,17 @@ footer {
   }
 
   .photo-intro {
-    width: 90vw;
+    width: 90%;
+  }
+
+  .text-intro p {
+    font-size: 14px;
+  }
+
+  .intro-title h2,
+  .works-section h2,
+  .avis-section h2 {
+    font-size: 28px;
   }
 }
 
@@ -227,7 +354,7 @@ footer {
 .works-section h2 {
   font-family: "Fira Code", monospace;
   font-weight: 600;
-  font-size: 2.5rem;
+  font-size: 40px;
   color: white;
   text-align: center;
   margin-bottom: 50px;
@@ -252,7 +379,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: bold;
   margin: 0 auto 20px;
 }
@@ -271,7 +398,7 @@ footer {
 
 .avis-section h2 {
   font-family: "Fira Code", monospace;
-  font-size: 2.5rem;
+  font-size: 40px;
   font-weight: 600;
   text-align: center;
   margin-bottom: 50px;
@@ -294,7 +421,7 @@ footer {
 }
 
 .testimonial-text {
-  font-size: 1rem;
+  font-size: 16px;
   line-height: 1.6;
   margin-bottom: 20px;
   font-style: italic;
@@ -302,13 +429,13 @@ footer {
 
 .testimonial-author {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
 .testimonial-role {
   color: #666;
-  font-size: 0.9rem;
+  font-size: 14px;
   background: #f0f0f0;
   padding: 4px 12px;
   border-radius: 12px;
@@ -335,29 +462,11 @@ footer {
   text-decoration: none;
 }
 
-/* Responsive */
+/* Responsive pour mobile */
 @media (max-width: 768px) {
-  .title {
-    font-size: 1.4rem;
-    padding: 20px 15px;
-  }
-
-  .search-form {
-    grid-template-columns: 1fr;
-  }
-
-  .search-form input[type="date"] {
-    grid-column: span 1;
-  }
-
-  .search-form button {
-    grid-column: span 1;
-  }
-
-  .intro-title h2,
   .works-section h2,
   .avis-section h2 {
-    font-size: 2rem;
+    font-size: 32px;
   }
 
   .testimonial-grid {
@@ -365,7 +474,31 @@ footer {
     gap: 20px;
   }
 }
-/* Page de inscription / regitration */
+
+@media (max-width: 480px) {
+  .works-section h2,
+  .avis-section h2 {
+    font-size: 28px;
+  }
+
+  .step-card {
+    padding: 20px;
+  }
+
+  .testimonial-card {
+    padding: 20px;
+  }
+
+  .testimonial-text {
+    font-size: 14px;
+  }
+
+  .testimonial-author {
+    font-size: 16px;
+  }
+}
+
+/* Page de inscription / registration */
 section.login {
   background-color: #eef5ec;
   min-height: 100%;
@@ -374,7 +507,7 @@ section.login {
 .ecoride-card {
   background-color: #fdfdfb;
   border: 1px solid #dcdcdc;
-  border-radius: 1.5rem;
+  border-radius: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   max-width: 600px;
   width: 100%;
@@ -383,12 +516,12 @@ section.login {
 .form-title {
   color: #457b9d;
   font-family: "Fira Code", monospace;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+  font-size: 28px;
+  margin-bottom: 24px;
 }
 
 input.form-control {
-  border-radius: 0.5rem;
+  border-radius: 8px;
   border: 1px solid #c4c4c4;
   background-color: #fcfcfa;
   transition: border-color 0.3s ease;
@@ -404,8 +537,8 @@ input.form-control:focus {
   color: white;
   border: none;
   font-weight: 600;
-  border-radius: 0.8rem;
-  padding: 0.6rem;
+  border-radius: 12px;
+  padding: 10px;
   transition: background-color 0.3s ease, transform 0.2s;
 }
 
@@ -417,8 +550,19 @@ input.form-control:focus {
 .ecoride-card-login {
   background-color: #fdfdfb;
   border: 1px solid #dcdcdc;
-  border-radius: 1.5rem;
+  border-radius: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   max-width: 600px;
   width: 100%;
+}
+
+@media (max-width: 480px) {
+  .form-title {
+    font-size: 24px;
+  }
+
+  .ecoride-card,
+  .ecoride-card-login {
+    margin: 10px;
+  }
 }

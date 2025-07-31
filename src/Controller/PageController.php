@@ -15,6 +15,17 @@ class PageController extends Controller
                     case 'mentions':
                         $this->mentions();
                         break;
+                    case 'about':
+                        $this->about();
+                        break;
+
+                    case 'contact':
+                        $this->contact();
+                        break;
+
+                    case 'faq':
+                        $this->faq();
+                        break;
 
                     default:
                         throw new \Exception("Cette action n'existe pas : " . $_GET['action']);
@@ -36,6 +47,23 @@ class PageController extends Controller
 
     protected function mentions()
     {
-        $this->render('pages/mentions');
+        $this->render('pages/mentions', [
+            'currentPage' => 'mentions'
+        ]);
+    }
+
+    protected function about()
+    {
+        $this->render('pages/about');
+    }
+
+    protected function contact()
+    {
+        $this->render('pages/contact');
+    }
+
+    protected function faq()
+    {
+        $this->render('pages/faq');
     }
 }

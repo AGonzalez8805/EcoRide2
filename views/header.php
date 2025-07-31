@@ -42,8 +42,8 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <!-- Liens du milieu -->
                     <div class="navbar-nav text-center">
-                        <a class="nav-link" href="#">Covoiturage</a>
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="/?controller=covoiturage&action=covoiturage">Covoiturage</a>
+                        <a class="nav-link" href="/?controller=pages&action=contact">Contact</a>
                     </div>
                     <!-- Connexion/Inscription/compte à droite -->
                     <div class="d-flex flex-column flex-lg-row ms-lg-auto mt-3 mt-lg-0">

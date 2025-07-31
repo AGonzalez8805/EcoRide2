@@ -10,7 +10,7 @@
         <div class="search-image active">
             <img src="/images/route1.jpg" alt="...">
         </div>
-        <form class="search-form">
+        <form class="search-form" method="post" action="?controller=results">
             <input type="text" placeholder="Départ" name="depart">
             <input type="text" placeholder="Arrivée" name="arrivee">
             <input type="date" name="date">

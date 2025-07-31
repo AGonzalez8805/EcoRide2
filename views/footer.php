@@ -14,13 +14,13 @@
                 <!-- Menu de navigation secondaire centré dans le footer -->
                 <ul class="nav justify-content-center border-bottom border-black pb-3 mb-1">
                     <li class="nav-item">
-                        <a href="/?controller=pages&action=mentions" class="nav-link px-2 text-body-secondary <?= $currentPage === 'mentions' ? 'active-link' : '' ?>">Mentions Légales</a>
+                        <a href="/?controller=pages&action=mentions" class="nav-link px-2 text-body-secondary">Mentions Légales</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link px-2 text-body-secondary">A propos</a>
+                        <a href="/?controller=pages&action=about" class="nav-link px-2 text-body-secondary">A propos</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link px-2 text-body-secondary">FAQs</a>
+                        <a href="/?controller=pages&action=faq" class="nav-link px-2 text-body-secondary">FAQs</a>
                     </li>
                 </ul>
                 <!-- Texte centré sous le menu -->
