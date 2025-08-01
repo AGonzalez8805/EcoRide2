@@ -24,7 +24,7 @@ class Mysql
     private function __construct()
     {
         // Si on est sur Heroku, on récupère la config depuis DATABASE_URL
-        $databaseUrl = getenv('DATABASE_URL');
+        $databaseUrl = getenv('DATABASE_URL') ?: getenv('CLEARDB_DATABASE_URL') ?: getenv('JAWSDB_URL');
 
         if ($databaseUrl) {
             $url = parse_url($databaseUrl);
