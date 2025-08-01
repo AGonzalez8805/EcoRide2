@@ -68,32 +68,7 @@
             <div class="form-group">
                 <input type="text" id="search-user" placeholder="Rechercher un utilisateur...">
             </div>
-            <div class="user-list" id="user-list">
-                <div class="user-item">
-                    <div class="user-info-item">
-                        <div class="user-name">Alice Martin</div>
-                        <div class="user-email">alice.martin@email.com</div>
-                    </div>
-                    <span class="user-status status-active">Actif</span>
-                    <button class="btn btn-danger" onclick="suspendUser('alice.martin@email.com')">Suspendre</button>
-                </div>
-                <div class="user-item">
-                    <div class="user-info-item">
-                        <div class="user-name">Bob Dupont</div>
-                        <div class="user-email">bob.dupont@email.com</div>
-                    </div>
-                    <span class="user-status status-active">Actif</span>
-                    <button class="btn btn-danger" onclick="suspendUser('bob.dupont@email.com')">Suspendre</button>
-                </div>
-                <div class="user-item">
-                    <div class="user-info-item">
-                        <div class="user-name">Claire Moreau</div>
-                        <div class="user-email">claire.moreau@email.com</div>
-                    </div>
-                    <span class="user-status status-suspended">Suspendu</span>
-                    <button class="btn" onclick="activateUser('claire.moreau@email.com')">Réactiver</button>
-                </div>
-            </div>
+            <div class="user-list" id="user-list"></div>
         </div>
 
         <!-- Gestion des employés -->
@@ -102,12 +77,9 @@
                 <div class="card-icon">🛠️</div>
                 <div class="card-title">Gestion des employés</div>
             </div>
-            <div class="user-list" id="employee-list">
-
-            </div>
+            <div class="user-list" id="employee-list"></div>
         </div>
     </div>
-</div>
 
 
-<?php require_once APP_ROOT . '/views/footer.php'; ?>
+    <?php require_once APP_ROOT . '/views/footer.php'; ?>

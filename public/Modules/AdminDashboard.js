@@ -35,6 +35,10 @@ export class AdminDashboard {
     if (this.employeeList) {
       this.loadEmployees();
     }
+
+    if (this.userList) {
+      this.loadUsers();
+    }
   }
 
   async handleCreateEmployee() {
@@ -186,6 +190,53 @@ export class AdminDashboard {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async loadUsers() {
+    try {
+      const response = await fetch("/?controller=admin&action=listUsersJson");
+      if (!response.ok) throw new Error("Erreur chargement utilisateurs");
+
+      const users = await response.json();
+      const container = document.getElementById("user-list");
+      if (!container) {
+        console.error("Element user-list non trouvé");
+        return;
+      }
+      container.innerHTML = "";
+
+      users.forEach((user) => {
+        const status = user.isSuspended ? "Suspendu" : "Actif";
+        const statusClass = user.isSuspended
+          ? "status-suspended"
+          : "status-active";
+        const buttonText = user.isSuspended ? "Réactiver" : "Suspendre";
+
+        const userItem = document.createElement("div");
+        userItem.classList.add("user-item");
+        userItem.innerHTML = `
+        <div class="user-info-item">
+          <div class="user-name">${user.name}</div>
+          <div class="user-email">${user.email}</div>
+        </div>
+        <span class="user-status ${statusClass}">${status}</span>
+        <button class="btn btn-${user.isSuspended ? "success" : "danger"}"
+          data-email="${user.email}" data-action="toggle">${buttonText}</button>
+      `;
+
+        container.appendChild(userItem);
+      });
+
+      container.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const email = e.target.getAttribute("data-email");
+          const action = e.target.getAttribute("data-action");
+          this.toggleUserStatus(email, action);
+        });
+      });
+    } catch (err) {
+      console.error("Erreur lors du chargement des utilisateurs :", err);
     }
   }
 }

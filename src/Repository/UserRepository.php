@@ -89,4 +89,22 @@ class UserRepository
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         return $stmt->execute();
     }
+
+    public function getAllNonEmployeeUsers(): array
+    {
+        $pdo = Mysql::getInstance()->getPDO();
+
+        $sql = "
+        SELECT u.email, u.name, u.isSuspended
+        FROM utilisateurs u
+        LEFT JOIN possede p ON u.id = p.id_utilisateurs
+        LEFT JOIN role r ON p.id = r.id
+        WHERE r.name != 'employe' OR r.name IS NULL
+    ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
