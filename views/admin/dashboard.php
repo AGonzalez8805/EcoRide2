@@ -103,22 +103,7 @@
                 <div class="card-title">Gestion des employés</div>
             </div>
             <div class="user-list" id="employee-list">
-                <div class="user-item">
-                    <div class="user-info-item">
-                        <div class="user-name">Marie Dubois (Employé)</div>
-                        <div class="user-email">marie.dubois@ecoride.com</div>
-                    </div>
-                    <span class="user-status status-active">Actif</span>
-                    <button class="btn btn-danger" onclick="suspendEmployee('marie.dubois@ecoride.com')">Suspendre</button>
-                </div>
-                <div class="user-item">
-                    <div class="user-info-item">
-                        <div class="user-name">Pierre Leroy (Employé)</div>
-                        <div class="user-email">pierre.leroy@ecoride.com</div>
-                    </div>
-                    <span class="user-status status-active">Actif</span>
-                    <button class="btn btn-danger" onclick="suspendEmployee('pierre.leroy@ecoride.com')">Suspendre</button>
-                </div>
+
             </div>
         </div>
     </div>

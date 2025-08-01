@@ -28,6 +28,10 @@ class AdminController extends Controller
                     $this->toggleEmployeStatus();
                     break;
 
+                case 'listEmployesJson':
+                    $this->listEmployesJson();
+                    break;
+
                 default:
                     throw new \Exception("Action administrateur inconnue");
             }
@@ -113,24 +117,58 @@ class AdminController extends Controller
 
     public function toggleEmployeStatus(): void
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo 'Méthode non autorisée';
+            return;
+        }
+
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
             http_response_code(403);
-            echo 'Accès refusé';
-            exit;
+            echo 'Non autorisé';
+            return;
         }
 
-        $email = $_POST['email'] ?? null;
+        $email = $_POST['email'] ?? '';
 
-        if (!$email) {
+        if (empty($email)) {
             http_response_code(400);
             echo 'Email manquant';
+            return;
+        }
+
+        $repo = new \App\Repository\EmployeRepository();
+
+        $employe = $repo->findByEmail($email);
+
+        if (!$employe) {
+            http_response_code(404);
+            echo 'Employé introuvable';
+            return;
+        }
+
+        $etatActuel = (bool) $employe['isSuspended']; // force booléen
+        $nouvelEtat = !$etatActuel;
+
+
+        $success = $repo->setSuspendedStatus($email, $nouvelEtat);
+
+        echo $success ? 'OK' : 'Erreur lors de la mise à jour';
+    }
+
+    public function listEmployesJson(): void
+    {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+            http_response_code(403);
+            echo json_encode(['error' => 'Accès refusé']);
             exit;
         }
 
+        $repo = new \App\Repository\EmployeRepository();
+        $employes = $repo->findAll();
 
-        $repo = new \App\Repository\UserRepository();
-
-        $result = $repo->toggleSuspensionByEmail($email);
-        echo $result ? 'OK' : 'Erreur';
+        header('Content-Type: application/json');
+        echo json_encode($employes);
+        exit;
     }
 }

@@ -32,15 +32,8 @@ export class AdminDashboard {
       });
     }
 
-    // Gestion des employés
     if (this.employeeList) {
-      this.employeeList.querySelectorAll("button").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          const email = e.target.getAttribute("data-email");
-          const action = e.target.getAttribute("data-action");
-          this.toggleEmployeeStatus(email, action);
-        });
-      });
+      this.loadEmployees();
     }
   }
 
@@ -142,6 +135,57 @@ export class AdminDashboard {
       else alert("Erreur : " + result);
     } catch (err) {
       console.error("Erreur suspension employé :", err);
+    }
+  }
+
+  async loadEmployees() {
+    try {
+      const response = await fetch(
+        "/?controller=admin&action=listEmployesJson"
+      );
+      if (!response.ok) throw new Error("Erreur chargement employés");
+
+      const employees = await response.json();
+      const container = document.getElementById("employee-list");
+      if (!container) {
+        console.error("Element employee-list non trouvé dans le DOM");
+        return;
+      }
+      container.innerHTML = ""; // vide avant d’ajouter
+
+      employees.forEach((emp) => {
+        const status = emp.isSuspended ? "Suspendu" : "Actif";
+        const statusClass = emp.isSuspended
+          ? "status-inactive"
+          : "status-active";
+        const buttonText = emp.isSuspended ? "Réactiver" : "Suspendre";
+
+        const userItem = document.createElement("div");
+        userItem.classList.add("user-item");
+        userItem.innerHTML = `
+        <div class="user-info-item">
+          <div class="user-name">${emp.pseudo} (Employé)</div>
+          <div class="user-email">${emp.email}</div>
+        </div>
+        <span class="user-status ${statusClass}">${status}</span>
+        <button class="btn btn-${
+          emp.isSuspended ? "success" : "danger"
+        }" data-email="${emp.email}" data-action="toggle">${buttonText}</button>
+
+      `;
+        container.appendChild(userItem);
+      });
+
+      // Réattacher les événements sur les boutons
+      container.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const email = e.target.getAttribute("data-email");
+          const action = e.target.getAttribute("data-action");
+          this.toggleEmployeeStatus(email, action); // ta méthode existante
+        });
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 }
