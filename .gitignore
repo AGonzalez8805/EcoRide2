@@ -1,4 +1,7 @@
-#Ignorer les fichiers d'environnement contenant des données sensibles
-.env 
-# Ignorer les dépendances installées via Composer
+.env
+.db.ini
 /vendor/
+generate-password.php
+log_debug.txt
+
+.vscode/
