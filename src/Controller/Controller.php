@@ -52,6 +52,11 @@ class Controller
                         $controller->route();
                         break;
 
+                    case 'employe':
+                        $controller = new EmployeController();
+                        $controller->route();
+                        break;
+
                     default:
                         throw new \Exception("Le contrôleur n'existe pas", 404);
                 }

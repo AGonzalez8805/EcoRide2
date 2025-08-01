@@ -97,6 +97,20 @@ class AuthController extends Controller
             echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=dashboard"]);
             return;
         }
+
+        $employeRepo = new \App\Repository\EmployeRepository();
+        $employe = $employeRepo->findByEmail($email);
+
+        if ($employe && password_verify($password, $employe['password'])) {
+            $_SESSION['user_id'] = $employe['id'];
+            $_SESSION['email'] = $employe['email'];
+            $_SESSION['role'] = 'employe';
+
+            ob_end_clean();
+            echo json_encode(["success" => true, "redirect" => "/?controller=employe&action=dashboard"]);
+            return;
+        }
+
         $userRepo = new UserRepository();
         $user = $userRepo->findByEmail($email);
 

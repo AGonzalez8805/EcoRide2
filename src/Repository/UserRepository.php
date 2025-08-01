@@ -80,4 +80,13 @@ class UserRepository
         $stmt = $pdo->prepare("INSERT INTO possede (id, id_utilisateurs) VALUES (:id, :userId)");
         return $stmt->execute([':id' => $roleId, 'userId' => $userId]);
     }
+
+    public function toggleSuspensionByEmail(string $email): bool
+    {
+        $pdo = Mysql::getInstance()->getPDO();
+
+        $stmt = $pdo->prepare("UPDATE utilisateurs SET isSuspended = NOT isSuspended WHERE email = :email");
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }
