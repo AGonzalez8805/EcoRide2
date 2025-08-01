@@ -1,4 +1,4 @@
-USE Ecoride;
+-- USE Ecoride;
 
 CREATE TABLE utilisateurs(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -13,6 +13,11 @@ CREATE TABLE utilisateurs(
 );
 
 ALTER TABLE utilisateurs MODIFY pseudo VARCHAR(255) NULL DEFAULT NULL;
+
+INSERT INTO utilisateurs (name,firstName,email,password)
+VALUES 
+    ('Dupont', 'Jean', 'jean.dupont@mail.fr', '$2y$12$936JEyPhv.Zke56I168qteot9WUTJbFoSZeIv7DE86WaVuy1xj2aO'),
+    ('Durand', 'Alice', 'alice.durand@mail.fr','$2y$12$936JEyPhv.Zke56I168qteot9WUTJbFoSZeIv7DE86WaVuy1xj2aO');
 
 CREATE TABLE role(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,8 +91,19 @@ VALUES (
     FALSE, 
     FALSE, 
     'Aucune', 
-    5
-);
+    1
+),
+('Corsa',
+'EF-888-DE',
+'HYBRIDE',
+'NOIR',
+'OPEL',
+'2024-05-08',
+4,
+TRUE,
+TRUE,
+'Aucune',
+2);
 
 CREATE TABLE covoiturage (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -115,7 +131,7 @@ INSERT INTO covoiturage(
     '2023-09-15', '14:00:00', 'Paris',
     '2023-09-15', '15:00:00', 'Marseille',
     'en_cours', 2, 100.0,
-    5, 1
+    1, 1
 );
 
 CREATE TABLE participation (

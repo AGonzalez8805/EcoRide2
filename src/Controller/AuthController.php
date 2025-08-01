@@ -189,7 +189,7 @@ class AuthController extends Controller
         }
 
         // Déterminer le rôle à attribuer (si pas d’admin, on crée un admin, sinon utilisateur)
-        $roleToAssign = $userRepo->existsUserWithRole('admin') ? 'utilisateur' : 'admin';
+        $roleToAssign = 'utilisateur';
 
         // Hasher le mot de passe
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
