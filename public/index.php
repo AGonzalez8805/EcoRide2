@@ -5,7 +5,7 @@ define('APP_ROOT', dirname(__DIR__));
 
 define('APP_ENV', dirname(__DIR__) . '/.db.ini');
 
-require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\Controller;
 

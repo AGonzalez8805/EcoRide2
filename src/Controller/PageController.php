@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Services\Mailer;
+
 class PageController extends Controller
 {
     public function route(): void
@@ -73,7 +75,16 @@ class PageController extends Controller
 
     public function sendMessage()
     {
-        $this->validateForm();
+        // Lire les données JSON reçues
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
+
+        $mailer = new Mailer();
+        $result = $mailer->sendContactMail($data);
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
     }
 
     public function validateForm()

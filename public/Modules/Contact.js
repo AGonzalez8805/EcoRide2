@@ -102,6 +102,7 @@ export class Contact {
         };
 
         try {
+            console.log("Envoi du message...", data);
             const response = await fetch("/?controller=page&action=sendMessage", {
                 method: "POST",
                 headers: {
