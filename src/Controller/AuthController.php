@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use App\Repository\AdminRepository;
+use App\Repository\EmployeRepository;
 
 class AuthController extends Controller
 {
@@ -65,7 +66,7 @@ class AuthController extends Controller
 
     public function handleLogin()
     {
-        ob_start();
+
         header('Content-Type: application/json');
         http_response_code(200);
 
@@ -98,7 +99,7 @@ class AuthController extends Controller
             return;
         }
 
-        $employeRepo = new \App\Repository\EmployeRepository();
+        $employeRepo = new EmployeRepository();
         $employe = $employeRepo->findByEmail($email);
 
         if ($employe && password_verify($password, $employe['password'])) {
@@ -119,15 +120,17 @@ class AuthController extends Controller
             // Authentification réussie, on stocke les infos en session
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'] ?? 'utilisateur';
+            $_SESSION['typeUtilisateur'] = $user['typeUtilisateur'];
 
             ob_end_clean();
 
-            // Redirection conditionnelle selon le rôle
-            $url = ($_SESSION['role'] === 'admin')
-                ? '/?controller=admin&action=dashboard'
-                : '/?controller=user&action=dashboard';
-
+            // Redirection conditionnelle selon letype d'utilisateur
+            $url = match ($_SESSION['typeUtilisateur']) {
+                'chauffeur' => '/?controller=user&action=dashboardChauffeur',
+                'passager' => '/?controller=user&action=dashboardPassager',
+                'chauffeur-passager' => '/?controller=user&action=dashboardMixte',
+                default => '/?controller=user&action=dashboard',
+            };
             echo json_encode(["success" => true, "redirect" => $url]);
             return;
         } else {
@@ -188,8 +191,14 @@ class AuthController extends Controller
             exit;
         }
 
-        // Déterminer le rôle à attribuer (si pas d’admin, on crée un admin, sinon utilisateur)
-        $roleToAssign = $userRepo->existsUserWithRole('admin') ? 'utilisateur' : 'admin';
+        $typeUtilisateur = $input['typeUtilisateur'] ?? '';
+        $allowedTypes = ['chauffeur', 'passager', 'chauffeur-passager'];
+
+        if (!in_array($typeUtilisateur, $allowedTypes)) {
+            echo json_encode(["success" => false, "message" => "Type d'utilisateur invalide."]);
+            exit;
+        }
+
 
         // Hasher le mot de passe
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
@@ -201,15 +210,13 @@ class AuthController extends Controller
             'firstName' => $firstName,
             'email' => $email,
             'password' => $hashedPassword,
+            'typeUtilisateur' => $typeUtilisateur
         ]);
 
         if (!$newUserId) {
             echo json_encode(["success" => false, "message" => "Erreur lors de l'inscription."]);
             exit;
         }
-
-        // Assigner le rôle à l’utilisateur créé
-        $userRepo->assignRoleToUser($newUserId, $roleToAssign);
 
         // Répondre avec succès
         echo json_encode(["success" => true]);

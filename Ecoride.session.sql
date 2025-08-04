@@ -16,8 +16,7 @@ ALTER TABLE utilisateurs MODIFY pseudo VARCHAR(255) NULL DEFAULT NULL;
 
 CREATE TABLE role(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR (255) NOT NULL UNIQUE,
-    description TEXT
+    name VARCHAR (255) NOT NULL UNIQUE
 );
 
 CREATE TABLE possede(
@@ -27,6 +26,8 @@ CREATE TABLE possede(
     FOREIGN KEY (id) REFERENCES role(id),
     FOREIGN KEY (id_utilisateurs) REFERENCES utilisateurs(id)
 );
+
+DROP TABLE IF EXISTS possede;
 
 CREATE TABLE admin(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -150,3 +151,26 @@ CREATE TABLE transaction (
 );
 
     
+ALTER TABLE admin ADD id_role INT;
+
+ALTER TABLE employe ADD id_role INT;
+
+ALTER TABLE utilisateurs 
+ADD typeUtilisateur ENUM('chauffeur', 'passager', 'chauffeur-passager') NOT NULL;
+
+ALTER TABLE admin 
+ADD CONSTRAINT fk_admin_role 
+FOREIGN KEY (id_role) REFERENCES role(id);
+
+ALTER TABLE employe 
+ADD CONSTRAINT fk_employe_role 
+FOREIGN KEY (id_role) REFERENCES role(id);
+
+INSERT IGNORE INTO role (name) VALUES 
+('admin'),
+('employe'),
+('utilisateur'),
+('chauffeur'),
+('passager'),
+('chauffeur-passager');
+

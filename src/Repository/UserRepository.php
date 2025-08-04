@@ -12,14 +12,8 @@ class UserRepository
         $mysql = Mysql::getInstance();
         $pdo = $mysql->getPDO();
 
-        $stmt = $pdo->prepare('
-            SELECT u.*, r.name as role
-            FROM utilisateurs u
-            LEFT JOIN possede p ON u.id = p.id_utilisateurs
-            LEFT JOIN role r ON p.id = r.id
-            WHERE u.email = :email
-        ');
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR); // Utilisez PDO::PARAM_STR
+        $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE email = :email');
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
 
         $utilisateurs = $stmt->fetch();
@@ -32,14 +26,15 @@ class UserRepository
         $pdo = $mysql->getPDO();
 
         $stmt = $pdo->prepare('
-            INSERT INTO utilisateurs (name, firstName, email, password)
-            VALUES (:name, :firstName, :email, :password)');
+            INSERT INTO utilisateurs (name, firstName, email, password, typeUtilisateur)
+            VALUES (:name, :firstName, :email, :password, :typeUtilisateur)');
 
         $success = $stmt->execute([
             ':name' => $data['name'],
             ':firstName' => $data['firstName'],
             ':email' => $data['email'],
             ':password' => $data['password'],
+            ':typeUtilisateur' => $data['typeUtilisateur'],
         ]);
 
         if ($success) {
@@ -47,38 +42,6 @@ class UserRepository
         } else {
             return null;
         }
-    }
-
-    public function existsUserWithRole(string $roleName): bool
-    {
-        $mysql = Mysql::getInstance();
-        $pdo = $mysql->getPDO();
-
-        $sql = "SELECT COUNT(*) FROM possede p
-                JOIN role r ON p.id = r.id
-                WHERE r.name = :roleName";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['roleName' => $roleName]);
-
-        return $stmt->fetchColumn() > 0;
-    }
-
-    public function assignRoleToUser(int $userId, string $roleName): bool
-    {
-        $mysql = Mysql::getInstance();
-        $pdo = $mysql->getPDO();
-
-        $stmt = $pdo->prepare("SELECT id FROM role WHERE name = :roleName");
-        $stmt->execute(['roleName' => $roleName]);
-        $roleId = $stmt->fetchColumn();
-
-        if (!$roleId) {
-            return false;
-        }
-
-        $stmt = $pdo->prepare("INSERT INTO possede (id, id_utilisateurs) VALUES (:id, :userId)");
-        return $stmt->execute([':id' => $roleId, 'userId' => $userId]);
     }
 
     public function toggleSuspensionByEmail(string $email): bool
@@ -94,15 +57,10 @@ class UserRepository
     {
         $pdo = Mysql::getInstance()->getPDO();
 
-        $sql = "
-        SELECT u.email, u.name, u.isSuspended
-        FROM utilisateurs u
-        LEFT JOIN possede p ON u.id = p.id_utilisateurs
-        LEFT JOIN role r ON p.id = r.id
-        WHERE r.name != 'employe' OR r.name IS NULL
-    ";
-
-        $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare('
+        SELECT email, name, isSuspended, type_utilisateur
+        FROM utilisateurs
+    ');
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -48,7 +48,7 @@
                     <!-- Connexion/Inscription/compte à droite -->
                     <div class="d-flex flex-column flex-lg-row ms-lg-auto mt-3 mt-lg-0">
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <?php if ($_SESSION['role'] === 'admin'): ?>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                                 <a href="/?controller=admin&action=dashboard" class="btn btn-outline-light btn-registration me-3">Tableau de bord</a>
                             <?php else: ?>
                                 <a href="/?controller=user&action=dashboard" class="btn btn-outline-light btn-registration me-3">Mon compte</a>
