@@ -51,9 +51,6 @@ class AdminController extends Controller
         }
     }
 
-
-
-
     public function dashboard(): void
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {

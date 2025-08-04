@@ -67,6 +67,9 @@ class AuthController extends Controller
     public function handleLogin()
     {
 
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         header('Content-Type: application/json');
         http_response_code(200);
 
@@ -93,8 +96,9 @@ class AuthController extends Controller
             $_SESSION['user_id'] = $admin['id'];
             $_SESSION['pseudo'] = $admin['pseudo'];
             $_SESSION['role'] = 'admin';
-
-            ob_end_clean();
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
             echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=dashboard"]);
             return;
         }
@@ -107,7 +111,9 @@ class AuthController extends Controller
             $_SESSION['email'] = $employe['email'];
             $_SESSION['role'] = 'employe';
 
-            ob_end_clean();
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
             echo json_encode(["success" => true, "redirect" => "/?controller=employe&action=dashboard"]);
             return;
         }
@@ -122,10 +128,13 @@ class AuthController extends Controller
             $_SESSION['email'] = $user['email'];
             $_SESSION['typeUtilisateur'] = $user['typeUtilisateur'];
 
-            ob_end_clean();
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
 
             // Redirection conditionnelle selon letype d'utilisateur
-            $url = match ($_SESSION['typeUtilisateur']) {
+            $typeUtilisateur = $_SESSION['typeUtilisateur'] ?? 'default';
+            $url = match ($typeUtilisateur) {
                 'chauffeur' => '/?controller=user&action=dashboardChauffeur',
                 'passager' => '/?controller=user&action=dashboardPassager',
                 'chauffeur-passager' => '/?controller=user&action=dashboardMixte',
@@ -135,6 +144,9 @@ class AuthController extends Controller
             return;
         } else {
             // Identifiants incorrects
+            error_log('Session role: ' . ($_SESSION['role'] ?? 'null'));
+            error_log('Session typeUtilisateur: ' . ($_SESSION['typeUtilisateur'] ?? 'null'));
+
             echo json_encode(["success" => false, "message" => "Email ou mot de passe incorrect."]);
             return;
         }

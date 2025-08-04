@@ -12,9 +12,19 @@ class UserController extends Controller
     {
         if (isset($_GET['action'])) {
             switch ($_GET['action']) {
-                case 'dashboard':
+                case 'dashboardChauffeur':
+                    // Affiche le tableau de bord Ch
+                    $this->dashboardChauffeur();
+                    break;
+
+                case 'dashboardPassager':
                     // Affiche le tableau de bord utilisateur
-                    $this->dashboard();
+                    $this->dashboardPassager();
+                    break;
+
+                case 'dashboardMixte':
+                    // Affiche le tableau de bord utilisateur
+                    $this->dashboardMixte();
                     break;
 
                 default:
@@ -24,20 +34,16 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Affiche la vue du tableau de bord pour un utilisateur connecté.
-     * Redirige vers la page de login si l'utilisateur n'est pas connecté ou n'a pas le bon rôle.
-     */
-    public function dashboard(): void
+    public function dashboardChauffeur(): void
     {
-        // Vérifie si l'utilisateur est connecté et a le rôle 'utilisateur'
-        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'utilisateur') {
-            // Redirige vers la page de connexion s'il n'est pas autorisé
-            header('Location: /?controller=auth&action=login');
-            exit;
-        }
-
-        // Affiche la vue du tableau de bord utilisateur
-        $this->render('user/dashboard');
+        $this->render('user/dashboardChauffeur');
+    }
+    public function dashboardPassager(): void
+    {
+        $this->render('user/dashboardPassager');
+    }
+    public function dashboardMixte(): void
+    {
+        $this->render('user/dashboardMixte');
     }
 }
