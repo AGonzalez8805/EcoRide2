@@ -498,7 +498,7 @@ footer {
   }
 }
 
-/* Page de inscription / registration */
+/* Page de inscription / registration / contact */
 section.login {
   background-color: #eef5ec;
   min-height: 100%;
@@ -776,4 +776,155 @@ input.form-control:focus {
   background: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
+}
+
+/* Dashboard Utilisateur */
+/* Header simple */
+.user-header {
+  background-color: #6aaa64;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.user-header h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.user-credits {
+  font-size: 18px;
+}
+
+/* Cards simples */
+.simple-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  color: #457b9d;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* Boutons simples */
+.btn-green {
+  background-color: #6aaa64;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-green:hover {
+  background-color: #558e4d;
+  color: white;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #6aaa64;
+  border: 2px solid #6aaa64;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background-color: #6aaa64;
+  color: white;
+}
+
+/* Sélection de rôle simple */
+.role-box {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.role-box:hover,
+.role-box.selected {
+  border-color: #6aaa64;
+  background-color: #f0f8f0;
+}
+
+/* Liste simple */
+.simple-list {
+  list-style: none;
+  padding: 0;
+}
+
+.list-item {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.list-item:hover {
+  background-color: #e9ecef;
+}
+
+/* Status badges simples */
+.status {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-completed {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Formulaires simples */
+.form-control {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.form-control:focus {
+  border-color: #6aaa64;
+  outline: none;
+}
+
+/* Sections cachées */
+.hidden {
+  display: none;
+}
+
+/* Mobile simple */
+@media (max-width: 768px) {
+  .user-header h1 {
+    font-size: 20px;
+  }
+
+  .simple-card {
+    margin: 10px;
+    padding: 15px;
+  }
 }

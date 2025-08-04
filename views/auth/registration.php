@@ -45,9 +45,7 @@
             </div>
             <button type="submit" id="register" class="btn ecoride-btn w-100">S'inscrire</button>
             <div class="text-center pt-3">
-                <font style="text-decoration: underline;">
-                    <a href="/?controller=auth&action=login">Vous avez déjà un compte ? Connectez-vous ici !</a>
-                </font>
+                <a style="text-decoration: underline;" href="/?controller=auth&action=login">Vous avez déjà un compte ? Connectez-vous ici !</a>
             </div>
         </form>
     </div>

@@ -165,7 +165,7 @@ class AuthController extends Controller
         $password = $input['password'] ?? '';
         $validatePassword = $input['validatePassword'] ?? '';
 
-        if (empty($name) || empty($firstName) || empty($email) || empty($password)) {
+        if (!$name || !$firstName || !$email || !$password) {
             echo json_encode(["success" => false, "message" => "Tous les champs sont requis."]);
             exit;
         }

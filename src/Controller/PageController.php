@@ -19,6 +19,10 @@ class PageController extends Controller
                         $this->about();
                         break;
 
+                    case 'sendMessage':
+                        $this->sendMessage();
+                        break;
+
                     case 'contact':
                         $this->contact();
                         break;
@@ -65,5 +69,49 @@ class PageController extends Controller
     protected function faq()
     {
         $this->render('pages/faq');
+    }
+
+    public function sendMessage()
+    {
+        $this->validateForm();
+    }
+
+    public function validateForm()
+    {
+        header('Content-Type: application/json');
+        http_response_code(200);
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (!$input) {
+            echo json_encode(["succes" => false, "message" => "Données invalides"]);
+            exit;
+        }
+
+        $name = trim($input['name'] ?? '');
+        $firstName = trim($input['firstName'] ?? '');
+        $email = trim($input['email'] ?? '');
+        $subject = trim($input['subject'] ?? '');
+        $message = trim($input['message'] ?? '');
+
+        if (!$name || !$firstName || !$email || !$subject || !$message) {
+            echo json_encode(["succes" => false, "message" => "Données invalides"]);
+            exit;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(["succes" => false, "message" => "Email invalide"]);
+            exit;
+        }
+
+        if (strlen($message) < 10) {
+            echo json_encode(["succes" => false, "message" => "Message trop court"]);
+            exit;
+        }
+
+        // Envoi du message
+        $headers = "From: $name <$email>\r\n";
+        $headers .= "Reply-To: $email\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion();
     }
 }

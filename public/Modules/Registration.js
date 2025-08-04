@@ -145,6 +145,7 @@ export class Registration {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify(data),
       });
@@ -162,14 +163,15 @@ export class Registration {
         }
       } catch (e) {
         console.error("Réponse invalide du serveur :", e);
+        alert("Réponse du serveur non conforme.");
+      }
+
+      if (!response.ok) {
+        console.error("Erreur HTTP :", response.status);
       }
     } catch (err) {
       console.error("Erreur lors de la requête :", err);
-    }
-    if (!response.ok) {
-      alert("Erreur serveur : " + response.status);
-      console.error(await response.text());
-      return;
+      alert("Une erreur technique est survenue.");
     }
   }
 }
