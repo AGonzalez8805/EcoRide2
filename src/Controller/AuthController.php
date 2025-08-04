@@ -127,6 +127,9 @@ class AuthController extends Controller
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['typeUtilisateur'] = $user['typeUtilisateur'];
+            $_SESSION['firstName'] = $user['firstName'];
+            $_SESSION['name'] = $user['name'];
+            error_log('User firstName: ' . ($user['firstName'] ?? 'null'));
 
             if (ob_get_length()) {
                 ob_end_clean();

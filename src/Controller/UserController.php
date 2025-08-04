@@ -40,8 +40,20 @@ class UserController extends Controller
     }
     public function dashboardPassager(): void
     {
-        $this->render('user/dashboardPassager');
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Récupérer les infos utilisateur stockées en session
+        $user = [
+            'firstName' => $_SESSION['firstName'] ?? 'Utilisateur',
+            'name' => $_SESSION['name'] ?? '',
+            'email' => $_SESSION['email'] ?? ''
+        ];
+
+        $this->render('user/dashboardPassager', ['user' => $user]);
     }
+
     public function dashboardMixte(): void
     {
         $this->render('user/dashboardMixte');

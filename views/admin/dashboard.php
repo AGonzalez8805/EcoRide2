@@ -1,6 +1,6 @@
 <?php require_once APP_ROOT . '/views/header.php'; ?>
 
-<div class="admin">
+<div class="en-tete">
     <h1> Bienvenue - sur la page <?= htmlspecialchars($_SESSION['role']) ?> </h1>
     <div class="user-info">Connecté en tant qu'administrateur | Dernière connexion: aujourd'hui</div>
 </div>
@@ -54,7 +54,7 @@
                     <label for="emp-password">Mot de passe</label>
                     <input type="password" id="emp-password" name="password" required>
                 </div>
-                <button type="submit" class="btn">Créer le compte</button>
+                <button type="submit" class="btn-dashboard">Créer le compte</button>
                 <div id="employee-message" class="message"></div>
             </form>
         </div>
