@@ -54,14 +54,25 @@ export class ChauffeurTrajet {
             e.preventDefault();
             this.submitForm();
         });
-        const vehiculeSelect = document.getElementById('vehicule');
+        const vehiculeSelect = document.getElementById("vehicule");
+
         if (vehiculeSelect) {
-            vehiculeSelect.addEventListener('change', function () {
-                if (this.value === 'nouveau') {
-                    window.location.href = '/?controller=vehicule&action=create';
+            console.log("✅ Écouteur de changement ajouté sur #vehicule");
+            vehiculeSelect.addEventListener("change", (e) => {
+                const selectedValue = e.target.value;
+                console.log("Sélection dans le menu véhicule :", selectedValue);
+
+                if (selectedValue === "nouveau") {
+                    setTimeout(() => {
+                        // Petit délai pour éviter blocage par certains navigateurs
+                        window.location.href = "/?controller=vehicule&action=create";
+                    }, 100);
                 }
             });
+        } else {
+            console.warn("Élément #vehicule non trouvé dans le DOM.");
         }
+
     }
 
     async fetchVilles(query, targetDatalist, type) {

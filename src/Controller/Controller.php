@@ -43,16 +43,6 @@ class Controller
                         $controller->route();
                         break;
 
-                    case 'results':
-                        $controller = new SearchController();
-                        $controller->results();
-                        break;
-
-                    case 'covoiturage':
-                        $controller = new CovoiturageController();
-                        $controller->route();
-                        break;
-
                     case 'employe':
                         $controller = new EmployeController();
                         $controller->route();
@@ -60,6 +50,11 @@ class Controller
 
                     case 'chauffeur':
                         $controller = new ChauffeurController();
+                        $controller->route();
+                        break;
+
+                    case 'vehicule':
+                        $controller = new VehiculeController();
                         $controller->route();
                         break;
 

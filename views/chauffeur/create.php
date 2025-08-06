@@ -58,6 +58,7 @@
         <div class="mb-3">
             <label for="vehicule" class="form-label">Véhicule</label>
             <select name="vehicule" id="vehicule" class="form-select" required>
+                <option value="">-- Choisir un véhicule --</option>
                 <option value="nouveau">+ Ajouter un nouveau véhicule</option>
                 <?php foreach ($vehicules as $vehicule): ?>
                     <option value="<?= htmlspecialchars($vehicule->getId()) ?>">
@@ -65,6 +66,14 @@
                     </option>
                 <?php endforeach; ?>
             </select>
+        </div>
+
+        <!-- Préférences personnalisées -->
+        <div class="form-group">
+            <label for="preferencesSupplementaires ">Préférences personnalisées</label>
+            <textarea id="preferencesSupplementaires " name="preferencesSupplementaires " class="form-control"
+                placeholder="Décrivez vos préférences particulières (optionnel)&#10;Ex: Pas de discussions téléphoniques, arrêts autorisés, etc."></textarea>
+            <div class="info-text">Précisez vos règles de voyage (optionnel)</div>
         </div>
 
         <div class="alert alert-info">

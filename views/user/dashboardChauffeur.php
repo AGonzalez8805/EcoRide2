@@ -21,7 +21,7 @@
                 </a>
             </div>
             <div class="col-md-6">
-                <a href="/?controller=vehicle&action=manage" class="btn-outline w-100">
+                <a href="/?controller=vehicule&action=create" class="btn-outline w-100">
                     Mes véhicules
                 </a>
             </div>
