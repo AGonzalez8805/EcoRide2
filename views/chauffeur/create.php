@@ -12,13 +12,13 @@
         <div class="row">
             <div class="mb-3 col">
                 <label for="lieuDepart" class="form-label">Ville de départ</label>
-                <input type="text" id="lieuDepart" name="lieuDepart" list="lieuDepart" class="form-control" required>
+                <input type="text" id="lieuDepart" name="lieuDepart" list="lieuDepart" class="form-control">
                 <datalist id="liste-depart"></datalist>
             </div>
 
             <div class="mb-3 col">
                 <label for="lieuArrivee" class="form-label">Ville d'arrivée</label>
-                <input type="text" id="lieuArrivee" name="lieuArrivee" list="liste-destination" class="form-control" required>
+                <input type="text" id="lieuArrivee" name="lieuArrivee" list="liste-destination" class="form-control">
                 <datalist id="liste-destination"></datalist>
             </div>
         </div>
@@ -26,38 +26,38 @@
         <div class="row">
             <div class="mb-3 col">
                 <label for="date_heure" class="form-label">Date de départ</label>
-                <input type="date" class="form-control" id="dateDepart" name="dateDepart" required>
+                <input type="date" class="form-control" id="dateDepart" name="dateDepart">
             </div>
             <div class="mb-3 col">
                 <label for="dateArrivee" class="form-label">Date d'arrivée</label>
-                <input type="date" class="form-control" id="dateArrivee" name="dateArrivee" required>
+                <input type="date" class="form-control" id="dateArrivee" name="dateArrivee">
             </div>
         </div>
 
         <div class="row">
             <div class="mb-3 col">
                 <label for="heureDepart" class="form-label">heure de départ</label>
-                <input type="time" class="form-control" id="heureDepart" name="heureDepart" required>
+                <input type="time" class="form-control" id="heureDepart" name="heureDepart">
             </div>
             <div class="mb-3 col">
                 <label for="heureArrivee" class="form-label">Heure d'arrivée</label>
-                <input type="time" class="form-control" id="heureArrivee" name="heureArrivee" required>
+                <input type="time" class="form-control" id="heureArrivee" name="heureArrivee">
             </div>
         </div>
 
         <div class="mb-3">
             <label for="nbPlace" class="form-label">Places disponibles</label>
-            <input type="number" class="form-control" id="nbPlace" name="nbPlace" min="1" required>
+            <input type="number" class="form-control" id="nbPlace" name="nbPlace" min="1">
         </div>
 
         <div class="mb-3">
             <label for="prixPersonne" class="form-label">Prix par passager</label>
-            <input type="number" class="form-control" id="prixPersonne" name="prixPersonne" step="0.5" min="2" required>
+            <input type="number" class="form-control" id="prixPersonne" name="prixPersonne" step="0.5" min="2">
         </div>
 
         <div class="mb-3">
             <label for="vehicule" class="form-label">Véhicule</label>
-            <select name="vehicule" id="vehicule" class="form-select" required>
+            <select name="vehicule" id="vehicule" class="form-select">
                 <option value="">-- Choisir un véhicule --</option>
                 <option value="nouveau">+ Ajouter un nouveau véhicule</option>
                 <?php foreach ($vehicules as $vehicule): ?>

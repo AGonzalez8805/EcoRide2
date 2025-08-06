@@ -45,29 +45,38 @@ class VehiculeController extends Controller
                 $marque = $_POST['marque'] ?? '';
                 $modele = $_POST['modele'] ?? '';
                 $couleur = $_POST['couleur'] ?? '';
-                $nbPlaces = (int) ($_POST['places'] ?? 1);
+                $nbPlaces = (int) ($_POST['nbPlaces'] ?? 0);
                 $immatriculation = $_POST['immatriculation'] ?? '';
                 $energie = $_POST['energie'] ?? '';
                 $datePremierImmatriculation = $_POST['datePremierImmatriculation'] ?? '';
-                $preferencesSupplementaires = $_POST['preferencesSupplementaires'] ?? '';
-                $fumeur = $_POST['fumeur'] ?? '';
-                $animaux = $_POST['animaux'] ?? '';
+                $fumeur = isset($_POST['fumeur']) ? 1 : 0;
+                $animaux = isset($_POST['animaux']) ? 1 : 0;
 
-                $from = $_POST['from'] ?? null;
+                $errors = [];
 
-                if (
-                    empty($marque) ||
-                    empty($modele) ||
-                    empty($couleur) ||
-                    empty($immatriculation) ||
-                    empty($energie) ||
-                    empty($datePremierImmatriculation) ||
-                    empty($preferencesSupplementaires) ||
-                    empty($fumeur) ||
-                    empty($animaux) ||
-                    $nbPlaces < 1
-                ) {
-                    throw new \Exception("Tous les champs sont requis.");
+                if (empty($marque)) {
+                    $errors['marque'] = "La marque est obligatoire.";
+                }
+                if (empty($modele)) {
+                    $errors['modele'] = "Le modèle est obligatoire.";
+                }
+                if (empty($couleur)) {
+                    $errors['couleur'] = "La couleur est obligatoire.";
+                }
+                if (empty($immatriculation)) {
+                    $errors['immatriculation'] = "L'immatriculation est obligatoire.";
+                }
+                if (empty($energie)) {
+                    $errors['energie'] = "Veuillez entrer un type d'énergie.";
+                }
+                if (empty($datePremierImmatriculation)) {
+                    $errors['datePremierImmatriculation'] = "la date de premier immatriculation est obligatoire.";
+                }
+                if ($nbPlaces < 1) {
+                    $errors['nbPlaces'] = "Le nombre de places doit être au moins 1.";
+                }
+                if (!empty($errors)) {
+                    throw new \Exception(json_encode($errors));
                 }
 
                 $vehicule = new Vehicule();
@@ -78,7 +87,6 @@ class VehiculeController extends Controller
                     ->setCouleur($couleur)
                     ->setEnergie($energie)
                     ->setDatePremierImmatriculation($datePremierImmatriculation)
-                    ->setPreferencesSupplementaires($preferencesSupplementaires)
                     ->setFumeur($fumeur)
                     ->setAnimaux($animaux)
                     ->setIdUtilisateurs($_SESSION['user_id']);
@@ -86,21 +94,46 @@ class VehiculeController extends Controller
                 $repo = new VehiculeRepository();
                 $repo->save($vehicule);
 
-                if ($isAjax) {
-                    echo json_encode(['success' => true, 'message' => 'Véhicule ajouté avec succès.']);
-                    exit;
-                }
+                $repo = new VehiculeRepository();
+                $repo->save($vehicule);
+
+                // Debug for AJAX only
+                header('Content-Type: application/json');
+                die(json_encode(['success' => true, 'redirect' => '/?controller=user&action=dashboardChauffeur']));
+
 
                 // Redirection normale sinon :
                 header('Location: ?controller=vehicule&action=index');
                 exit;
             } catch (\Exception $e) {
                 if ($isAjax) {
-                    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'message' => 'Véhicule ajouté avec succès.']);
+                    exit;
+
+                    $msg = $e->getMessage();
+
+                    // Ajoute un log temporaire pour t'aider à debugger
+                    error_log("Erreur VehiculeController: " . $msg);
+
+                    $decoded = json_decode($msg, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        echo json_encode([
+                            'success' => false,
+                            'errors' => $decoded
+                        ]);
+                    } else {
+                        echo json_encode([
+                            'success' => false,
+                            'message' => "Erreur serveur : " . $msg
+                        ]);
+                    }
+
                     http_response_code(400);
                     exit;
                 }
 
+                // Affichage classique si non-ajax
                 $this->render('Vehicule/create', ['error' => $e->getMessage()]);
             }
         }

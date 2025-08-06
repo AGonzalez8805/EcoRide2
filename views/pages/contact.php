@@ -22,24 +22,24 @@
             <div class="row">
                 <div class="col">
                     <label for="email" class="form-label">Adresse email</label>
-                    <input type="email" class="form-control" id="email" placeholder="exemple@ecoride.com" required>
+                    <input type="email" class="form-control" id="email" placeholder="exemple@ecoride.com">
                     <div class="valid-feedback">Adresse email valide</div>
                     <div class="invalid-feedback">Veuillez saisir une adresse email valide.</div>
                 </div>
                 <div class="col">
                     <label for="phone" class="form-label">Télephone</label>
-                    <input type="tel" class="form-control" id="phone" placeholder="06-01-02-04-05" required>
+                    <input type="tel" class="form-control" id="phone" placeholder="06-01-02-04-05">
                     <div class="invalid-feedback">Veuillez saisir un numéro de téléphone valide.</div>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="subject" class="form-label">Sujet</label>
-                <input type="text" class="form-control" id="subject" placeholder="Covoiturage" required>
+                <input type="text" class="form-control" id="subject" placeholder="Covoiturage">
                 <div class="invalid-feedback">Veuillez saisir un sujet.</div>
             </div>
             <div class="mb-3">
                 <label for="message" class="form-label">Message</label>
-                <input type="text" style="height: 100px;" class="form-control" id="message" placeholder="Saisez votre message" required>
+                <input type="text" style="height: 100px;" class="form-control" id="message" placeholder="Saisez votre message">
                 <div class="invalid-feedback">Veuillez saisir un message.</div>
             </div>
 

@@ -9,13 +9,13 @@
         <form id="loginForm">
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse email</label>
-                <input type="email" class="form-control" id="email" placeholder="exemple@ecoride.com" required>
+                <input type="email" class="form-control" id="email" placeholder="exemple@ecoride.com">
                 <div class="valid-feedback">Adresse email valide</div>
                 <div class="invalid-feedback">Veuillez saisir une adresse email valide.</div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                <input type="password" class="form-control" id="password" placeholder="••••••••">
                 <div class="invalid-feedback">Mot de passe requis</div>
             </div>
 

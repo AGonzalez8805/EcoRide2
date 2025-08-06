@@ -15,9 +15,12 @@ class Vehicule
     private ?string $datePremierImmatriculation = null;
     private ?int $nbPlaces = null;
     private ?string $preferencesSupplementaires = null;
-    private ?bool $fumeur = false;
-    private ?bool $animaux = false;
+    private bool $fumeur = false;
+    private bool $animaux = false;
     protected ?int $idUtilisateurs = null;
+
+
+
 
     /**
      * Get the value of id
@@ -184,7 +187,7 @@ class Vehicule
     /**
      * Get the value of fumeur
      */
-    public function isFumeur(): ?bool
+    public function isFumeur(): bool
     {
         return $this->fumeur;
     }
@@ -192,7 +195,7 @@ class Vehicule
     /**
      * Set the value of fumeur
      */
-    public function setFumeur(?bool $fumeur): self
+    public function setFumeur(bool $fumeur): self
     {
         $this->fumeur = $fumeur;
 
@@ -202,7 +205,7 @@ class Vehicule
     /**
      * Get the value of animaux
      */
-    public function isAnimaux(): ?bool
+    public function isAnimaux(): bool
     {
         return $this->animaux;
     }
@@ -210,7 +213,7 @@ class Vehicule
     /**
      * Set the value of animaux
      */
-    public function setAnimaux(?bool $animaux): self
+    public function setAnimaux(bool $animaux): self
     {
         $this->animaux = $animaux;
 

@@ -14,7 +14,7 @@ export class Vehicule {
         this.datePremierImmatriculation = document.getElementById("datePremierImmatriculation");
         this.energie = document.getElementById("energie");
 
-        // Div pour afficher les erreurs (ajoute ce div dans ton HTML sous le formulaire)
+        // Div pour afficher les erreurs
         this.errorDiv = document.getElementById("vehiculeFormError");
 
         this.init();
@@ -25,7 +25,7 @@ export class Vehicule {
         this.marque.addEventListener("input", () => this.validateRequiredField(this.marque));
         this.modele.addEventListener("input", () => this.validateRequiredField(this.modele));
         this.couleur.addEventListener("input", () => this.validateRequiredField(this.couleur));
-        this.nbPlaces.addEventListener("input", () => this.validateNumberField(this.nbPlaces, 2, 9));
+        this.nbPlaces.addEventListener("input", () => this.validateNumberField(this.nbPlaces, 1, 9));
         this.immatriculation.addEventListener("input", () => this.validateImmatriculation(this.immatriculation));
         this.datePremierImmatriculation.addEventListener("input", () => this.validateDate(this.datePremierImmatriculation));
         this.energie.addEventListener("input", () => this.validateRequiredField(this.energie));
@@ -101,7 +101,7 @@ export class Vehicule {
         const validMarque = this.validateRequiredField(this.marque);
         const validModele = this.validateRequiredField(this.modele);
         const validCouleur = this.validateRequiredField(this.couleur);
-        const validNbPlaces = this.validateNumberField(this.nbPlaces, 2, 9);
+        const validNbPlaces = this.validateNumberField(this.nbPlaces, 1, 9);
         const validImmatriculation = this.validateImmatriculation(this.immatriculation);
         const validDate = this.validateDate(this.datePremierImmatriculation);
         const validEnergie = this.validateRequiredField(this.energie);
@@ -132,10 +132,12 @@ export class Vehicule {
             });
 
             const text = await response.text();
+            console.log("Réponse brute du serveur :", text);
             let result;
             try {
                 result = JSON.parse(text);
             } catch {
+                console.error("Erreur de parsing JSON :", text);
                 this.showError("Réponse du serveur invalide.");
                 return;
             }
@@ -143,7 +145,24 @@ export class Vehicule {
             if (result.success) {
                 window.location.href = result.redirect || "/";
             } else {
-                this.showError(result.message || "Erreur lors de l'ajout du véhicule.");
+                if (result.errors) {
+                    // Affiche les erreurs sur chaque champ
+                    Object.entries(result.errors).forEach(([key, message]) => {
+                        const field = document.getElementById(key);
+                        if (field) {
+                            field.classList.add("is-invalid");
+
+                            const feedback = field.parentElement.querySelector(".invalid-feedback");
+                            if (feedback) {
+                                feedback.textContent = message;
+                                feedback.style.display = "block";
+                            }
+                        }
+                    });
+                    this.showError("Veuillez corriger les erreurs du formulaire.");
+                } else {
+                    this.showError(result.message || "Erreur lors de l'ajout du véhicule.");
+                }
             }
         } catch (error) {
             console.error("Erreur requête:", error);
