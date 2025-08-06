@@ -49,7 +49,19 @@
                     <div class="d-flex flex-column flex-lg-row ms-lg-auto mt-3 mt-lg-0">
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                                <a href="/?controller=admin&action=dashboard" class="btn btn-outline-light btn-registration me-3">Tableau de bord</a>
+                                <a href="/?controller=admin&action=dashboard" class="btn btn-outline-light btn-registration me-3">Tableau de bord Admin</a>
+                            <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'employe'): ?>
+                                <a href="/?controller=employe&action=dashboard" class="btn btn-outline-light btn-registration me-3">Tableau de bord Employé</a>
+                            <?php elseif (isset($_SESSION['typeUtilisateur'])): ?>
+                                <?php
+                                $dashboardRoute = match ($_SESSION['typeUtilisateur']) {
+                                    'chauffeur' => '/?controller=user&action=dashboardChauffeur',
+                                    'passager' => '/?controller=user&action=dashboardPassager',
+                                    'chauffeur-passager' => '/?controller=user&action=dashboardMixte',
+                                    default => '/?controller=user&action=dashboard',
+                                };
+                                ?>
+                                <a href="<?= $dashboardRoute ?>" class="btn btn-outline-light btn-registration me-3">Mon compte</a>
                             <?php else: ?>
                                 <a href="/?controller=user&action=dashboard" class="btn btn-outline-light btn-registration me-3">Mon compte</a>
                             <?php endif; ?>
@@ -58,6 +70,7 @@
                             <a href="/?controller=auth&action=registration" class="btn btn-registration custom-btn me-lg-3 mb-2 mb-lg-0">Inscription</a>
                             <a href="/?controller=auth&action=login" class="btn btn-login custom-btn mb-2 mb-lg-0">Connexion</a>
                         <?php endif; ?>
+
                     </div>
                 </div>
             </div>

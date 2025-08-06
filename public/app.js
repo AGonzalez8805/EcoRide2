@@ -3,6 +3,7 @@ import { Registration } from "./Modules/Registration.js";
 import { Login } from "./Modules/Login.js";
 import { AdminDashboard } from "./Modules/AdminDashboard.js";
 import { Contact } from "./Modules/Contact.js";
+import { ChauffeurTrajet } from "./Modules/ChauffeurTrajet.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("registrationForm")) {
@@ -19,5 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (document.getElementById("contactForm")) {
     new Contact();
+  }
+
+  if (document.getElementById("trajetForm")) {
+    new ChauffeurTrajet();
   }
 });

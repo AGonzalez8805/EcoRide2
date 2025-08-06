@@ -7,6 +7,7 @@ use App\Controller\AuthController;
 use App\Controller\UserController;
 use App\Controller\AdminController;
 use App\Controller\SearchController;
+use App\Controller\ChauffeurController;
 
 class Controller
 {
@@ -54,6 +55,11 @@ class Controller
 
                     case 'employe':
                         $controller = new EmployeController();
+                        $controller->route();
+                        break;
+
+                    case 'chauffeur':
+                        $controller = new ChauffeurController();
                         $controller->route();
                         break;
 

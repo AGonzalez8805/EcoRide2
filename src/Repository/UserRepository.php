@@ -4,15 +4,13 @@ namespace App\Repository;
 
 use App\Db\Mysql;
 use PDO;
+use App\Models\User;
 
-class UserRepository
+class UserRepository extends Repository
 {
     public function findByEmail(string $email)
     {
-        $mysql = Mysql::getInstance();
-        $pdo = $mysql->getPDO();
-
-        $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE email = :email');
+        $stmt = $this->pdo->prepare('SELECT * FROM utilisateurs WHERE email = :email');
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
 

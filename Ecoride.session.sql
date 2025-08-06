@@ -90,6 +90,8 @@ VALUES (
     5
 );
 
+RENAME TABLE voiture TO vehicule;
+
 CREATE TABLE covoiturage (
     id INT AUTO_INCREMENT PRIMARY KEY,
     dateDepart DATE NOT NULL,
@@ -118,6 +120,20 @@ INSERT INTO covoiturage(
     'en_cours', 2, 100.0,
     5, 1
 );
+
+-- Supprimer la contrainte existante sur id_voiture
+ALTER TABLE covoiturage
+    DROP FOREIGN KEY covoiturage_ibfk_2;
+
+-- Renommer la colonne id_voiture en id_vehicule
+ALTER TABLE covoiturage
+    CHANGE id_voiture id_vehicule INT NOT NULL;
+
+-- Ajouter la nouvelle contrainte de clé étrangère vers vehicule(id)
+ALTER TABLE covoiturage
+    ADD CONSTRAINT fk_covoiturage_vehicule
+    FOREIGN KEY (id_vehicule) REFERENCES vehicule(id);
+
 
 CREATE TABLE participation (
     id INT AUTO_INCREMENT PRIMARY KEY,

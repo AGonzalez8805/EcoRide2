@@ -4,14 +4,13 @@ namespace App\Repository;
 
 use App\Db\Mysql;
 use PDO;
+use App\Models\Employe;
 
-class EmployeRepository
+class EmployeRepository extends Repository
 {
     public function findByEmail(string $email)
     {
-        $pdo = Mysql::getInstance()->getPDO();
-
-        $stmt = $pdo->prepare('SELECT * FROM employe WHERE email = :email');
+        $stmt = $this->pdo->prepare('SELECT * FROM employe WHERE email = :email');
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
 
