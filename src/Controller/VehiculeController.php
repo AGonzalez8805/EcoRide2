@@ -38,6 +38,9 @@ class VehiculeController extends Controller
     public function store(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+
             try {
                 $marque = $_POST['marque'] ?? '';
                 $modele = $_POST['modele'] ?? '';
@@ -83,14 +86,21 @@ class VehiculeController extends Controller
                 $repo = new VehiculeRepository();
                 $repo->save($vehicule);
 
-                // 🔁 Redirection intelligente
-                if ($from === 'trajet') {
-                    header('Location: ?controller=chauffeur&action=create');
-                } else {
-                    header('Location: ?controller=vehicule&action=index'); // ou dashboard chauffeur
+                if ($isAjax) {
+                    echo json_encode(['success' => true, 'message' => 'Véhicule ajouté avec succès.']);
+                    exit;
                 }
+
+                // Redirection normale sinon :
+                header('Location: ?controller=vehicule&action=index');
                 exit;
             } catch (\Exception $e) {
+                if ($isAjax) {
+                    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                    http_response_code(400);
+                    exit;
+                }
+
                 $this->render('Vehicule/create', ['error' => $e->getMessage()]);
             }
         }
