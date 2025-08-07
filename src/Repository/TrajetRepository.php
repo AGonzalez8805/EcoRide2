@@ -147,23 +147,14 @@ class TrajetRepository extends Repository
 
     public function findAllWithDetails(): array
     {
-        $stmt = $this->pdo->query("
-    SELECT 
-        t.*, 
-        v.marque, v.modele, v.fumeur,
+        $sql = "
+        SELECT t.*, v.marque, v.modele, v.fumeur,
         u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom
-    FROM covoiturage t
-    JOIN vehicule v ON t.id_vehicule = v.id
-    JOIN utilisateurs u ON t.id_utilisateurs = u.id
-");
+        FROM covoiturage t
+        JOIN vehicule v ON t.id_vehicule = v.id
+        JOIN utilisateurs u ON t.id_utilisateurs = u.id";
 
-
-        $trajets = [];
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $trajets[] = $row;
-        }
-
-        return $trajets;
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

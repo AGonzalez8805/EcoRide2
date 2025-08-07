@@ -5,7 +5,7 @@ import { AdminDashboard } from "./Modules/AdminDashboard.js";
 import { Contact } from "./Modules/Contact.js";
 import { ChauffeurTrajet } from "./Modules/ChauffeurTrajet.js";
 import { Vehicule } from "./Modules/Vehicule.js";
-
+import { ProfilChauffeur } from "./Modules/ProfilChauffeur.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("registrationForm")) {
@@ -32,4 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     new Vehicule();
   }
 
+  if (document.getElementById("profilForm")) {
+    new ProfilChauffeur();
+  }
 });

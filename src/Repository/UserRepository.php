@@ -18,6 +18,43 @@ class UserRepository extends Repository
         return $utilisateurs ?: null;
     }
 
+    public function findById(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM utilisateurs WHERE id = :id');
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ?: null;
+    }
+
+    public function updatePhoto(int $userId, string $photoFilename): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE utilisateurs SET photo = :photo WHERE id = :id");
+        return $stmt->execute([
+            ':photo' => $photoFilename,
+            ':id' => $userId
+        ]);
+    }
+
+    public function updatePseudo(int $userId, string $newPseudo): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE utilisateurs SET pseudo = :pseudo WHERE id = :id");
+        $stmt->execute([
+            ':pseudo' => $newPseudo,
+            ':id' => $userId
+        ]);
+    }
+
+    public function updateEmail(int $userId, string $newEmail): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE utilisateurs SET email = :email WHERE id = :id");
+        $stmt->execute([
+            ':email' => $newEmail,
+            ':id' => $userId
+        ]);
+    }
+
     public function create(array $data): ?int
     {
         $mysql = Mysql::getInstance();
@@ -57,8 +94,7 @@ class UserRepository extends Repository
 
         $stmt = $pdo->prepare('
         SELECT email, name, isSuspended, type_utilisateur
-        FROM utilisateurs
-    ');
+        FROM utilisateurs');
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

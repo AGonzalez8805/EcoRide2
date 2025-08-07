@@ -6,7 +6,6 @@ use App\Controller\PageController;
 use App\Controller\AuthController;
 use App\Controller\UserController;
 use App\Controller\AdminController;
-use App\Controller\SearchController;
 use App\Controller\TrajetController;
 
 class Controller

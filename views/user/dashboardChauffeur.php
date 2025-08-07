@@ -121,7 +121,7 @@
                 <a href="/?controller=user&action=history" class="btn-outline w-100">Mon historique</a>
             </div>
             <div class="col-md-6">
-                <a href="/?controller=user&action=profile" class="btn-outline w-100">Mon profil</a>
+                <a href="/?controller=user&action=profilChauffeur" class="btn-outline w-100">Mon profil</a>
             </div>
         </div>
     </div>
