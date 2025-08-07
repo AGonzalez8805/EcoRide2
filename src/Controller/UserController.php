@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Repository\TrajetRepository;
+
 class UserController extends Controller
 {
     /**
@@ -36,7 +38,22 @@ class UserController extends Controller
 
     public function dashboardChauffeur(): void
     {
-        $this->render('user/dashboardChauffeur');
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $chauffeurId = $_SESSION['user_id'] ?? null;
+
+        if (!$chauffeurId) {
+            throw new \Exception("Utilisateur non connecté.");
+        }
+
+        $trajetRepo = new TrajetRepository();
+        $trajetsDuJour = $trajetRepo->findTodayByChauffeur($chauffeurId);
+
+        $this->render('user/dashboardChauffeur', [
+            'trajetsDuJour' => $trajetsDuJour
+        ]);
     }
     public function dashboardPassager(): void
     {

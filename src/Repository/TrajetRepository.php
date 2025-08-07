@@ -70,6 +70,26 @@ class TrajetRepository extends Repository
         return $trajets;
     }
 
+    public function findTodayByChauffeur(int $chauffeurId): array
+    {
+        $sql = "SELECT * FROM covoiturage 
+            WHERE id_utilisateurs = :chauffeurId 
+            AND dateDepart = CURDATE()
+            ORDER BY heureDepart ASC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':chauffeurId' => $chauffeurId]);
+
+        $trajets = [];
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $trajets[] = $this->hydrateTrajet($row);
+        }
+
+        return $trajets;
+    }
+
+
     public function search(string $depart, string $arrivee, string $date): array
     {
         $sql = "SELECT c.*, v.marque, v.modele, v.fumeur, u.prenom AS chauffeur_prenom, u.nom AS chauffeur_nom

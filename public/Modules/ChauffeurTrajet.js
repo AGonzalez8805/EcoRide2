@@ -29,7 +29,7 @@ export class ChauffeurTrajet {
 
     async loadApiKey() {
         try {
-            const res = await fetch("/?controller=chauffeur&action=getApiKey", {
+            const res = await fetch("/?controller=covoiturage&action=getApiKey", {
                 headers: {
                     "X-Requested-With": "XMLHttpRequest",
                 },
@@ -124,7 +124,7 @@ export class ChauffeurTrajet {
 
         try {
             console.log("Coordonnées envoyées à OpenRouteService :", body);
-            const response = await fetch("/?controller=chauffeur&action=proxyRoute", {
+            const response = await fetch("/?controller=covoiturage&action=proxyRoute", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -167,7 +167,7 @@ export class ChauffeurTrajet {
         const formData = new URLSearchParams(new FormData(this.trajetForm)).toString();
 
         try {
-            const res = await fetch("/?controller=chauffeur&action=store", {
+            const res = await fetch("/?controller=covoiturage&action=store", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",

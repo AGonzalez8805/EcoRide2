@@ -143,7 +143,7 @@ export class Vehicule {
             }
 
             if (result.success) {
-                window.location.href = result.redirect || "/";
+                window.location.href = "/?controller=covoiturage&action=create";
             } else {
                 if (result.errors) {
                     // Affiche les erreurs sur chaque champ

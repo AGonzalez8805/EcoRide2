@@ -32,32 +32,40 @@
     <div class="simple-card">
         <h3 class="card-title-dash">Mes trajets aujourd'hui</h3>
 
-        <!-- Un trajet en cours -->
-        <div class="trip-item">
-            <div class="trip-info">
-                <div class="trip-route">Paris → Lyon</div>
-                <div class="trip-date">Aujourd'hui 14:30</div>
-            </div>
-            <div class="trip-details">
-                <span>3 passagers</span>
-                <span class="status status-reserved">En cours</span>
-                <button class="btn-profil btn-sm">Terminer</button>
-            </div>
-        </div>
+        <?php if (!empty($trajetsDuJour)): ?>
+            <?php foreach ($trajetsDuJour as $trajet): ?>
+                <div class="trip-item">
+                    <div class="trip-info">
+                        <div class="trip-route">
+                            <?= htmlspecialchars($trajet->getLieuDepart()) ?> → <?= htmlspecialchars($trajet->getLieuArrivee()) ?>
+                        </div>
+                        <div class="trip-date">
+                            Aujourd'hui à <?= date('H:i', strtotime($trajet->getHeureDepart())) ?>
+                        </div>
+                    </div>
+                    <div class="trip-details">
+                        <span><?= $trajet->getNbPlace() ?> places</span>
+                        <span class="status"><?= ucfirst($trajet->getStatut()) ?></span>
 
-        <!-- Un trajet à venir -->
-        <div class="trip-item">
-            <div class="trip-info">
-                <div class="trip-route">Lyon → Marseille</div>
-                <div class="trip-date">Aujourd'hui 18:00</div>
-            </div>
-            <div class="trip-details">
-                <span>1 passager</span>
-                <span class="status status-reserved">Programmé</span>
-                <button class="btn-outline btn-sm">Démarrer</button>
-            </div>
-        </div>
+                        <?php if ($trajet->getStatut() === 'en cours'): ?>
+                            <form method="post" action="/?controller=trajet&action=finish">
+                                <input type="hidden" name="trajet_id" value="<?= $trajet->getId() ?>">
+                                <button class="btn-profil btn-sm">Terminer</button>
+                            </form>
+                        <?php elseif ($trajet->getStatut() === 'programmé'): ?>
+                            <form method="post" action="/?controller=trajet&action=start">
+                                <input type="hidden" name="trajet_id" value="<?= $trajet->getId() ?>">
+                                <button class="btn-outline btn-sm">Démarrer</button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Aucun trajet prévu aujourd'hui.</p>
+        <?php endif; ?>
     </div>
+
 
     <!-- Statistiques simples -->
     <div class="simple-card">
