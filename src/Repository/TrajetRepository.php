@@ -72,21 +72,25 @@ class TrajetRepository extends Repository
 
     public function search(string $depart, string $arrivee, string $date): array
     {
-        $sql = "SELECT * FROM covoiturage WHERE 1=1";
+        $sql = "SELECT c.*, v.marque, v.modele, v.fumeur, u.prenom AS chauffeur_prenom, u.nom AS chauffeur_nom
+            FROM covoiturage c
+            JOIN vehicule v ON c.id_vehicule = v.id
+            JOIN utilisateurs u ON c.id_utilisateurs = u.id
+            WHERE 1=1";
         $params = [];
 
         if (!empty($depart)) {
-            $sql .= " AND lieuDepart LIKE :depart";
+            $sql .= " AND c.lieuDepart LIKE :depart";
             $params[':depart'] = "%$depart%";
         }
 
         if (!empty($arrivee)) {
-            $sql .= " AND lieuArrivee LIKE :arrivee";
+            $sql .= " AND c.lieuArrivee LIKE :arrivee";
             $params[':arrivee'] = "%$arrivee%";
         }
 
         if (!empty($date)) {
-            $sql .= " AND dateDepart = :date";
+            $sql .= " AND c.dateDepart = :date";
             $params[':date'] = $date;
         }
 
@@ -101,6 +105,7 @@ class TrajetRepository extends Repository
 
         return $trajets;
     }
+
 
     private function hydrateTrajet(array $row): Trajet
     {
@@ -118,5 +123,27 @@ class TrajetRepository extends Repository
             ->setPrixPersonne((float)$row['prixPersonne'])
             ->setIdUtilisateurs((int)$row['id_utilisateurs'])
             ->setIdVehicule((int)$row['id_vehicule']);
+    }
+
+    public function findAllWithDetails(): array
+    {
+        $stmt = $this->pdo->query("
+    SELECT 
+        t.*, 
+        v.marque, v.modele, v.fumeur,
+        u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom
+    FROM covoiturage t
+    JOIN vehicule v ON t.id_vehicule = v.id
+    JOIN utilisateurs u ON t.id_utilisateurs = u.id
+");
+
+
+        $trajets = [];
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $trajets[] = $row;
+        }
+
+        return $trajets;
     }
 }

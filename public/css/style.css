@@ -167,11 +167,6 @@ footer {
   white-space: nowrap;
 }
 
-.search-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(69, 123, 157, 0.3);
-}
-
 /* Media queries pour une meilleure adaptation */
 @media (max-width: 768px) {
   .title {
@@ -1076,23 +1071,19 @@ input.form-control:focus {
   box-shadow: 0 0 0 3px rgba(106, 170, 100, 0.1);
 }
 
-.btn-search-simple {
-  width: 100%;
-  background: linear-gradient(135deg, #6aaa64, #457b9d);
+.btn-search {
+  background: linear-gradient(135deg, #457b9d, #558e4d);
   color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 16px;
   cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
   transition: all 0.3s ease;
-  margin-top: 15px;
-}
-
-.btn-search-simple:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(106, 170, 100, 0.3);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Section filtres dans la sidebar */
@@ -1203,13 +1194,7 @@ input.form-control:focus {
   padding: 20px;
   margin-bottom: 15px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
   border-left: 4px solid #6aaa64;
-}
-
-.trip-card-simple:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .trip-main-info {

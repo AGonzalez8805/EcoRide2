@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 define('APP_ROOT', dirname(__DIR__));
 
 // Chemin vers fichier de config DB

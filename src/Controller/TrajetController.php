@@ -12,12 +12,12 @@ class TrajetController extends Controller
     {
         $action = $_GET['action'] ?? 'covoiturage';
         switch ($action) {
-            case 'ajouter':
-                $this->ajouter();
+            case 'covoiturage':
+                $this->covoiturage();
                 break;
 
-            case 'rechercher':
-                $this->rechercher();
+            case 'ajouter':
+                $this->ajouter();
                 break;
 
             case 'store':
@@ -39,6 +39,16 @@ class TrajetController extends Controller
             default:
                 throw new \Exception("Action covoiturage inconnue : $action", 404);
         }
+    }
+
+    public function covoiturage(): void
+    {
+        $trajetRepo = new TrajetRepository();
+        $trajets = $trajetRepo->findAllWithDetails();
+
+        $this->render('covoiturage/covoiturage', [
+            'trajets' => $trajets
+        ]);
     }
 
     public function ajouter(): void
@@ -69,19 +79,6 @@ class TrajetController extends Controller
         // Si GET, afficher le formulaire d'ajout
         $this->render('covoiturage/ajouter');
     }
-
-    public function rechercher(): void
-    {
-        $depart = $_POST['depart'] ?? '';
-        $arrivee = $_POST['arrivee'] ?? '';
-        $date = $_POST['date'] ?? '';
-
-        $repo = new TrajetRepository();
-        $resultats = $repo->search($depart, $arrivee, $date);
-
-        $this->render('covoiturage/resultats', ['resultats' => $resultats]);
-    }
-
 
     public function store(): void
     {
