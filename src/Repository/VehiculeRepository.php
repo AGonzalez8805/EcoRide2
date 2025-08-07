@@ -26,8 +26,8 @@ class VehiculeRepository extends Repository
             ':datePremierImmatriculation' => $vehicule->getDatePremierImmatriculation(),
             ':nbPlaces' => $vehicule->getNbPlaces(),
             ':preferencesSupplementaires' => $vehicule->getPreferencesSupplementaires(),
-            ':fumeur' => $vehicule->isFumeur(),
-            ':animaux' => $vehicule->isAnimaux(),
+            ':fumeur' => (int) $vehicule->isFumeur(),
+            ':animaux' => (int) $vehicule->isAnimaux(),
             ':id_utilisateurs' => $vehicule->getIdUtilisateurs(),
         ]);
     }
@@ -80,8 +80,8 @@ class VehiculeRepository extends Repository
             ':datePremierImmatriculation' => $vehicule->getDatePremierImmatriculation(),
             ':nbPlaces' => $vehicule->getNbPlaces(),
             ':preferencesSupplementaires' => $vehicule->getPreferencesSupplementaires(),
-            ':fumeur' => $vehicule->isFumeur(),
-            ':animaux' => $vehicule->isAnimaux(),
+            ':fumeur' => (int) $vehicule->isFumeur(),
+            ':animaux' => (int) $vehicule->isAnimaux(),
             ':id' => $vehicule->getId(),
         ]);
     }

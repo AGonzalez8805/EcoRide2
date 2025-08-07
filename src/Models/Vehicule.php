@@ -4,7 +4,7 @@ namespace App\Models;
 
 use PDO;
 
-class Vehicule
+class Vehicule extends Models
 {
     private ?int $id = null;
     private ?string $marque = null;

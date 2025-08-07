@@ -94,47 +94,36 @@ class VehiculeController extends Controller
                 $repo = new VehiculeRepository();
                 $repo->save($vehicule);
 
-                $repo = new VehiculeRepository();
-                $repo->save($vehicule);
-
-                // Debug for AJAX only
-                header('Content-Type: application/json');
-                die(json_encode(['success' => true, 'redirect' => '/?controller=user&action=dashboardChauffeur']));
-
-
-                // Redirection normale sinon :
-                header('Location: ?controller=vehicule&action=index');
-                exit;
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Véhicule ajouté avec succès.',
+                        'redirect' => '?controller=trajet&action=create'
+                    ]);
+                    exit;
+                } else {
+                    header('Location: ?controller=trajet&action=create');
+                    exit;
+                }
             } catch (\Exception $e) {
                 if ($isAjax) {
                     header('Content-Type: application/json');
-                    echo json_encode(['success' => true, 'message' => 'Véhicule ajouté avec succès.']);
-                    exit;
 
                     $msg = $e->getMessage();
-
-                    // Ajoute un log temporaire pour t'aider à debugger
-                    error_log("Erreur VehiculeController: " . $msg);
-
                     $decoded = json_decode($msg, true);
+
                     if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                        echo json_encode([
-                            'success' => false,
-                            'errors' => $decoded
-                        ]);
+                        echo json_encode(['success' => false, 'errors' => $decoded]);
                     } else {
-                        echo json_encode([
-                            'success' => false,
-                            'message' => "Erreur serveur : " . $msg
-                        ]);
+                        echo json_encode(['success' => false, 'message' => $msg]);
                     }
 
                     http_response_code(400);
                     exit;
+                } else {
+                    $this->render('Vehicule/create', ['error' => $e->getMessage()]);
                 }
-
-                // Affichage classique si non-ajax
-                $this->render('Vehicule/create', ['error' => $e->getMessage()]);
             }
         }
     }

@@ -7,7 +7,7 @@ use App\Controller\AuthController;
 use App\Controller\UserController;
 use App\Controller\AdminController;
 use App\Controller\SearchController;
-use App\Controller\ChauffeurController;
+use App\Controller\TrajetController;
 
 class Controller
 {
@@ -48,8 +48,8 @@ class Controller
                         $controller->route();
                         break;
 
-                    case 'chauffeur':
-                        $controller = new ChauffeurController();
+                    case 'covoiturage':
+                        $controller = new TrajetController();
                         $controller->route();
                         break;
 

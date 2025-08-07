@@ -8,7 +8,7 @@
 </section>
 
 <div class="form-container container mt-4">
-    <form method="POST" id="trajetForm" action="/?controller=chauffeur&action=store">
+    <form method="POST" id="trajetForm" action="/?controller=trajet&action=store">
         <div class="row">
             <div class="mb-3 col">
                 <label for="lieuDepart" class="form-label">Ville de départ</label>
@@ -62,7 +62,7 @@
                 <option value="nouveau">+ Ajouter un nouveau véhicule</option>
                 <?php foreach ($vehicules as $vehicule): ?>
                     <option value="<?= htmlspecialchars($vehicule->getId()) ?>">
-                        <?= htmlspecialchars($vehicule->getNom()) ?>
+                        <?= htmlspecialchars($vehicule->getMarque()) ?>
                     </option>
                 <?php endforeach; ?>
             </select>

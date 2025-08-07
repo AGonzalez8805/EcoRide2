@@ -16,13 +16,13 @@
         <h3 class="card-title-dash">Mes actions</h3>
         <div class="row g-3">
             <div class="col-md-6">
-                <a href="/?controller=chauffeur&action=create" class="btn-profil w-100">
+                <a href="/?controller=covoiturage&action=create" class=" btn-profil w-100">
                     Créer un trajet
                 </a>
             </div>
             <div class="col-md-6">
                 <a href="/?controller=vehicule&action=create" class="btn-outline w-100">
-                    Mes véhicules
+                    Ajouter un véhicule
                 </a>
             </div>
         </div>
