@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Db\Mysql;
 
-use App\Models\StringTools;
+use App\Tools\StringTools;
 
 class Models
 {

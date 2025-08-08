@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use PDO;
-
 class Admin extends Models
 {
     protected ?int $id = null;
-    protected ?string $email = '';
-    protected ?string $password = '';
-    protected ?string $pseudo = '';
+    protected ?string $email = null;
+    protected ?string $password = null;
+    protected ?string $pseudo = null;
+
 
     /**
      * Get the value of id

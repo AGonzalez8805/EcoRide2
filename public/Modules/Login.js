@@ -74,6 +74,7 @@ export class Login {
 
   // Gère la logique de connexion
   async handleLogin() {
+
     console.log("handleLogin appelée");
 
     // Vérifie la validité des champs
@@ -105,12 +106,9 @@ export class Login {
         body: JSON.stringify(data),
       });
 
-      const text = await response.text();
-
       let result;
       try {
-        // Tente de parser la réponse JSON du serveur
-        result = JSON.parse(text);
+        result = await response.json();
       } catch (err) {
         console.error("Erreur de parsing JSON :", err);
         this.showLoginError("La réponse du serveur est invalide.");

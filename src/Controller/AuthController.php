@@ -70,6 +70,11 @@ class AuthController extends Controller
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+
+        // Nettoyer tout buffer précédent (utile pour éviter le HTML parasite)
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
         header('Content-Type: application/json');
         http_response_code(200);
 
@@ -86,19 +91,17 @@ class AuthController extends Controller
         // Vérification que les champs obligatoires sont remplis
         if (empty($email) || empty($password)) {
             echo json_encode(["success" => false, "message" => "L'email et le mot de passe sont requis."]);
-            return;
+            exit;
         }
 
         $adminRepo = new AdminRepository();
         $admin = $adminRepo->findByEmail($email);
 
-        if ($admin && password_verify($password, $admin['password'])) {
-            $_SESSION['user_id'] = $admin['id'];
-            $_SESSION['pseudo'] = $admin['pseudo'];
+        if ($admin && password_verify($password, $admin->getPassword())) {
+            $_SESSION['user_id'] = $admin->getId();
+            $_SESSION['pseudo'] = $admin->getPseudo();
             $_SESSION['role'] = 'admin';
-            if (ob_get_length()) {
-                ob_end_clean();
-            }
+
             echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=dashboard"]);
             return;
         }
@@ -106,14 +109,11 @@ class AuthController extends Controller
         $employeRepo = new EmployeRepository();
         $employe = $employeRepo->findByEmail($email);
 
-        if ($employe && password_verify($password, $employe['password'])) {
-            $_SESSION['user_id'] = $employe['id'];
-            $_SESSION['email'] = $employe['email'];
+        if ($employe && password_verify($password, $employe->getPassword())) {
+            $_SESSION['user_id'] = $employe->getId();
+            $_SESSION['email'] = $employe->getEmail();
             $_SESSION['role'] = 'employe';
 
-            if (ob_get_length()) {
-                ob_end_clean();
-            }
             echo json_encode(["success" => true, "redirect" => "/?controller=employe&action=dashboard"]);
             return;
         }
@@ -122,18 +122,14 @@ class AuthController extends Controller
         $user = $userRepo->findByEmail($email);
 
         // Vérification des identifiants
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user->getPassword())) {
             // Authentification réussie, on stocke les infos en session
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['typeUtilisateur'] = $user['typeUtilisateur'];
-            $_SESSION['firstName'] = $user['firstName'];
-            $_SESSION['name'] = $user['name'];
-            error_log('User firstName: ' . ($user['firstName'] ?? 'null'));
+            $_SESSION['user_id'] = $user->getId();
+            $_SESSION['email'] = $user->getEmail();
+            $_SESSION['typeUtilisateur'] = $user->getTypeUtilisateur();
+            $_SESSION['firstName'] = $user->getFirstName();
+            $_SESSION['name'] = $user->getName();
 
-            if (ob_get_length()) {
-                ob_end_clean();
-            }
 
             // Redirection conditionnelle selon letype d'utilisateur
             $typeUtilisateur = $_SESSION['typeUtilisateur'] ?? 'default';
@@ -146,9 +142,6 @@ class AuthController extends Controller
             echo json_encode(["success" => true, "redirect" => $url]);
             return;
         } else {
-            // Identifiants incorrects
-            error_log('Session role: ' . ($_SESSION['role'] ?? 'null'));
-            error_log('Session typeUtilisateur: ' . ($_SESSION['typeUtilisateur'] ?? 'null'));
 
             echo json_encode(["success" => false, "message" => "Email ou mot de passe incorrect."]);
             return;
@@ -206,11 +199,11 @@ class AuthController extends Controller
             exit;
         }
 
-        $typeUtilisateur = $input['typeUtilisateur'] ?? '';
+        $role = $input['role'] ?? '';
         $allowedTypes = ['chauffeur', 'passager', 'chauffeur-passager'];
 
-        if (!in_array($typeUtilisateur, $allowedTypes)) {
-            echo json_encode(["success" => false, "message" => "Type d'utilisateur invalide."]);
+        if (!in_array($role, $allowedTypes)) {
+            echo json_encode(["success" => false, "message" => "Role invalide."]);
             exit;
         }
 
@@ -225,7 +218,7 @@ class AuthController extends Controller
             'firstName' => $firstName,
             'email' => $email,
             'password' => $hashedPassword,
-            'typeUtilisateur' => $typeUtilisateur
+            'role' => $role
         ]);
 
         if (!$newUserId) {

@@ -120,6 +120,10 @@ class PageController extends Controller
             exit;
         }
 
+        // Validation réussie, on renvoie un message OK
+        echo json_encode(["success" => true, "message" => "Formulaire valide"]);
+        exit;
+
         // Envoi du message
         $headers = "From: $name <$email>\r\n";
         $headers .= "Reply-To: $email\r\n";

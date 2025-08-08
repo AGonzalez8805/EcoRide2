@@ -19,9 +19,6 @@ class Vehicule extends Models
     private bool $animaux = false;
     protected ?int $idUtilisateurs = null;
 
-
-
-
     /**
      * Get the value of id
      */

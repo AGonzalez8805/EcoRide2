@@ -47,7 +47,7 @@ export class Contact {
 
         // Spécifique au champ téléphone
         if (field === this.inputPhone) {
-            const phoneRegex = /^[0-9\s-]{10,}$/; // pas de \-
+            const phoneRegex = /^[0-9\s-]{10,}$/;
             const isValid = phoneRegex.test(value);
             field.classList.toggle("is-valid", isValid);
             field.classList.toggle("is-invalid", !isValid);
@@ -112,17 +112,15 @@ export class Contact {
                 body: JSON.stringify(data),
             });
 
-            if (response.ok) {
-                alert("Message envoyé avec succès !");
+            const result = await response.json();
+            if (response.ok && result.success) {
+                alert(result.message || "Message envoyé avec succès !");
                 this.form.reset();
-                document
-                    .querySelectorAll(".is-valid")
-                    .forEach((el) => el.classList.remove("is-valid"));
+                document.querySelectorAll(".is-valid").forEach(el => el.classList.remove("is-valid"));
             } else {
-                const errorText = await response.text();
-                console.error("Erreur serveur :", errorText);
-                alert("Erreur lors de l'envoi du message.");
+                alert(result.message || "Erreur lors de l'envoi du message.");
             }
+
         } catch (err) {
             console.error("Erreur réseau :", err);
             alert("Erreur réseau, veuillez réessayer.");

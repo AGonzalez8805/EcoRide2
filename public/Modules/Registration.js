@@ -165,11 +165,9 @@ export class Registration {
         body: JSON.stringify(data),
       });
 
-      const text = await response.text();
-      console.log("Réponse brute du serveur:", text);
-      // Tentative de décodage JSON
+      let result;
       try {
-        const result = JSON.parse(text);
+        result = await response.json();
         if (result.success) {
           alert("Inscription réussie !");
           window.location.href = "/?controller=auth&action=login";

@@ -19,35 +19,44 @@ class AdminController extends Controller
 
     public function route(): void
     {
-        if (isset($_GET['action'])) {
-            switch ($_GET['action']) {
-                case 'dashboard':
-                    $this->dashboard();
-                    break;
+        try {
+            if (isset($_GET['action'])) {
+                switch ($_GET['action']) {
 
-                case 'createEmploye':
-                    $this->createEmploye();
-                    break;
+                    case 'dashboard':
+                        $this->dashboard();
+                        break;
 
-                case 'toggleUserStatus':
-                    $this->toggleUserStatus();
-                    break;
+                    case 'createEmploye':
+                        $this->createEmploye();
+                        break;
 
-                case 'toggleEmployeStatus':
-                    $this->toggleEmployeStatus();
-                    break;
+                    case 'toggleUserStatus':
+                        $this->toggleUserStatus();
+                        break;
 
-                case 'listEmployesJson':
-                    $this->listEmployesJson();
-                    break;
+                    case 'toggleEmployeStatus':
+                        $this->toggleEmployeStatus();
+                        break;
 
-                case 'listUsersJson':
-                    $this->listUsersJson();
-                    break;
+                    case 'listEmployesJson':
+                        $this->listEmployesJson();
+                        break;
 
-                default:
-                    throw new \Exception("Action administrateur inconnue");
+                    case 'listUsersJson':
+                        $this->listUsersJson();
+                        break;
+
+                    default:
+                        throw new \Exception("Action administrateur inconnue");
+                }
+            } else {
+                throw new \Exception("Aucune action détectée");
             }
+        } catch (\Exception $e) {
+            $this->render('errors/default', [
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
@@ -59,7 +68,7 @@ class AdminController extends Controller
         }
 
         // Charger les stats
-        $statRepo = new \App\Repository\StatistiqueRepository();
+        $statRepo = new StatistiqueRepository();
         $stats = $statRepo->getAllStats();
 
         // Affiche la vue admin/dashboard.php
@@ -81,7 +90,7 @@ class AdminController extends Controller
 
             if (!empty($email) && !empty($pseudo) && !empty($password)) {
 
-                $repo = new \App\Repository\EmployeRepository();
+                $repo = new EmployeRepository();
 
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 

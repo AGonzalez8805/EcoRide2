@@ -7,6 +7,8 @@ use App\Controller\AuthController;
 use App\Controller\UserController;
 use App\Controller\AdminController;
 use App\Controller\TrajetController;
+use App\Controller\EmployeController;
+use App\Controller\VehiculeController;
 
 class Controller
 {
@@ -59,6 +61,7 @@ class Controller
 
                     default:
                         throw new \Exception("Le contrôleur n'existe pas", 404);
+                        break;
                 }
             } else {
                 $pageController = new PageController();
