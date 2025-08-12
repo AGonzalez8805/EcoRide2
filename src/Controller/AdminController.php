@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Repository\StatistiqueRepository;
 use App\Repository\EmployeRepository;
 use App\Repository\UserRepository;
+use App\Models\Employe;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -164,19 +166,41 @@ class AdminController extends Controller
             exit;
         }
 
-        $repo = new \App\Repository\EmployeRepository();
+        $repo = new EmployeRepository();
         $employes = $repo->findAll();
 
+        $employeesArray = array_map(function (Employe $employe) {
+            return [
+                'id'          => $employe->getId(),
+                'email'       => $employe->getEmail(),
+                'pseudo'      => $employe->getPseudo(),
+                'isSuspended' => $employe->isIsSuspended(),
+            ];
+        }, $employes);
+
         header('Content-Type: application/json');
-        echo json_encode($employes);
+        echo json_encode($employeesArray);
         exit;
     }
+
 
     public function listUsersJson()
     {
         header('Content-Type: application/json');
         $users = $this->userRepository->getAllNonEmployeeUsers();
-        echo json_encode($users);
+        $usersArray = array_map(function (User $user) {
+            return [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'name' => $user->getName(),
+                'firstName' => $user->getFirstName(),
+                'pseudo' => $user->getPseudo(),
+                'isSuspended' => $user->isIsSuspended(),
+            ];
+        }, $users);
+
+        header('Content-Type: application/json');
+        echo json_encode($usersArray);
         exit;
     }
 

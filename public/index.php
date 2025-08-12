@@ -1,18 +1,20 @@
 <?php
 
+// Afficher toutes les erreurs PHP
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Démarrer la session
 session_start();
 
-
+// Racine du projet
 define('APP_ROOT', dirname(__DIR__));
 
-// Chemin vers fichier de config DB
+// Chemin du fichier de config DB
 define('APP_ENV', dirname(__DIR__) . '/.db.ini');
 
-// Chargement du fichier .env (Docker, API, etc.)
+// Charger les variables du fichier .env
 $envPath = dirname(__DIR__) . '/.env';
 if (file_exists($envPath)) {
     $envVars = parse_ini_file($envPath);
@@ -21,13 +23,16 @@ if (file_exists($envPath)) {
     }
 }
 
+// Charger l'autoloader de Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Lancer le contrôleur principal
 use App\Controller\Controller;
 
 $controller = new Controller();
 $controller->route();
 
+// Connexion à la base de données
 use App\Db\Mysql;
 
 $mysql = Mysql::getInstance();

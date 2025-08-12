@@ -108,7 +108,7 @@ class UserRepository extends Repository
     /** Récupérer tous les utilisateurs sauf ceux avec typeUtilisateur 'employee' (par exemple) */
     public function getAllNonEmployeeUsers(): array
     {
-        $query = $this->pdo->prepare('SELECT id, name, email, isSuspended, typeUtilisateur FROM utilisateurs WHERE typeUtilisateur != :employee');
+        $query = $this->pdo->prepare('SELECT id, name,firstName, email, isSuspended, typeUtilisateur FROM utilisateurs WHERE typeUtilisateur != :employee');
         $query->execute([':employee' => 'employee']);
 
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
