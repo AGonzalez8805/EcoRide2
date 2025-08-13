@@ -16,7 +16,6 @@ class User extends Models
     protected ?bool $isSuspended = false;
     protected ?int $credit = 20;
 
-
     /**
      * Get the value of id
      */
@@ -126,6 +125,24 @@ class User extends Models
     }
 
     /**
+     * Get the value of typeUtilisateur
+     */
+    public function getTypeUtilisateur(): ?string
+    {
+        return $this->typeUtilisateur;
+    }
+
+    /**
+     * Set the value of typeUtilisateur
+     */
+    public function setTypeUtilisateur(?string $typeUtilisateur): self
+    {
+        $this->typeUtilisateur = $typeUtilisateur;
+
+        return $this;
+    }
+
+    /**
      * Get the value of pseudo
      */
     public function getPseudo(): ?string
@@ -193,24 +210,6 @@ class User extends Models
     public function setCredit(?int $credit): self
     {
         $this->credit = $credit;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of typeUtilisateur
-     */
-    public function getTypeUtilisateur(): ?string
-    {
-        return $this->typeUtilisateur;
-    }
-
-    /**
-     * Set the value of typeUtilisateur
-     */
-    public function setTypeUtilisateur(?string $typeUtilisateur): self
-    {
-        $this->typeUtilisateur = $typeUtilisateur;
 
         return $this;
     }

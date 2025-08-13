@@ -43,16 +43,6 @@
                 <div class="valid-feedback">Mot de passe confirmé</div>
                 <div class="invalid-feedback">Les mots de passe ne correspondent pas.</div>
             </div>
-            <div class="mb-3">
-                <label for="typeUtilisateur" class="form-label">Je souhaite être :</label>
-                <select class="form-select" name="typeUtilisateur" id="typeUtilisateur">
-                    <option value="" disabled selected>Choisissez une option</option>
-                    <option value="passager">Passager</option>
-                    <option value="chauffeur">Chauffeur</option>
-                    <option value="chauffeur-passager">Chauffeur & Passager</option>
-                </select>
-                <div class="invalid-feedback">Veuillez sélectionner un rôle.</div>
-            </div>
             <button type="submit" id="register" class="btn ecoride-btn w-100">S'inscrire</button>
             <div class="text-center pt-3">
                 <a style="text-decoration: underline;" href="/?controller=auth&action=login">Vous avez déjà un compte ? Connectez-vous ici !</a>

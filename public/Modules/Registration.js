@@ -17,7 +17,6 @@ export class Registration {
     this.inputMail = document.getElementById("email");
     this.inputPassword = document.getElementById("password");
     this.inputValidatePassword = document.getElementById("validatePassword");
-    this.inputTypeUtilisateur = document.getElementById("typeUtilisateur");
 
     // Initialisation des événements
     this.init();
@@ -46,11 +45,6 @@ export class Registration {
     // Vérifie la correspondance des mots de passe
     this.inputValidatePassword.addEventListener("input", () =>
       this.validatePasswordMatch()
-    );
-
-    //Choix de type d'utilisateur
-    this.inputTypeUtilisateur.addEventListener("change", () =>
-      this.validateSelect(this.inputTypeUtilisateur)
     );
 
     // Soumission du formulaire
@@ -94,13 +88,6 @@ export class Registration {
     return match;
   }
 
-  // Vérifie que le type d'utilisateur est sélectionné
-  validateSelect(selectElement) {
-    const isValid = !!selectElement.value;
-    selectElement.classList.toggle("is-valid", isValid);
-    selectElement.classList.toggle("is-invalid", !isValid);
-    return isValid;
-  }
 
   // Met à jour visuellement les critères du mot de passe
   updatePasswordCriteria(password) {
@@ -152,7 +139,6 @@ export class Registration {
       email: this.inputMail.value,
       password: this.inputPassword.value,
       validatePassword: this.inputValidatePassword.value,
-      typeUtilisateur: this.inputTypeUtilisateur.value,
     };
 
     try {

@@ -21,13 +21,17 @@ class UserController extends Controller
                     $this->dashboardChauffeur();
                     break;
 
-                case 'profilChauffeur':
+                case 'profil':
                     // Affiche le profil utilisateur
-                    $this->profilChauffeur();
+                    $this->profil();
                     break;
 
                 case 'updateProfile':
                     $this->updateProfile();
+                    break;
+
+                case 'updateRole':
+                    $this->updateRole();
                     break;
 
                 case 'dashboardPassager':
@@ -62,12 +66,17 @@ class UserController extends Controller
         $trajetRepo = new TrajetRepository();
         $trajetsDuJour = $trajetRepo->findTodayByChauffeur($chauffeurId);
 
+        $vehiculeRepo = new VehiculeRepository();
+        $vehicules = $vehiculeRepo->findAllByUser($chauffeurId);
+
         $this->render('user/dashboardChauffeur', [
-            'trajetsDuJour' => $trajetsDuJour
+            'trajetsDuJour' => $trajetsDuJour,
+            'vehicules' => $vehicules
         ]);
     }
 
-    public function profilChauffeur(): void
+
+    public function profil(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -87,11 +96,8 @@ class UserController extends Controller
             throw new \Exception("Utilisateur non trouvé.");
         }
 
-        $vehicules = $vehiculeRepo->findAllByUser($userId);
-
-        $this->render('user/profilChauffeur', [
+        $this->render('user/profil', [
             'user' => $user,
-            'vehicules' => $vehicules
         ]);
     }
 
@@ -142,9 +148,55 @@ class UserController extends Controller
         }
 
         // 🔁 Redirection propre
-        header("Location: /?controller=user&action=profilChauffeur");
+        header("Location: /?controller=user&action=profil");
         exit;
     }
+
+    public function updateRole()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(["success" => false, "message" => "Non autorisé"]);
+            exit;
+        }
+
+        $input = $_POST; // car formulaire classique
+        $newRole = $input['role'] ?? '';
+
+        $allowedTypes = ['chauffeur', 'passager', 'chauffeur-passager'];
+
+        if (!in_array($newRole, $allowedTypes)) {
+            echo json_encode(["success" => false, "message" => "Rôle invalide"]);
+            exit;
+        }
+
+        $userRepo = new UserRepository();
+        $updated = $userRepo->updateRole($_SESSION['user_id'], $newRole);
+
+        if ($updated) {
+            $_SESSION['typeUtilisateur'] = $newRole;
+
+            switch ($newRole) {
+                case 'chauffeur':
+                    header('Location: /?controller=user&action=dashboardChauffeur');
+                    break;
+                case 'passager':
+                    header('Location: /?controller=user&action=dashboardPassager');
+                    break;
+                case 'chauffeur-passager':
+                    header('Location: /?controller=user&action=dashboardMixte');
+                    break;
+            }
+            exit;
+        } else {
+            header('Location: /?controller=user&action=profil&error=1');
+            exit;
+        }
+    }
+
 
     public function dashboardPassager(): void
     {

@@ -79,7 +79,6 @@ class AuthController extends Controller
         header('Content-Type: application/json');
         http_response_code(200);
 
-        // Récupération des données JSON envoyées
         $input = json_decode(file_get_contents("php://input"), true);
 
         if (!$input) {
@@ -87,7 +86,6 @@ class AuthController extends Controller
             exit;
         }
 
-        // Nettoyage et récupération des données
         $pseudo = trim($input['pseudo'] ?? '');
         $name = trim($input['name'] ?? '');
         $firstName = trim($input['firstName'] ?? '');
@@ -95,19 +93,16 @@ class AuthController extends Controller
         $password = $input['password'] ?? '';
         $validatePassword = $input['validatePassword'] ?? '';
 
-        // Vérification des champs obligatoires
         if (!$name || !$firstName || !$email || !$password) {
             echo json_encode(["success" => false, "message" => "Tous les champs sont requis."]);
             exit;
         }
 
-        // Validation de l'email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(["success" => false, "message" => "Adresse email invalide."]);
             exit;
         }
 
-        // Vérification correspondance des mots de passe
         if ($password !== $validatePassword) {
             echo json_encode(["success" => false, "message" => "Le mot de passe ne correspond pas."]);
             exit;
@@ -115,41 +110,30 @@ class AuthController extends Controller
 
         $userRepo = new UserRepository();
 
-        // Vérifier que l’email n’est pas déjà utilisé
         if ($userRepo->findByEmail($email)) {
             echo json_encode(["success" => false, "message" => "Cet email est déjà utilisé."]);
             exit;
         }
 
-        // Validation du rôle
-        $role = $input['role'] ?? '';
-        $allowedTypes = ['chauffeur', 'passager', 'chauffeur-passager'];
-
-        if (!in_array($role, $allowedTypes)) {
-            echo json_encode(["success" => false, "message" => "Role invalide."]);
-            exit;
-        }
-
-        // Hashage du mot de passe
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        // Création du nouvel utilisateur dans la base de données
+        // typeUtilisateur par défaut pour l'inscription
+        $typeUtilisateur = 'non-defini';
+
         $newUserId = $userRepo->create([
             'pseudo' => $pseudo,
             'name' => $name,
             'firstName' => $firstName,
             'email' => $email,
             'password' => $hashedPassword,
-            'role' => $role
+            'typeUtilisateur' => $typeUtilisateur
         ]);
 
         if (!$newUserId) {
-            // En cas d'erreur lors de la création
             echo json_encode(["success" => false, "message" => "Erreur lors de l'inscription."]);
             exit;
         }
 
-        // Répondre avec succès si tout s'est bien passé
         echo json_encode(["success" => true]);
         exit;
     }
@@ -198,7 +182,7 @@ class AuthController extends Controller
             $_SESSION['pseudo'] = $admin->getPseudo();
             $_SESSION['role'] = 'admin';
 
-            echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=dashboard"]);
+            echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=profil"]);
             return;
         }
 
@@ -224,7 +208,7 @@ class AuthController extends Controller
             // Authentification réussie pour un utilisateur classique
             $_SESSION['user_id'] = $user->getId();
             $_SESSION['email'] = $user->getEmail();
-            $_SESSION['typeUtilisateur'] = $user->getTypeUtilisateur();
+            $_SESSION['typeUtilisateur'] = $user->getRole();
             $_SESSION['firstName'] = $user->getFirstName();
             $_SESSION['name'] = $user->getName();
 
@@ -234,7 +218,7 @@ class AuthController extends Controller
                 'chauffeur' => '/?controller=user&action=dashboardChauffeur',
                 'passager' => '/?controller=user&action=dashboardPassager',
                 'chauffeur-passager' => '/?controller=user&action=dashboardMixte',
-                default => '/?controller=user&action=dashboard',
+                default => '/?controller=user&action=profil',
             };
             echo json_encode(["success" => true, "redirect" => $url]);
             return;
@@ -244,6 +228,40 @@ class AuthController extends Controller
             return;
         }
     }
+
+    public function updateRole()
+    {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /?controller=auth&action=login');
+            exit;
+        }
+
+        $nouveauRole = $_POST['typeUtilisateur'] ?? '';
+
+        if (!in_array($nouveauRole, ['chauffeur', 'passager', 'chauffeur-passager'])) {
+            echo "Rôle invalide";
+            exit;
+        }
+
+        // Mise à jour en BDD
+        $userRepo = new UserRepository();
+        $userRepo->updateRole($_SESSION['user_id'], $nouveauRole);
+
+        // Met à jour la session
+        $_SESSION['typeUtilisateur'] = $nouveauRole;
+
+        // Redirection vers le bon dashboard
+        $url = match ($nouveauRole) {
+            'chauffeur' => '/?controller=user&action=dashboardChauffeur',
+            'passager' => '/?controller=user&action=dashboardPassager',
+            'chauffeur-passager' => '/?controller=user&action=dashboardMixte',
+        };
+
+        header("Location: $url");
+        exit;
+    }
+
 
     /* Déconnecte l'utilisateur */
     public function logout()

@@ -27,6 +27,27 @@
             </div>
         </div>
     </div>
+    <!-- Véhicules -->
+    <div class="info-card">
+        <h3>🚗 Mes véhicules</h3>
+        <?php if (!empty($vehicules)): ?>
+            <div class="vehicle-list">
+                <?php foreach ($vehicules as $vehicule): ?>
+                    <div class="vehicle-box">
+                        <strong><?= htmlspecialchars($vehicule->getMarque()) ?> <?= htmlspecialchars($vehicule->getModele()) ?></strong>
+                        <div class="vehicle-info">
+                            <span>🔢 <?= htmlspecialchars($vehicule->getImmatriculation()) ?></span>
+                            <span>👥 <?= $vehicule->getNbPlaces() ?> places</span>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="no-vehicle">
+                Vous n'avez pas encore de véhicule enregistré
+            </div>
+        <?php endif; ?>
+    </div>
 
     <!-- Mes trajets aujourd'hui -->
     <div class="simple-card">
@@ -121,7 +142,7 @@
                 <a href="/?controller=user&action=history" class="btn-outline w-100">Mon historique</a>
             </div>
             <div class="col-md-6">
-                <a href="/?controller=user&action=profilChauffeur" class="btn-outline w-100">Mon profil</a>
+                <a href="/?controller=user&action=profil" class="btn-outline w-100">Mon profil</a>
             </div>
         </div>
     </div>

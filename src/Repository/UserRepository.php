@@ -98,6 +98,13 @@ class UserRepository extends Repository
         ]);
     }
 
+    public function updateRole(int $id, string $role): bool
+    {
+        $sql = "UPDATE utilisateurs SET typeUtilisateur = :role WHERE id = :id";
+        $query = $this->pdo->prepare($sql);
+        return $query->execute(['role' => $role, 'id' => $id]);
+    }
+
     /** Activer ou désactiver la suspension d'un utilsateur par son email */
     public function toggleSuspensionByEmail(string $email): bool
     {

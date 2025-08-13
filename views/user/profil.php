@@ -30,7 +30,6 @@
 </section>
 
 <div class="container mt-4">
-
     <!-- Informations -->
     <div class="info-card" id="profilForm">
         <h3>📋 Mes informations</h3>
@@ -79,6 +78,20 @@
                     </div>
                 </form>
             </div>
+            <!-- Choix du rôle -->
+            <div class="info-item">
+                <span class="label">Je souhaite être :</span>
+                <form action="/?controller=user&action=updateRole" method="POST">
+                    <select class="form-select" name="role" required>
+                        <option value="" disabled <?= empty($user->getRole()) ? 'selected' : '' ?>>Choisissez une option</option>
+                        <option value="passager" <?= $user->getRole() === 'passager' ? 'selected' : '' ?>>Passager</option>
+                        <option value="chauffeur" <?= $user->getRole() === 'chauffeur' ? 'selected' : '' ?>>Chauffeur</option>
+                        <option value="chauffeur-passager" <?= $user->getRole() === 'chauffeur-passager' ? 'selected' : '' ?>>Chauffeur & Passager</option>
+                    </select>
+                    <button type="submit" class="btn-small mt-2">Mettre à jour</button>
+                </form>
+            </div>
+
             <div class="info-item">
                 <span class="label">Crédits :</span>
                 <span class="value credit-badge"><?= htmlspecialchars($user->getCredit()) ?> €</span>
@@ -90,29 +103,6 @@
                 </span>
             </div>
         </div>
-    </div>
-
-    <!-- Véhicules -->
-    <div class="info-card">
-        <h3>🚗 Mes véhicules</h3>
-        <?php var_dump($vehicules); ?>
-        <?php if (!empty($vehicules)): ?>
-            <div class="vehicle-list">
-                <?php foreach ($vehicules as $vehicule): ?>
-                    <div class="vehicle-box">
-                        <strong><?= htmlspecialchars($vehicule->getMarque()) ?> <?= htmlspecialchars($vehicule->getModele()) ?></strong>
-                        <div class="vehicle-info">
-                            <span>🔢 <?= htmlspecialchars($vehicule->getImmatriculation()) ?></span>
-                            <span>👥 <?= $vehicule->getNbPlaces() ?> places</span>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php else: ?>
-            <div class="no-vehicle">
-                Vous n'avez pas encore de véhicule enregistré
-            </div>
-        <?php endif; ?>
     </div>
 </div>
 
