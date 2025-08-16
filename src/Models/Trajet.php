@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use PDO;
-
 class Trajet extends Models
 {
     protected ?int $id = null;

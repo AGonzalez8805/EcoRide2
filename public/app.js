@@ -1,11 +1,13 @@
 // app.js
+
+console.log("app.js chargé ✅");
 import { Registration } from "./Modules/Registration.js";
 import { Login } from "./Modules/Login.js";
 import { AdminDashboard } from "./Modules/AdminDashboard.js";
 import { Contact } from "./Modules/Contact.js";
 import { ChauffeurTrajet } from "./Modules/ChauffeurTrajet.js";
 import { Vehicule } from "./Modules/Vehicule.js";
-import { ProfilChauffeur } from "./Modules/ProfilChauffeur.js";
+import { Profil } from "./Modules/Profil.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("registrationForm")) {
@@ -33,6 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (document.getElementById("profilForm")) {
-    new ProfilChauffeur();
+    new Profil();
   }
 });

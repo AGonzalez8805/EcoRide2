@@ -9,7 +9,7 @@ class PageController extends Controller
     /* Route les différentes actions en fonction du paramètre 'action' dans l'URL */
     public function route(): void
     {
-        try {
+        $this->handleRoute(function () {
             if (isset($_GET['action'])) {
                 switch ($_GET['action']) {
                     case 'home':
@@ -33,27 +33,9 @@ class PageController extends Controller
                     default:
                         throw new \Exception("Cette action n'existe pas : " . $_GET['action']);
                 }
-            } else {
-                throw new \Exception("Aucune action détectée");
             }
-        } catch (\Exception $e) {
-            if (isset($_GET['action']) && $_GET['action'] === 'sendMessage') {
-                // Répondre en JSON en cas d’erreur sur sendMessage
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ]);
-                exit;
-            } else {
-                // Pour les autres actions, afficher la page d’erreur HTML
-                $this->render('errors/default', [
-                    'errors' => $e->getMessage()
-                ]);
-            }
-        }
+        });
     }
-
 
     /*Affiche la page d'accueil */
     protected function home()

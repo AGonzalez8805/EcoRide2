@@ -31,4 +31,5 @@
         </div>
     <?php } ?>
 </div>
+
 <?php require_once APP_ROOT . '/views/footer.php'; ?>

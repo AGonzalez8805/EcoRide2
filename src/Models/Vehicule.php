@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use PDO;
-
 class Vehicule extends Models
 {
     private ?int $id = null;

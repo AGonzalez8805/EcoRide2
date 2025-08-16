@@ -12,8 +12,6 @@ CREATE TABLE utilisateurs(
     credit INT DEFAULT 20
 );
 
-ALTER TABLE utilisateurs MODIFY pseudo VARCHAR(255) NULL DEFAULT NULL;
-
 CREATE TABLE role(
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR (255) NOT NULL UNIQUE
@@ -73,23 +71,6 @@ CREATE TABLE voiture(
     FOREIGN KEY (id_utilisateurs) REFERENCES utilisateurs(id)
 );
 
-INSERT INTO voiture (modele, immatriculation, energie, couleur, marque, 
-                    datePremierImmatriculation, nbPlaces, fumeur, animaux, 
-                    preferencesSupplementaires, id_utilisateurs)
-VALUES (
-    'Clio', 
-    'AB-123-CD', 
-    'Essence', 
-    'Rouge', 
-    'Renault', 
-    '2020-01-01', 
-    5, 
-    FALSE, 
-    FALSE, 
-    'Aucune', 
-    5
-);
-
 RENAME TABLE voiture TO vehicule;
 
 CREATE TABLE covoiturage (
@@ -107,18 +88,6 @@ CREATE TABLE covoiturage (
     id_voiture INT NOT NULL,
     FOREIGN KEY (id_utilisateurs) REFERENCES utilisateurs(id),
     FOREIGN KEY (id_voiture) REFERENCES voiture(id)
-);
-
-INSERT INTO covoiturage(
-    dateDepart,heureDepart, lieuDepart,
-    dateArrivee, heureArrivee, lieuArrivee,
-    statut, nbPlace, prixPersonne,
-    id_utilisateurs, id_voiture
-) VALUES (
-    '2023-09-15', '14:00:00', 'Paris',
-    '2023-09-15', '15:00:00', 'Marseille',
-    'en_cours', 2, 100.0,
-    5, 1
 );
 
 -- Supprimer la contrainte existante sur id_voiture
@@ -172,7 +141,7 @@ ALTER TABLE admin ADD id_role INT;
 ALTER TABLE employe ADD id_role INT;
 
 ALTER TABLE utilisateurs 
-ADD typeUtilisateur ENUM('chauffeur', 'passager', 'chauffeur-passager') NOT NULL;
+ADD typeUtilisateur ENUM('chauffeur', 'passager', 'chauffeur-passager', 'non-defini') NOT NULL DEFAULT 'non-defini' ;
 
 ALTER TABLE admin 
 ADD CONSTRAINT fk_admin_role 
@@ -182,7 +151,7 @@ ALTER TABLE employe
 ADD CONSTRAINT fk_employe_role 
 FOREIGN KEY (id_role) REFERENCES role(id);
 
-INSERT IGNORE INTO role (name) VALUES 
+INSERT INTO role (name) VALUES 
 ('admin'),
 ('employe'),
 ('utilisateur'),
@@ -190,3 +159,41 @@ INSERT IGNORE INTO role (name) VALUES
 ('passager'),
 ('chauffeur-passager');
 
+INSERT INTO utilisateurs (id, name, firstName, email, password, credit)
+VALUES (
+    NULL,
+    'Dupont',
+    'Julie',
+    'julie.dupont@mail.com',
+    '$2y$10$MSeHhNCSyFfYeIs5xuzz.uRF1UX3aeNDAYdEB7QXr/OjEWgk6y356',
+    20
+);
+
+INSERT INTO vehicule (modele, immatriculation, energie, couleur, marque, 
+                    datePremierImmatriculation, nbPlaces, fumeur, animaux, 
+                    preferencesSupplementaires, id_utilisateurs)
+VALUES (
+    'Clio', 
+    'AB-123-CD', 
+    'Essence', 
+    'Rouge', 
+    'Renault', 
+    '2020-01-01', 
+    5, 
+    FALSE, 
+    FALSE, 
+    'Aucune', 
+    24
+);
+
+INSERT INTO covoiturage(
+    dateDepart,heureDepart, lieuDepart,
+    dateArrivee, heureArrivee, lieuArrivee,
+    statut, nbPlace, prixPersonne,
+    id_utilisateurs, id_vehicule
+) VALUES (
+    '2023-09-15', '14:00:00', 'Paris',
+    '2023-09-15', '15:00:00', 'Marseille',
+    'en_cours', 2, 100.0,
+    24, 12
+);

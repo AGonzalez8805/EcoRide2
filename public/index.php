@@ -26,13 +26,18 @@ if (file_exists($envPath)) {
 // Charger l'autoloader de Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Connexion à la base de données
+use App\Db\Mysql;
+use App\Db\MongoDb;
+
+$mysql = Mysql::getInstance()->getPDO();
+
+$mongo = MongoDb::getInstance();
+$dbMongo = $mongo->getDatabase();
+
+
 // Lancer le contrôleur principal
 use App\Controller\Controller;
 
 $controller = new Controller();
 $controller->route();
-
-// Connexion à la base de données
-use App\Db\Mysql;
-
-$mysql = Mysql::getInstance();

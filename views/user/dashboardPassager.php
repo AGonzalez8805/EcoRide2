@@ -111,7 +111,7 @@
         <h2 class="card-title">⚡ Actions rapides</h2>
         <div class="row" style="margin: 15px;">
             <div class="col-md-4 mb-3">
-                <a href="/?controller=user&action=profile" class="btn-profil w-100">
+                <a href="/?controller=user&action=profil" class="btn-profil w-100">
                     👤 Modifier mon profil
                 </a>
             </div>

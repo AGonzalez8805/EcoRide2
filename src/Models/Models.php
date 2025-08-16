@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Db\Mysql;
-
 use App\Tools\StringTools;
 
 class Models
@@ -13,12 +12,14 @@ class Models
     {
         return Mysql::getInstance()->getPDO();
     }
+
     public static function createAndHydrate(array $data): static
     {
         $entity = new static();
         $entity->hydrate($data);
         return $entity;
     }
+
     public function hydrate(array $data)
     {
         if (!empty($data) > 0) {

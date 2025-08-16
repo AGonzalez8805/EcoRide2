@@ -11,54 +11,31 @@ class AuthController extends Controller
     // Méthode principale pour router les actions en fonction du paramètre GET 'action'
     public function route(): void
     {
-        try {
-            if (isset($_GET['action'])) {
-                switch ($_GET['action']) {
-                    case 'registration':
-                        // Affichage de la page d'inscription
-                        $this->registration();
-                        break;
-                    case 'handleRegister':
-                        // Traite la soumission du formulaire d'inscription
-                        $this->handleRegister();
-                        break;
-                    case 'login':
-                        // Affichage de la page de connexion
-                        $this->login();
-                        break;
-                    case 'handleLogin':
-                        // Traite la soumission du formulaire de connexion
-                        $this->handleLogin();
-                        break;
-                    case 'logout':
-                        // Deconnexion
-                        $this->logout();
-                        break;
-
-                    default:
-                        // Si l'action n'est pas reconnue, on lance une exception
-                        throw new \Exception("Cette action n'existe pas : " . $_GET['action']);
-                }
-            } else {
-                // Si aucune action n'est passée en paramètre, on lance une exception
+        $this->handleRoute(function () {
+            if (!isset($_GET['action'])) {
                 throw new \Exception("Aucune action détectée");
             }
-        } catch (\Exception $e) {
-            // Gestion d'erreurs spécifique pour les requêtes AJAX
-            if (
-                isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
-            ) {
-                // Si c'est une requête AJAX, on retourne une réponse JSON avec l'erreur
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-            } else {
-                // Sinon, on affiche une vue d'erreur classique
-                $this->render('errors/default', [
-                    'errors' => $e->getMessage()
-                ]);
+
+            switch ($_GET['action']) {
+                case 'registration':
+                    $this->registration();
+                    break;
+                case 'handleRegister':
+                    $this->handleRegister();
+                    break;
+                case 'login':
+                    $this->login();
+                    break;
+                case 'handleLogin':
+                    $this->handleLogin();
+                    break;
+                case 'logout':
+                    $this->logout();
+                    break;
+                default:
+                    throw new \Exception("Cette action n'existe pas : " . $_GET['action']);
             }
-        }
+        });
     }
 
     /* Affiche la page d'inscription */
@@ -115,9 +92,16 @@ class AuthController extends Controller
             exit;
         }
 
+        // Générer un pseudo unique
+        $pseudo = trim($input['pseudo'] ?? '');
+
+        if (empty($pseudo)) {
+            $pseudo = 'user_' . uniqid();
+        }
+
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        // typeUtilisateur par défaut pour l'inscription
+        // typeUtilisateur non défini
         $typeUtilisateur = 'non-defini';
 
         $newUserId = $userRepo->create([
@@ -182,7 +166,7 @@ class AuthController extends Controller
             $_SESSION['pseudo'] = $admin->getPseudo();
             $_SESSION['role'] = 'admin';
 
-            echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=profil"]);
+            echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=dashboard"]);
             return;
         }
 
@@ -228,40 +212,6 @@ class AuthController extends Controller
             return;
         }
     }
-
-    public function updateRole()
-    {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /?controller=auth&action=login');
-            exit;
-        }
-
-        $nouveauRole = $_POST['typeUtilisateur'] ?? '';
-
-        if (!in_array($nouveauRole, ['chauffeur', 'passager', 'chauffeur-passager'])) {
-            echo "Rôle invalide";
-            exit;
-        }
-
-        // Mise à jour en BDD
-        $userRepo = new UserRepository();
-        $userRepo->updateRole($_SESSION['user_id'], $nouveauRole);
-
-        // Met à jour la session
-        $_SESSION['typeUtilisateur'] = $nouveauRole;
-
-        // Redirection vers le bon dashboard
-        $url = match ($nouveauRole) {
-            'chauffeur' => '/?controller=user&action=dashboardChauffeur',
-            'passager' => '/?controller=user&action=dashboardPassager',
-            'chauffeur-passager' => '/?controller=user&action=dashboardMixte',
-        };
-
-        header("Location: $url");
-        exit;
-    }
-
 
     /* Déconnecte l'utilisateur */
     public function logout()

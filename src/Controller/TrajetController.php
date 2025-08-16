@@ -10,35 +10,40 @@ class TrajetController extends Controller
 {
     public function route(): void
     {
-        $action = $_GET['action'] ?? 'covoiturage';
-        switch ($action) {
-            case 'covoiturage':
-                $this->covoiturage();
-                break;
+        $this->handleRoute(function () {
+            if (!isset($_GET['action'])) {
+                throw new \Exception("Aucune action détectée");
+            }
+            $action = $_GET['action'] ?? 'covoiturage';
+            switch ($action) {
+                case 'covoiturage':
+                    $this->covoiturage();
+                    break;
 
-            case 'ajouter':
-                $this->ajouter();
-                break;
+                case 'ajouter':
+                    $this->ajouter();
+                    break;
 
-            case 'store':
-                $this->store();
-                break;
+                case 'store':
+                    $this->store();
+                    break;
 
-            case 'getApiKey':
-                $this->getApiKey();
-                break;
+                case 'getApiKey':
+                    $this->getApiKey();
+                    break;
 
-            case 'proxyRoute':
-                $this->proxyRoute();
-                break;
+                case 'proxyRoute':
+                    $this->proxyRoute();
+                    break;
 
-            case 'create':
-                $this->create();
-                break;
+                case 'create':
+                    $this->create();
+                    break;
 
-            default:
-                throw new \Exception("Action covoiturage inconnue : $action", 404);
-        }
+                default:
+                    throw new \Exception("Action covoiturage inconnue : $action", 404);
+            }
+        });
     }
 
     public function covoiturage(): void

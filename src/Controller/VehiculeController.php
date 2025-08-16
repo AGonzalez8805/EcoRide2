@@ -9,7 +9,7 @@ class VehiculeController extends Controller
 {
     public function route(): void
     {
-        try {
+        $this->handleRoute(function () {
             if (isset($_GET['action'])) {
                 switch ($_GET['action']) {
                     case 'create':
@@ -24,9 +24,7 @@ class VehiculeController extends Controller
                         throw new \Exception("Action inconnue : " . $_GET['action']);
                 }
             }
-        } catch (\Exception $e) {
-            $this->render('errors/default', ['errors' => $e->getMessage()]);
-        }
+        });
     }
 
     public function create(): void

@@ -117,7 +117,7 @@ export class Login {
 
       // Si le login est un succès, redirection
       if (result.success) {
-        window.location.href = result.redirect || "/";
+        window.location.href = result.redirect || "";
       } else {
         // Affiche le message d'erreur retourné par le serveur
         this.showLoginError(result.message || "Erreur d'identifiants.");

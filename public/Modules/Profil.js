@@ -1,26 +1,28 @@
-export class ProfilChauffeur {
+export class Profil {
     constructor() {
-        // Boutons modifier / annuler pour pseudo
-        this.editPseudoBtn = document.querySelector("#pseudoDisplayContainer button[title='Modifier le pseudo']");
-        this.cancelPseudoBtn = document.querySelector("#pseudoForm button[title='Annuler'], #pseudoForm button.btn-small:nth-child(2)");
-
-        // Boutons modifier / annuler pour mail
-        this.editMailBtn = document.querySelector("#emailDisplayContainer button[title='Modifier l\'email']");
-        this.cancelMailBtn = document.querySelector("#emailForm button[title='Annuler'], #emailForm button.btn-small:nth-child(2)");
-
-        // IDs utiles
+        // Déplacez les sélecteurs ici.
         this.pseudoDisplayId = "pseudoDisplayContainer";
         this.pseudoFormId = "pseudoForm";
-
         this.emailDisplayId = "emailDisplayContainer";
         this.emailFormId = "emailForm";
-
         this.mailInputId = "mailInput";
 
+        // Appelez init() pour initialiser les boutons et les écouteurs.
         this.init();
     }
 
     init() {
+        console.log("Init Profil");
+        console.log("Edit pseudo btn:", document.getElementById("editPseudoBtn"));
+        // Recherche des boutons.
+        // Cette étape est exécutée après le chargement du DOM,
+        // garantissant que les éléments existent.
+        this.editPseudoBtn = document.getElementById("editPseudoBtn");
+        this.cancelPseudoBtn = document.getElementById("cancelPseudoBtn");
+        this.editMailBtn = document.getElementById("editMailBtn");
+        this.cancelMailBtn = document.getElementById("cancelMailBtn");
+
+        // Attachement des écouteurs d'événements.
         if (this.editPseudoBtn) {
             this.editPseudoBtn.addEventListener("click", () => this.toggleEdit(this.pseudoDisplayId, this.pseudoFormId, true));
         }
@@ -35,6 +37,7 @@ export class ProfilChauffeur {
         }
     }
 
+    // ... le reste de la méthode toggleEdit() est inchangé
     toggleEdit(displayId, formId, showForm = true, focusId = null) {
         const display = document.getElementById(displayId);
         const form = document.getElementById(formId);

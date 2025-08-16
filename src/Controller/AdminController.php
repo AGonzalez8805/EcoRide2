@@ -21,46 +21,36 @@ class AdminController extends Controller
 
     public function route(): void
     {
-        try {
-            if (isset($_GET['action'])) {
-                switch ($_GET['action']) {
-
-                    case 'dashboard':
-                        $this->dashboard();
-                        break;
-
-                    case 'createEmploye':
-                        $this->createEmploye();
-                        break;
-
-                    case 'toggleUserStatus':
-                        $this->toggleUserStatus();
-                        break;
-
-                    case 'toggleEmployeStatus':
-                        $this->toggleEmployeStatus();
-                        break;
-
-                    case 'listEmployesJson':
-                        $this->listEmployesJson();
-                        break;
-
-                    case 'listUsersJson':
-                        $this->listUsersJson();
-                        break;
-
-                    default:
-                        throw new \Exception("Action administrateur inconnue");
-                }
-            } else {
+        $this->handleRoute(function () {
+            if (!isset($_GET['action'])) {
                 throw new \Exception("Aucune action détectée");
             }
-        } catch (\Exception $e) {
-            $this->render('errors/default', [
-                'error' => $e->getMessage()
-            ]);
-        }
+
+            switch ($_GET['action']) {
+                case 'dashboard':
+                    $this->dashboard();
+                    break;
+                case 'createEmploye':
+                    $this->createEmploye();
+                    break;
+                case 'toggleUserStatus':
+                    $this->toggleUserStatus();
+                    break;
+                case 'toggleEmployeStatus':
+                    $this->toggleEmployeStatus();
+                    break;
+                case 'listEmployesJson':
+                    $this->listEmployesJson();
+                    break;
+                case 'listUsersJson':
+                    $this->listUsersJson();
+                    break;
+                default:
+                    throw new \Exception("Action administrateur inconnue");
+            }
+        });
     }
+
 
     public function dashboard(): void
     {
@@ -92,11 +82,9 @@ class AdminController extends Controller
 
             if (!empty($email) && !empty($pseudo) && !empty($password)) {
 
-                $repo = new EmployeRepository();
-
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-                $created = $repo->create([
+                $created = $this->employeRepository->create([
                     'email' => $email,
                     'pseudo' => $pseudo,
                     'password' => $hashedPassword,
@@ -149,7 +137,7 @@ class AdminController extends Controller
             return;
         }
 
-        $etatActuel = (bool) $employe['isSuspended']; // force booléen
+        $etatActuel = $employe->isIsSuspended();
         $nouvelEtat = !$etatActuel;
 
 

@@ -14,41 +14,43 @@ class UserController extends Controller
      */
     public function route(): void
     {
-        if (isset($_GET['action'])) {
-            switch ($_GET['action']) {
-                case 'dashboardChauffeur':
-                    // Affiche le tableau de bord Ch
-                    $this->dashboardChauffeur();
-                    break;
+        $this->handleRoute(function () {
+            if (isset($_GET['action'])) {
+                switch ($_GET['action']) {
+                    case 'dashboardChauffeur':
+                        // Affiche le tableau de bord Ch
+                        $this->dashboardChauffeur();
+                        break;
 
-                case 'profil':
-                    // Affiche le profil utilisateur
-                    $this->profil();
-                    break;
+                    case 'profil':
+                        // Affiche le profil utilisateur
+                        $this->profil();
+                        break;
 
-                case 'updateProfile':
-                    $this->updateProfile();
-                    break;
+                    case 'updateProfile':
+                        $this->updateProfile();
+                        break;
 
-                case 'updateRole':
-                    $this->updateRole();
-                    break;
+                    case 'updateRole':
+                        $this->updateRole();
+                        break;
 
-                case 'dashboardPassager':
-                    // Affiche le tableau de bord utilisateur
-                    $this->dashboardPassager();
-                    break;
+                    case 'dashboardPassager':
+                        // Affiche le tableau de bord utilisateur
+                        $this->dashboardPassager();
+                        break;
 
-                case 'dashboardMixte':
-                    // Affiche le tableau de bord utilisateur
-                    $this->dashboardMixte();
-                    break;
+                    case 'dashboardMixte':
+                        // Affiche le tableau de bord utilisateur
+                        $this->dashboardMixte();
+                        break;
 
-                default:
-                    // L'action n'est pas reconnue pour ce contrôleur
-                    throw new \Exception("Action utilisateur inconnue");
+                    default:
+                        // L'action n'est pas reconnue pour ce contrôleur
+                        throw new \Exception("Action utilisateur inconnue");
+                }
             }
-        }
+        });
     }
 
     public function dashboardChauffeur(): void
@@ -75,7 +77,6 @@ class UserController extends Controller
         ]);
     }
 
-
     public function profil(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -88,7 +89,6 @@ class UserController extends Controller
         }
 
         $userRepo = new UserRepository();
-        $vehiculeRepo = new VehiculeRepository();
 
         $user = $userRepo->findById($userId);
 
@@ -104,7 +104,6 @@ class UserController extends Controller
     public function updateProfile(): void
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
-
         $userId = $_SESSION['user_id'] ?? null;
         if (!$userId) {
             header('Location: /?controller=security&action=login');
@@ -112,91 +111,86 @@ class UserController extends Controller
         }
 
         $userRepo = new UserRepository();
+        $field = $_POST['field'] ?? '';
 
-        // ✅ Mise à jour du pseudo (si fourni)
-        if (!empty($_POST['pseudo'])) {
-            $newPseudo = trim($_POST['pseudo']);
-            $userRepo->updatePseudo($userId, $newPseudo);
+        switch ($field) {
+            case 'pseudo':
+                if (!empty($_POST['pseudo'])) {
+                    $newPseudo = trim($_POST['pseudo']);
+                    $userRepo->updatePseudo($userId, $newPseudo);
+                }
+                break;
+
+            case 'email':
+                if (!empty($_POST['email'])) {
+                    $newEmail = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+                    if ($newEmail) {
+                        $userRepo->updateEmail($userId, $newEmail);
+                    }
+                }
+                break;
+
+            case 'photo':
+                if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                    $photoTmpPath = $_FILES['photo']['tmp_name'];
+                    $photoExtension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+                    $newPhotoName = uniqid('profile_') . '.' . $photoExtension;
+                    $uploadDir = __DIR__ . '/../../public/photos/';
+                    move_uploaded_file($photoTmpPath, $uploadDir . $newPhotoName);
+                    $userRepo->updatePhoto($userId, $newPhotoName);
+                }
+                break;
         }
 
-        // Mise à jour de l'email
-        if (!empty($_POST['email'])) {
-            $newEmail = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
-            if ($newEmail) {
-                $userRepo->updateEmail($userId, $newEmail);
-            } else {
-                // Gestion d'erreur basique (optionnelle)
-                // Par exemple, ajouter un message d'erreur en session
-            }
-        }
-
-        // ✅ Mise à jour de la photo (si envoyée)
-        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-            $photoTmpPath = $_FILES['photo']['tmp_name'];
-            $photoName = basename($_FILES['photo']['name']);
-            $photoExtension = pathinfo($photoName, PATHINFO_EXTENSION);
-
-            $newPhotoName = uniqid('profile_') . '.' . $photoExtension;
-            $uploadDir = __DIR__ . '/../../public/photos/';
-            $destination = $uploadDir . $newPhotoName;
-
-            if (!move_uploaded_file($photoTmpPath, $destination)) {
-                throw new \Exception("Erreur lors du téléchargement de la photo.");
-            }
-
-            $userRepo->updatePhoto($userId, $newPhotoName);
-        }
-
-        // 🔁 Redirection propre
         header("Location: /?controller=user&action=profil");
         exit;
     }
 
-    public function updateRole()
+
+    public function updateRole(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        if (!isset($_SESSION['user_id'])) {
-            echo json_encode(["success" => false, "message" => "Non autorisé"]);
+        // Vérification que l'utilisateur est connecté
+        if (empty($_SESSION['user_id'])) {
+            header('Location: /?controller=auth&action=login');
             exit;
         }
 
-        $input = $_POST; // car formulaire classique
-        $newRole = $input['role'] ?? '';
+        // Récupération du rôle choisi dans le formulaire
+        $nouveauRole = $_POST['role'] ?? '';
 
-        $allowedTypes = ['chauffeur', 'passager', 'chauffeur-passager'];
+        // Rôles autorisés
+        $rolesAutorises = ['chauffeur', 'passager', 'chauffeur-passager'];
 
-        if (!in_array($newRole, $allowedTypes)) {
-            echo json_encode(["success" => false, "message" => "Rôle invalide"]);
+        if (!in_array($nouveauRole, $rolesAutorises)) {
+            header('Location: /?controller=user&action=profil&error=role_invalide');
             exit;
         }
 
+        // Mise à jour en base
         $userRepo = new UserRepository();
-        $updated = $userRepo->updateRole($_SESSION['user_id'], $newRole);
+        $userRepo->updateRole($_SESSION['user_id'], $nouveauRole);
 
-        if ($updated) {
-            $_SESSION['typeUtilisateur'] = $newRole;
+        // Mise à jour de la session
+        $_SESSION['typeUtilisateur'] = $nouveauRole;
 
-            switch ($newRole) {
-                case 'chauffeur':
-                    header('Location: /?controller=user&action=dashboardChauffeur');
-                    break;
-                case 'passager':
-                    header('Location: /?controller=user&action=dashboardPassager');
-                    break;
-                case 'chauffeur-passager':
-                    header('Location: /?controller=user&action=dashboardMixte');
-                    break;
-            }
-            exit;
-        } else {
-            header('Location: /?controller=user&action=profil&error=1');
-            exit;
+        // Redirection vers le dashboard correspondant
+        switch ($nouveauRole) {
+            case 'chauffeur':
+                header('Location: /?controller=user&action=dashboardChauffeur');
+                break;
+            case 'passager':
+                header('Location: /?controller=user&action=dashboardPassager');
+                break;
+            case 'chauffeur-passager':
+                header('Location: /?controller=user&action=dashboardMixte');
+                break;
         }
+        exit;
     }
-
 
     public function dashboardPassager(): void
     {
