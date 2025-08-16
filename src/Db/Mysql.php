@@ -17,14 +17,11 @@ class Mysql
     // Instance unique de la classe (singleton)
     private static ?self $instance = null;
 
-    /**
-     * Constructeur privé pour empêcher l'instanciation directe (pattern Singleton).
-     * Il lit la configuration de la base depuis un fichier INI.
-     */
+    //Constructeur privé pour empêcher l'instanciation directe (pattern Singleton).
     private function __construct()
     {
-        // Si on est sur Heroku, on récupère la config depuis DATABASE_URL
-        $databaseUrl = getenv('DATABASE_URL') ?: getenv('CLEARDB_DATABASE_URL') ?: getenv('JAWSDB_URL');
+        //Récupération de la config depuis DATABASE_URL (pour heroku)
+        $databaseUrl = getenv('DATABASE_URL');
 
         if ($databaseUrl) {
             $url = parse_url($databaseUrl);
@@ -44,11 +41,7 @@ class Mysql
         }
     }
 
-
-    /**
-     * Retourne l'instance unique de Mysql (Singleton).
-     * Crée une nouvelle instance si elle n'existe pas encore.
-     */
+    //Retourne l'instance unique de Mysql (Singleton).
     public static function getInstance(): self
     {
         if (is_null(self::$instance)) {
@@ -58,10 +51,7 @@ class Mysql
         return self::$instance;
     }
 
-    /**
-     * Retourne l'objet PDO connecté à la base de données.
-     * Crée la connexion s'il n'en existe pas encore.
-     */
+    //Retourne l'objet PDO connecté à la base de données.
     public function getPDO(): \PDO
     {
         if (is_null($this->pdo)) {

@@ -3,5 +3,9 @@
     "psr-4": {
       "App\\": "src/"
     }
+  },
+  "require": {
+    "phpmailer/phpmailer": "^6.10",
+    "mongodb/mongodb": "^2.1"
   }
 }

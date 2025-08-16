@@ -88,6 +88,7 @@ export class Registration {
     return match;
   }
 
+
   // Met à jour visuellement les critères du mot de passe
   updatePasswordCriteria(password) {
     const criteria = {
@@ -145,15 +146,14 @@ export class Registration {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify(data),
       });
 
-      const text = await response.text();
-      console.log("Réponse brute du serveur:", text);
-      // Tentative de décodage JSON
+      let result;
       try {
-        const result = JSON.parse(text);
+        result = await response.json();
         if (result.success) {
           alert("Inscription réussie !");
           window.location.href = "/?controller=auth&action=login";
@@ -162,14 +162,15 @@ export class Registration {
         }
       } catch (e) {
         console.error("Réponse invalide du serveur :", e);
+        alert("Réponse du serveur non conforme.");
+      }
+
+      if (!response.ok) {
+        console.error("Erreur HTTP :", response.status);
       }
     } catch (err) {
       console.error("Erreur lors de la requête :", err);
-    }
-    if (!response.ok) {
-      alert("Erreur serveur : " + response.status);
-      console.error(await response.text());
-      return;
+      alert("Une erreur technique est survenue.");
     }
   }
 }

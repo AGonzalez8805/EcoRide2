@@ -5,13 +5,14 @@ namespace App\Models;
 class User extends Models
 {
     protected ?int $id = null;
-    protected ?string $email = '';
-    protected ?string $password = '';
-    protected ?string $name = '';
-    protected ?string $firstName = '';
-    protected ?string $role = '';
-    protected ?string $pseudo = '';
-    protected ?string $photo = '';
+    protected ?string $email = null;
+    protected ?string $password = null;
+    protected ?string $name = null;
+    protected ?string $firstName = null;
+    protected ?string $role = null;
+    protected ?string $typeUtilisateur = null;
+    protected ?string $pseudo = null;
+    protected ?string $photo = null;
     protected ?bool $isSuspended = false;
     protected ?int $credit = 20;
 
@@ -119,6 +120,24 @@ class User extends Models
     public function setRole(?string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of typeUtilisateur
+     */
+    public function getTypeUtilisateur(): ?string
+    {
+        return $this->typeUtilisateur;
+    }
+
+    /**
+     * Set the value of typeUtilisateur
+     */
+    public function setTypeUtilisateur(?string $typeUtilisateur): self
+    {
+        $this->typeUtilisateur = $typeUtilisateur;
 
         return $this;
     }

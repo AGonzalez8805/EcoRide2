@@ -2,91 +2,129 @@
 
 namespace App\Repository;
 
-use App\Db\Mysql;
+use App\Models\User;
 use PDO;
 
-class UserRepository
+class UserRepository extends Repository
 {
-    public function findByEmail(string $email)
+    /** Récupérer tous les utilisateurs */
+    public function findAll(): array
     {
-        $mysql = Mysql::getInstance();
-        $pdo = $mysql->getPDO();
+        $query = $this->pdo->prepare("SELECT * FROM utilisateurs");
+        $query->execute();
 
-        $stmt = $pdo->prepare('
-            SELECT u.*, r.name as role
-            FROM utilisateurs u
-            LEFT JOIN possede p ON u.id = p.id_utilisateurs
-            LEFT JOIN role r ON p.id = r.id
-            WHERE u.email = :email
-        ');
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR); // Utilisez PDO::PARAM_STR
-        $stmt->execute();
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        $usersArray = [];
 
-        $utilisateurs = $stmt->fetch();
-        return $utilisateurs ?: null;
+        foreach ($rows as $row) {
+            $usersArray[] = $this->hydrate(new User(), $row);
+        }
+
+        return $usersArray;
     }
 
+    /** Trouver un utilisateur par email */
+    public function findByEmail(string $email): ?User
+    {
+        $query = $this->pdo->prepare('SELECT * FROM utilisateurs WHERE email = :email');
+        $query->bindValue(':email', $email, PDO::PARAM_STR);
+        $query->execute();
+
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $row ? $this->hydrate(new User(), $row) : null;
+    }
+
+    /** Trouver un utilisateur par ID */
+    public function findById(int $id): ?User
+    {
+        $query = $this->pdo->prepare('SELECT * FROM utilisateurs WHERE id = :id');
+        $query->bindValue(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $row ? $this->hydrate(new User(), $row) : null;
+    }
+
+    /** Créer un utilisateur */
     public function create(array $data): ?int
     {
-        $mysql = Mysql::getInstance();
-        $pdo = $mysql->getPDO();
+        $query = $this->pdo->prepare('
+            INSERT INTO utilisateurs (name, firstName, email, password, typeUtilisateur, pseudo, photo)
+            VALUES (:name, :firstName, :email, :password, :typeUtilisateur, :pseudo, :photo)
+            ');
 
-        $stmt = $pdo->prepare('
-            INSERT INTO utilisateurs (name, firstName, email, password)
-            VALUES (:name, :firstName, :email, :password)');
-
-        $success = $stmt->execute([
+        $success = $query->execute([
             ':name' => $data['name'],
             ':firstName' => $data['firstName'],
             ':email' => $data['email'],
             ':password' => $data['password'],
+            ':typeUtilisateur' => $data['typeUtilisateur'],
+            ':pseudo' => $data['pseudo'] ?? null,
+            ':photo' => $data['photo'] ?? null,
         ]);
 
-        if ($success) {
-            return (int) $pdo->lastInsertId();
-        } else {
-            return null;
-        }
+        return $success ? (int) $this->pdo->lastInsertId() : null;
     }
 
-    public function existsUserWithRole(string $roleName): bool
+    /** Mettre à jour la photo de profil */
+    public function updatePhoto(int $userId, string $photoFilename): bool
     {
-        $mysql = Mysql::getInstance();
-        $pdo = $mysql->getPDO();
-
-        $sql = "SELECT COUNT(*) FROM possede p
-                JOIN role r ON p.id = r.id
-                WHERE r.name = :roleName";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['roleName' => $roleName]);
-
-        return $stmt->fetchColumn() > 0;
+        $query = $this->pdo->prepare("UPDATE utilisateurs SET photo = :photo WHERE id = :id");
+        return $query->execute([
+            ':photo' => $photoFilename,
+            ':id' => $userId
+        ]);
     }
 
-    public function assignRoleToUser(int $userId, string $roleName): bool
+    /** Mettre à jour le pseudo */
+    public function updatePseudo(int $userId, string $newPseudo): void
     {
-        $mysql = Mysql::getInstance();
-        $pdo = $mysql->getPDO();
-
-        $stmt = $pdo->prepare("SELECT id FROM role WHERE name = :roleName");
-        $stmt->execute(['roleName' => $roleName]);
-        $roleId = $stmt->fetchColumn();
-
-        if (!$roleId) {
-            return false;
-        }
-
-        $stmt = $pdo->prepare("INSERT INTO possede (id, id_utilisateurs) VALUES (:id, :userId)");
-        return $stmt->execute([':id' => $roleId, 'userId' => $userId]);
+        $query = $this->pdo->prepare("UPDATE utilisateurs SET pseudo = :pseudo WHERE id = :id");
+        $query->execute([
+            ':pseudo' => $newPseudo,
+            ':id' => $userId
+        ]);
     }
 
+    /** Mettre à jour l'email */
+    public function updateEmail(int $userId, string $newEmail): void
+    {
+        $query = $this->pdo->prepare("UPDATE utilisateurs SET email = :email WHERE id = :id");
+        $query->execute([
+            ':email' => $newEmail,
+            ':id' => $userId
+        ]);
+    }
+
+    public function updateRole(int $id, string $role): bool
+    {
+        $sql = "UPDATE utilisateurs SET typeUtilisateur = :role WHERE id = :id";
+        $query = $this->pdo->prepare($sql);
+        return $query->execute(['role' => $role, 'id' => $id]);
+    }
+
+    /** Activer ou désactiver la suspension d'un utilsateur par son email */
     public function toggleSuspensionByEmail(string $email): bool
     {
-        $pdo = Mysql::getInstance()->getPDO();
+        $query = $this->pdo->prepare("UPDATE utilisateurs SET isSuspended = NOT isSuspended WHERE email = :email");
+        return $query->execute([':email' => $email]);
+    }
 
-        $stmt = $pdo->prepare("UPDATE utilisateurs SET isSuspended = NOT isSuspended WHERE email = :email");
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        return $stmt->execute();
+    /** Récupérer tous les utilisateurs sauf ceux avec typeUtilisateur 'employee' (par exemple) */
+    public function getAllNonEmployeeUsers(): array
+    {
+        $query = $this->pdo->prepare('SELECT id, name,firstName, email, isSuspended, typeUtilisateur FROM utilisateurs WHERE typeUtilisateur != :employee');
+        $query->execute([':employee' => 'employee']);
+
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        $usersArray = [];
+
+        foreach ($rows as $row) {
+            $usersArray[] = $this->hydrate(new User(), $row);
+        }
+
+        return $usersArray;
     }
 }

@@ -2,27 +2,43 @@
 
 namespace App\Controller;
 
-use App\Controller\PageController;
-use App\Controller\AuthController;
-use App\Controller\UserController;
-use App\Controller\AdminController;
-use App\Controller\SearchController;
-
 class Controller
 {
-    public function route(): void
+    /* Try/catch commun pour tous les contrôleurs */
+    protected function handleRoute(callable $callback): void
     {
         try {
+            $callback();
+        } catch (\Exception $e) {
+            if (
+                isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+            ) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]);
+            } else {
+                $this->render('errors/default', [
+                    'errors' => $e->getMessage()
+                ]);
+            }
+        }
+    }
+
+    /* Routeur principal (dispatch vers les autres contrôleurs) */
+    public function route(): void
+    {
+        $this->handleRoute(function () {
             if (isset($_GET['controller'])) {
                 switch ($_GET['controller']) {
                     case 'pages':
-                        // Charger le contrôleur de la page
                         $pageController = new PageController();
                         $pageController->route();
                         break;
 
                     case 'auth':
-                        // Charger le contrôleur d'authentification (login, logout, register)
                         $controller = new AuthController();
                         $controller->route();
                         break;
@@ -42,38 +58,35 @@ class Controller
                         $controller->route();
                         break;
 
-                    case 'results':
-                        $controller = new SearchController();
-                        $controller->results();
-                        break;
-
-                    case 'covoiturage':
-                        $controller = new CovoiturageController();
-                        $controller->route();
-                        break;
-
                     case 'employe':
                         $controller = new EmployeController();
                         $controller->route();
                         break;
 
+                    case 'covoiturage':
+                        $controller = new TrajetController();
+                        $controller->route();
+                        break;
+
+                    case 'vehicule':
+                        $controller = new VehiculeController();
+                        $controller->route();
+                        break;
+
                     default:
-                        throw new \Exception("Le contrôleur n'existe pas", 404);
+                        throw new \Exception("Le contrôleur '{$_GET['controller']}' n'existe pas", 404);
                 }
             } else {
-                $pageController = new PageController();
-                $pageController->home();
+                throw new \Exception("Aucun contrôleur détecté");
             }
-        } catch (\Exception $e) {
-            $this->render('errors/default', [
-                'errors' => $e->getMessage()
-            ]);
-        }
+        });
     }
 
+    /* Méthode pour afficher une vue */
     protected function render(string $path, array $params = []): void
     {
         static $isRenderingError = false;
+
         $filePath = APP_ROOT . '/views/' . $path . '.php';
 
         try {
@@ -85,7 +98,6 @@ class Controller
             }
         } catch (\Exception $e) {
             if ($isRenderingError) {
-                // Si on est déjà en train de rendre une erreur, afficher un message brut pour éviter la récursion
                 echo "<h1>Erreur critique lors du rendu de la vue</h1>";
                 echo "<p>" . htmlspecialchars($e->getMessage()) . "</p>";
                 return;

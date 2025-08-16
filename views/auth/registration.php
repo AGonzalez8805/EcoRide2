@@ -21,13 +21,13 @@
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse email</label>
-                <input type="email" class="form-control" id="email" placeholder="exemple@ecoride.com" required>
+                <input type="email" class="form-control" id="email" placeholder="exemple@ecoride.com">
                 <div class="valid-feedback">Adresse email valide</div>
                 <div class="invalid-feedback">Veuillez saisir une adresse email valide.</div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                <input type="password" class="form-control" id="password" placeholder="••••••••">
                 <small class="text-muted" style="text-decoration: underline;">Le mot de passe doit contenir :</small>
                 <ul class="list-unstyled small mt-1 mb-3" id="passwordCriteria">
                     <li id="length" class="text-danger"> Au moins 9 caractères</li>
@@ -39,15 +39,13 @@
             </div>
             <div class="mb-3">
                 <label for="validatePassword" class="form-label">Confirmer votre mot de passe</label>
-                <input type="password" class="form-control" id="validatePassword" placeholder="••••••••" required>
+                <input type="password" class="form-control" id="validatePassword" placeholder="••••••••">
                 <div class="valid-feedback">Mot de passe confirmé</div>
                 <div class="invalid-feedback">Les mots de passe ne correspondent pas.</div>
             </div>
             <button type="submit" id="register" class="btn ecoride-btn w-100">S'inscrire</button>
             <div class="text-center pt-3">
-                <font style="text-decoration: underline;">
-                    <a href="/?controller=auth&action=login">Vous avez déjà un compte ? Connectez-vous ici !</a>
-                </font>
+                <a style="text-decoration: underline;" href="/?controller=auth&action=login">Vous avez déjà un compte ? Connectez-vous ici !</a>
             </div>
         </form>
     </div>

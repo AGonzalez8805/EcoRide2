@@ -4,147 +4,53 @@ namespace App\Controller;
 
 use App\Repository\UserRepository;
 use App\Repository\AdminRepository;
+use App\Repository\EmployeRepository;
 
 class AuthController extends Controller
 {
+    // Méthode principale pour router les actions en fonction du paramètre GET 'action'
     public function route(): void
     {
-        try {
-            if (isset($_GET['action'])) {
-                switch ($_GET['action']) {
-                    case 'login':
-                        $this->login();
-                        break;
-                    case 'handleLogin':
-                        $this->handleLogin();
-                        break;
-                    case 'logout':
-                        $this->logout();
-                        break;
-                    case 'registration':
-                        $this->registration();
-                        break;
-                    case 'handleRegister':
-                        $this->handleRegister();
-                        break;
-                    default:
-                        throw new \Exception("Cette action n'existe pas : " . $_GET['action']);
-                }
-            } else {
+        $this->handleRoute(function () {
+            if (!isset($_GET['action'])) {
                 throw new \Exception("Aucune action détectée");
             }
-        } catch (\Exception $e) {
-            // Gestion d'erreurs spécifique pour les requêtes AJAX
-            if (
-                isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
-            ) {
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-            } else {
-                // Affichage d'une vue d'erreur standard
-                $this->render('errors/default', [
-                    'errors' => $e->getMessage()
-                ]);
+
+            switch ($_GET['action']) {
+                case 'registration':
+                    $this->registration();
+                    break;
+                case 'handleRegister':
+                    $this->handleRegister();
+                    break;
+                case 'login':
+                    $this->login();
+                    break;
+                case 'handleLogin':
+                    $this->handleLogin();
+                    break;
+                case 'logout':
+                    $this->logout();
+                    break;
+                default:
+                    throw new \Exception("Cette action n'existe pas : " . $_GET['action']);
             }
-        }
+        });
     }
 
-    /**
-     * Affiche la page de connexion
-     */
-    public function login()
-    {
-        $this->render('auth/login');
-    }
-
+    /* Affiche la page d'inscription */
     public function registration()
     {
         $this->render('auth/registration');
     }
 
-    public function handleLogin()
+    /* Affiche la page de connexion */
+    public function login()
     {
-        ob_start();
-        header('Content-Type: application/json');
-        http_response_code(200);
-
-        $input = json_decode(file_get_contents("php://input"), true);
-
-        if (!$input) {
-            echo json_encode(["success" => false, "message" => "Données invalides."]);
-            return;
-        }
-
-        $email = trim($input['email'] ?? '');
-        $password = $input['password'] ?? '';
-
-        // Vérification que les champs obligatoires sont remplis
-        if (empty($email) || empty($password)) {
-            echo json_encode(["success" => false, "message" => "L'email et le mot de passe sont requis."]);
-            return;
-        }
-
-        $adminRepo = new AdminRepository();
-        $admin = $adminRepo->findByEmail($email);
-
-        if ($admin && password_verify($password, $admin['password'])) {
-            $_SESSION['user_id'] = $admin['id'];
-            $_SESSION['pseudo'] = $admin['pseudo'];
-            $_SESSION['role'] = 'admin';
-
-            ob_end_clean();
-            echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=dashboard"]);
-            return;
-        }
-
-        $employeRepo = new \App\Repository\EmployeRepository();
-        $employe = $employeRepo->findByEmail($email);
-
-        if ($employe && password_verify($password, $employe['password'])) {
-            $_SESSION['user_id'] = $employe['id'];
-            $_SESSION['email'] = $employe['email'];
-            $_SESSION['role'] = 'employe';
-
-            ob_end_clean();
-            echo json_encode(["success" => true, "redirect" => "/?controller=employe&action=dashboard"]);
-            return;
-        }
-
-        $userRepo = new UserRepository();
-        $user = $userRepo->findByEmail($email);
-
-        // Vérification des identifiants
-        if ($user && password_verify($password, $user['password'])) {
-            // Authentification réussie, on stocke les infos en session
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'] ?? 'utilisateur';
-
-            ob_end_clean();
-
-            // Redirection conditionnelle selon le rôle
-            $url = ($_SESSION['role'] === 'admin')
-                ? '/?controller=admin&action=dashboard'
-                : '/?controller=user&action=dashboard';
-
-            echo json_encode(["success" => true, "redirect" => $url]);
-            return;
-        } else {
-            // Identifiants incorrects
-            echo json_encode(["success" => false, "message" => "Email ou mot de passe incorrect."]);
-            return;
-        }
+        $this->render('auth/login');
     }
 
-    public function logout()
-    {
-        session_unset();    // Supprime toutes les variables de session
-        session_destroy();  // Détruit la session
-        header('Location: t/?controller=auth&action=login');
-        exit;
-    }
-
+    /* Traite l'inscription d'un nouvel utilisateur */
     public function handleRegister()
     {
         header('Content-Type: application/json');
@@ -157,7 +63,6 @@ class AuthController extends Controller
             exit;
         }
 
-        // Nettoyage et validation des champs
         $pseudo = trim($input['pseudo'] ?? '');
         $name = trim($input['name'] ?? '');
         $firstName = trim($input['firstName'] ?? '');
@@ -165,7 +70,7 @@ class AuthController extends Controller
         $password = $input['password'] ?? '';
         $validatePassword = $input['validatePassword'] ?? '';
 
-        if (empty($name) || empty($firstName) || empty($email) || empty($password)) {
+        if (!$name || !$firstName || !$email || !$password) {
             echo json_encode(["success" => false, "message" => "Tous les champs sont requis."]);
             exit;
         }
@@ -182,25 +87,30 @@ class AuthController extends Controller
 
         $userRepo = new UserRepository();
 
-        // Vérifier que l’email n’est pas déjà utilisé
         if ($userRepo->findByEmail($email)) {
             echo json_encode(["success" => false, "message" => "Cet email est déjà utilisé."]);
             exit;
         }
 
-        // Déterminer le rôle à attribuer (si pas d’admin, on crée un admin, sinon utilisateur)
-        $roleToAssign = 'utilisateur';
+        // Générer un pseudo unique
+        $pseudo = trim($input['pseudo'] ?? '');
 
-        // Hasher le mot de passe
+        if (empty($pseudo)) {
+            $pseudo = 'user_' . uniqid();
+        }
+
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        // Créer le nouvel utilisateur
+        // typeUtilisateur non défini
+        $typeUtilisateur = 'non-defini';
+
         $newUserId = $userRepo->create([
             'pseudo' => $pseudo,
             'name' => $name,
             'firstName' => $firstName,
             'email' => $email,
             'password' => $hashedPassword,
+            'typeUtilisateur' => $typeUtilisateur
         ]);
 
         if (!$newUserId) {
@@ -208,11 +118,107 @@ class AuthController extends Controller
             exit;
         }
 
-        // Assigner le rôle à l’utilisateur créé
-        $userRepo->assignRoleToUser($newUserId, $roleToAssign);
-
-        // Répondre avec succès
         echo json_encode(["success" => true]);
+        exit;
+    }
+
+    /* Traite la connexion de l'utilisateur */
+    public function handleLogin()
+    {
+        // Démarrer la session si elle n'est pas déjà démarrée
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Nettoyer tous les buffers de sortie pour éviter les sorties HTML parasites
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: application/json'); // On prépare la réponse JSON
+        http_response_code(200);
+
+        // Récupérer les données JSON envoyées en POST
+        $input = json_decode(file_get_contents("php://input"), true);
+
+        if (!$input) {
+            echo json_encode(["success" => false, "message" => "Données invalides."]);
+            return;
+        }
+
+        // Récupérer et nettoyer les valeurs
+        $email = trim($input['email'] ?? '');
+        $password = $input['password'] ?? '';
+
+        // Vérifier que l'email et le mot de passe sont renseignés
+        if (empty($email) || empty($password)) {
+            echo json_encode(["success" => false, "message" => "L'email et le mot de passe sont requis."]);
+            exit;
+        }
+
+        // Vérification dans la table admin
+        $adminRepo = new AdminRepository();
+        $admin = $adminRepo->findByEmail($email);
+
+        if ($admin && password_verify($password, $admin->getPassword())) {
+            // Authentification réussie pour un admin
+            $_SESSION['user_id'] = $admin->getId();
+            $_SESSION['pseudo'] = $admin->getPseudo();
+            $_SESSION['role'] = 'admin';
+
+            echo json_encode(["success" => true, "redirect" => "/?controller=admin&action=dashboard"]);
+            return;
+        }
+
+        // Vérification dans la table employe
+        $employeRepo = new EmployeRepository();
+        $employe = $employeRepo->findByEmail($email);
+
+        if ($employe && password_verify($password, $employe->getPassword())) {
+            // Authentification réussie pour un employé
+            $_SESSION['user_id'] = $employe->getId();
+            $_SESSION['email'] = $employe->getEmail();
+            $_SESSION['role'] = 'employe';
+
+            echo json_encode(["success" => true, "redirect" => "/?controller=employe&action=dashboard"]);
+            return;
+        }
+
+        // Vérification dans la table utilisateur
+        $userRepo = new UserRepository();
+        $user = $userRepo->findByEmail($email);
+
+        if ($user && password_verify($password, $user->getPassword())) {
+            // Authentification réussie pour un utilisateur classique
+            $_SESSION['user_id'] = $user->getId();
+            $_SESSION['email'] = $user->getEmail();
+            $_SESSION['typeUtilisateur'] = $user->getRole();
+            $_SESSION['firstName'] = $user->getFirstName();
+            $_SESSION['name'] = $user->getName();
+
+            // Redirection selon le type d'utilisateur
+            $typeUtilisateur = $_SESSION['typeUtilisateur'] ?? 'default';
+            $url = match ($typeUtilisateur) {
+                'chauffeur' => '/?controller=user&action=dashboardChauffeur',
+                'passager' => '/?controller=user&action=dashboardPassager',
+                'chauffeur-passager' => '/?controller=user&action=dashboardMixte',
+                default => '/?controller=user&action=profil',
+            };
+            echo json_encode(["success" => true, "redirect" => $url]);
+            return;
+        } else {
+            // En cas d'échec d'authentification
+            echo json_encode(["success" => false, "message" => "Email ou mot de passe incorrect."]);
+            return;
+        }
+    }
+
+    /* Déconnecte l'utilisateur */
+    public function logout()
+    {
+        session_unset();    // Supprime toutes les variables de session
+        session_destroy();  // Détruit la session
+        header('Location: t/?controller=auth&action=login'); // Redirection vers la page de connexion
         exit;
     }
 }

@@ -6,7 +6,10 @@ class EmployeController extends Controller
 {
     public function route(): void
     {
-        if (isset($_GET['action'])) {
+        $this->handleRoute(function () {
+            if (isset($_GET['action'])) {
+                throw new \Exception("Aucune action détectée");
+            }
             switch ($_GET['action']) {
                 case 'dashboard':
                     $this->dashboard();
@@ -14,7 +17,7 @@ class EmployeController extends Controller
                 default:
                     throw new \Exception("Action employé inconnue");
             }
-        }
+        });
     }
 
     public function dashboard(): void

@@ -5,38 +5,52 @@ namespace App\Controller;
 use App\Repository\StatistiqueRepository;
 use App\Repository\EmployeRepository;
 use App\Repository\UserRepository;
+use App\Models\Employe;
+use App\Models\User;
 
 class AdminController extends Controller
 {
+    private UserRepository $userRepository;
+    private EmployeRepository $employeRepository;
+
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository();
+        $this->employeRepository = new EmployeRepository();
+    }
+
     public function route(): void
     {
-        if (isset($_GET['action'])) {
+        $this->handleRoute(function () {
+            if (!isset($_GET['action'])) {
+                throw new \Exception("Aucune action détectée");
+            }
+
             switch ($_GET['action']) {
                 case 'dashboard':
                     $this->dashboard();
                     break;
-
                 case 'createEmploye':
                     $this->createEmploye();
                     break;
-
                 case 'toggleUserStatus':
                     $this->toggleUserStatus();
                     break;
-
                 case 'toggleEmployeStatus':
                     $this->toggleEmployeStatus();
                     break;
-
                 case 'listEmployesJson':
                     $this->listEmployesJson();
                     break;
-
+                case 'listUsersJson':
+                    $this->listUsersJson();
+                    break;
                 default:
                     throw new \Exception("Action administrateur inconnue");
             }
-        }
+        });
     }
+
 
     public function dashboard(): void
     {
@@ -46,7 +60,7 @@ class AdminController extends Controller
         }
 
         // Charger les stats
-        $statRepo = new \App\Repository\StatistiqueRepository();
+        $statRepo = new StatistiqueRepository();
         $stats = $statRepo->getAllStats();
 
         // Affiche la vue admin/dashboard.php
@@ -68,11 +82,9 @@ class AdminController extends Controller
 
             if (!empty($email) && !empty($pseudo) && !empty($password)) {
 
-                $repo = new \App\Repository\EmployeRepository();
-
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-                $created = $repo->create([
+                $created = $this->employeRepository->create([
                     'email' => $email,
                     'pseudo' => $pseudo,
                     'password' => $hashedPassword,
@@ -84,35 +96,13 @@ class AdminController extends Controller
                 $message = 'Tous les champs sont requis.';
             }
 
-            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTPP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
                 echo $message;
                 exit;
             }
         }
 
         $this->render('admin/createEmploye', ['message' => $message]);
-    }
-
-    public function toggleUserStatus(): void
-    {
-        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-            http_response_code(403);
-            echo 'Accès refusé';
-            exit;
-        }
-
-        $email = $_POST['email'] ?? null;
-
-        if (!$email) {
-            http_response_code(400);
-            echo 'Email manquant';
-            exit;
-        }
-
-        $repo = new \App\Repository\UserRepository();
-
-        $result = $repo->toggleSuspensionByEmail($email);
-        echo $result ? 'OK' : 'Erreur';
     }
 
     public function toggleEmployeStatus(): void
@@ -147,7 +137,7 @@ class AdminController extends Controller
             return;
         }
 
-        $etatActuel = (bool) $employe['isSuspended']; // force booléen
+        $etatActuel = $employe->isIsSuspended();
         $nouvelEtat = !$etatActuel;
 
 
@@ -164,11 +154,52 @@ class AdminController extends Controller
             exit;
         }
 
-        $repo = new \App\Repository\EmployeRepository();
+        $repo = new EmployeRepository();
         $employes = $repo->findAll();
 
+        $employeesArray = array_map(function (Employe $employe) {
+            return [
+                'id'          => $employe->getId(),
+                'email'       => $employe->getEmail(),
+                'pseudo'      => $employe->getPseudo(),
+                'isSuspended' => $employe->isIsSuspended(),
+            ];
+        }, $employes);
+
         header('Content-Type: application/json');
-        echo json_encode($employes);
+        echo json_encode($employeesArray);
         exit;
+    }
+
+
+    public function listUsersJson()
+    {
+        header('Content-Type: application/json');
+        $users = $this->userRepository->getAllNonEmployeeUsers();
+        $usersArray = array_map(function (User $user) {
+            return [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'name' => $user->getName(),
+                'firstName' => $user->getFirstName(),
+                'pseudo' => $user->getPseudo(),
+                'isSuspended' => $user->isIsSuspended(),
+            ];
+        }, $users);
+
+        header('Content-Type: application/json');
+        echo json_encode($usersArray);
+        exit;
+    }
+
+    public function toggleUserStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['email'])) {
+            $email = $_POST['email'];
+            $success = $this->userRepository->toggleSuspensionByEmail($email);
+            echo $success ? "OK" : "Erreur lors de la modification";
+        } else {
+            echo "Requête invalide";
+        }
     }
 }

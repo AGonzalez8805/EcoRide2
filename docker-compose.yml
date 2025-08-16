@@ -3,18 +3,21 @@ services:
   php:
     container_name: Ecoride_php 
     ports:
-      - "80:80"  # Port 80 de l'ordi → port 80 du conteneur
+      - "80:80"  
     volumes:
-      - ./:/var/www/html  # Dossier du projet → dans le conteneur
+      - ./:/var/www/html  
     build:
       context: .  # Construit depuis ce dossier
       dockerfile: Dockerfile  # Fichier Docker à utiliser
     networks:
       - app-network  # Réseau utilisé
+    depends_on:
+      - db
+      - mongodb
 
   # Service 'db' : Conteneur pour la base de données MySQL.
   db:
-    image: mysql:latest  # MySQL dernière version
+    image: mysql:latest
     container_name: Ecoride_mysql 
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} 
@@ -43,9 +46,41 @@ services:
     networks:
       - app-network  # Réseau utilisé
 
+        # Service 'mongodb' : Conteneur pour la base de données MongoDb.
+  mongodb:
+    image: mongo:7.0
+    container_name: Ecoride_mongodb
+    restart: unless-stopped #Evite l'arrêt en cas de redémarrage
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - Ecoride-mongodb_data:/data/db
+    networks:
+      - app-network
+
+  mongo-express:
+    image: mongo-express
+    container_name: Ecoride_mongo_express
+    restart: unless-stopped
+    ports:
+      - "8090:8081"  # Interface web sur http://localhost:8090
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
 # Réseau utilisé par tous les services
 networks:
   app-network:
 # Volume pour sauvegarder les données MySQL
 volumes:
   Ecoride-data:
+  Ecoride-mongodb_data:

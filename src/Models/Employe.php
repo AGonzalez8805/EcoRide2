@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use PDO;
-
 class Employe extends Models
 {
     protected ?int $id = null;
-    protected ?string $email = '';
-    protected ?string $password = '';
-    protected ?string $pseudo = '';
+    protected ?string $email = null;
+    protected ?string $password = null;
+    protected ?string $pseudo = null;
     protected bool $isSuspended = false;
     protected ?int $id_admin = null;
 

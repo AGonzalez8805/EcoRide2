@@ -61,6 +61,7 @@ footer {
   background-color: #558e4d;
 }
 
+/* Bouton de connexion */
 .btn-login {
   background-color: transparent;
   border: 2px solid #457b9d;
@@ -165,11 +166,6 @@ footer {
   cursor: pointer;
   font-weight: bold;
   white-space: nowrap;
-}
-
-.search-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(69, 123, 157, 0.3);
 }
 
 /* Media queries pour une meilleure adaptation */
@@ -568,16 +564,18 @@ input.form-control:focus {
 }
 
 /* Dashboard Admin */
-.admin {
+.en-tete {
   background: linear-gradient(135deg, #2d5a2d 0%, #4a7c59 100%);
   color: white;
-  padding: 1rem 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px 0;
+  text-align: center;
 }
 
-.admin h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
+.en-tete h1 {
+  font-family: "Fira Code", monospace;
+  font-size: 28px;
+  margin-bottom: 10px;
 }
 
 .user-info {
@@ -691,8 +689,8 @@ input.form-control:focus {
   border-color: #4a7c59;
 }
 
-.btn {
-  background: linear-gradient(135deg, #4a7c59, #2d5a2d);
+.btn-dashboard {
+  background: #2d5a2d;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -701,11 +699,13 @@ input.form-control:focus {
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+.btn-dashboard:hover {
+  background-color: #82b691;
+  color: white;
 }
 
 .btn-danger {
@@ -776,4 +776,1138 @@ input.form-control:focus {
   background: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
+}
+
+/* dashboard Passager */
+.user-credits {
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.simple-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 124, 89, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+/* Boutons unifiés */
+.btn-outline {
+  background: transparent;
+  color: #4a7c59;
+  border: 2px solid #4a7c59;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-outline:hover {
+  background-color: #4a7c59;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+}
+
+.btn-profil {
+  background: #2d5a2d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-profil:hover {
+  background-color: #82b691;
+  color: white;
+}
+
+/* Liste des trajets */
+.trip-history {
+  margin-top: 15px;
+}
+.trip-item {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-left: 4px solid #6aaa64;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.trip-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.trip-route {
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+}
+
+.trip-date {
+  color: #666;
+  font-size: 14px;
+}
+
+.trip-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-reserved {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Section statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid rgba(74, 124, 89, 0.1);
+  background: #f8fdf8;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2d5a2d;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Message d'état */
+.alert {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .en-tete h1 {
+    font-size: 24px;
+  }
+
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .simple-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .trip-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .trip-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .en-tete {
+    padding: 20px 0;
+  }
+
+  .en-tete h1 {
+    font-size: 20px;
+  }
+
+  .user-credits {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Page covoiturage */
+.covoiturage-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+  min-height: calc(100vh - 200px);
+}
+/* Sidebar de recherche et filtres */
+.search-sidebar {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.sidebar-title {
+  font-family: "Fira Code", monospace;
+  color: #457b9d;
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #6aaa64;
+  padding-bottom: 10px;
+}
+
+.search-form-simple {
+  margin-bottom: 30px;
+}
+
+.form-group-simple {
+  margin-bottom: 15px;
+}
+
+.form-group-simple label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 14px;
+}
+
+.form-control-simple {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #fafbfc;
+}
+
+.form-control-simple:focus {
+  outline: none;
+  border-color: #6aaa64;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(106, 170, 100, 0.1);
+}
+
+.btn-search {
+  background: linear-gradient(135deg, #457b9d, #558e4d);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Section filtres dans la sidebar */
+.filters-section-sidebar {
+  border-top: 1px solid #e9ecef;
+  padding-top: 20px;
+}
+
+.filters-title-sidebar {
+  font-weight: 600;
+  color: #457b9d;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.filter-item {
+  margin-bottom: 15px;
+}
+
+.filter-item label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.range-container {
+  position: relative;
+}
+
+.range-input {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.range-value {
+  text-align: center;
+  font-weight: 600;
+  color: #6aaa64;
+  font-size: 14px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6aaa64;
+}
+
+.checkbox-container label {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Zone des résultats */
+.results-area {
+  background: transparent;
+}
+
+.results-header-simple {
+  background: white;
+  padding: 20px 25px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-count-simple {
+  font-family: "Fira Code", monospace;
+  color: #457b9d;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sort-container label {
+  font-size: 14px;
+  color: #666;
+}
+
+.sort-select-simple {
+  padding: 8px 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+}
+
+/* Cartes de covoiturage simplifiées */
+.trip-card-simple {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #6aaa64;
+}
+
+.trip-main-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 15px;
+}
+
+.trip-route-simple {
+  font-family: "Fira Code", monospace;
+  font-size: 20px;
+  color: #457b9d;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.trip-time {
+  color: #666;
+  font-size: 14px;
+}
+
+.trip-price-simple {
+  font-size: 28px;
+  font-weight: bold;
+  color: #6aaa64;
+  text-align: right;
+}
+
+.price-per-person {
+  font-size: 12px;
+  color: #999;
+  font-weight: normal;
+}
+
+.trip-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.detail-icon {
+  color: #457b9d;
+  width: 14px;
+  text-align: center;
+}
+
+.driver-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.driver-info-simple {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.driver-avatar-simple {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6aaa64, #457b9d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.driver-name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.driver-rating-simple {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.stars-simple {
+  color: #ffc107;
+  font-size: 14px;
+}
+
+.trip-actions-simple {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-detail-simple {
+  background: transparent;
+  color: #457b9d;
+  border: 2px solid #457b9d;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-detail-simple:hover {
+  background: #457b9d;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-book-simple {
+  background: #6aaa64;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-book-simple:hover {
+  background: #558e4d;
+  transform: translateY(-1px);
+}
+
+.btn-book-simple:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Badge écologique */
+.eco-badge-simple {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+/* États spéciaux */
+.trip-full {
+  opacity: 0.6;
+  border-left-color: #dc3545;
+}
+
+.full-badge {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Message d'absence de résultats */
+.no-results-simple {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+}
+
+.no-results-simple i {
+  font-size: 64px;
+  color: #e9ecef;
+  margin-bottom: 20px;
+}
+
+.no-results-simple h3 {
+  color: #457b9d;
+  margin-bottom: 10px;
+  font-family: "Fira Code", monospace;
+}
+
+.no-results-simple p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .covoiturage-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .search-sidebar {
+    position: static;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .covoiturage-container {
+    padding: 10px;
+  }
+
+  .search-sidebar {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .trip-main-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .trip-price-simple {
+    text-align: left;
+  }
+
+  .trip-details-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .driver-section {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .results-header-simple {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-card-simple {
+    padding: 15px;
+  }
+
+  .sidebar-title {
+    font-size: 18px;
+  }
+
+  .trip-route-simple {
+    font-size: 18px;
+  }
+
+  .trip-price-simple {
+    font-size: 24px;
+  }
+}
+
+/* Creation vehicule */
+.vehicle-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 124, 89, 0.1);
+  margin-bottom: 2rem;
+}
+
+.card-title-dash {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2d5a2d;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #6aaa64;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+  background-color: #fafbfc;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4a7c59;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #4a7c59;
+  border: 2px solid #4a7c59;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-secondary:hover {
+  background-color: #4a7c59;
+  color: white;
+  text-decoration: none;
+}
+
+.energy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.energy-option {
+  position: relative;
+}
+
+.energy-option input[type="radio"] {
+  display: none;
+}
+
+.energy-label {
+  display: block;
+  padding: 1rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  background: #fafbfc;
+  font-weight: 500;
+}
+
+.energy-option input[type="radio"]:checked + .energy-label {
+  border-color: #4a7c59;
+  background: #f8fdf8;
+  color: #2d5a2d;
+}
+
+.energy-label .eco-badge {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.preferences-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.preference-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  background: #fafbfc;
+}
+
+.preference-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #4a7c59;
+}
+
+.preference-item label {
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.info-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.required {
+  color: #dc3545;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* profilChauffeur */
+.profilChauffeur {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 1rem;
+  font-family: "Fira Code", monospace;
+  font-size: 2rem;
+  text-decoration: underline;
+}
+
+.Chauffeur {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Card principale */
+.info-card {
+  background: white;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Layout en-tête avec photo à gauche et nom centré */
+.header-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header-photo-left {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-name-center {
+  flex: 1;
+  text-align: center;
+}
+
+.header-name-center h1 {
+  margin: 0;
+  color: white;
+  font-family: "Fira Code", monospace;
+}
+
+.header-spacer {
+  flex: 0 0 auto;
+  width: 100px; /* Même largeur que la zone photo pour équilibrer */
+}
+
+/* Photo de profil à gauche */
+.profile-photo-header {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.no-photo-header {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+}
+
+/* Formulaire photo compact à gauche */
+.photo-form-header {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.file-input-header {
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+  width: 60px;
+}
+
+.btn-update-header {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 4px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+  min-width: 30px;
+}
+
+.btn-update-header:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Titres des sections */
+.info-card h3 {
+  color: #457b9d;
+  margin-bottom: 20px;
+  font-size: 18px;
+  border-bottom: 2px solid #6aaa64;
+  padding-bottom: 5px;
+}
+
+/* Grille des informations */
+.info-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+.label {
+  font-weight: bold;
+  color: #333;
+}
+
+.value {
+  color: #555;
+}
+/* Pseudo */
+.pseudo-display,
+.email-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.pseudo-edit,
+.email-edit {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.btn-small {
+  padding: 2px 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Badges */
+.credit-badge {
+  background: #457b9d;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.status-good {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-bad {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Véhicules */
+.vehicle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.vehicle-box {
+  background: #eef5ec;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #6aaa64;
+}
+
+.vehicle-info {
+  margin-top: 8px;
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.no-vehicle {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 30px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  /* En-tête mobile : retour en colonne */
+  .header-layout {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .header-spacer {
+    display: none;
+  }
+
+  .header-name-center {
+    order: 2;
+  }
+
+  .header-photo-left {
+    order: 1;
+  }
+
+  .profile-photo-header {
+    width: 70px;
+    height: 70px;
+  }
+
+  .no-photo-header {
+    width: 70px;
+    height: 70px;
+    font-size: 25px;
+  }
+
+  .photo-form-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .file-input-header {
+    width: 120px;
+    font-size: 11px;
+  }
+
+  .info-card {
+    padding: 15px;
+    margin: 15px 0;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .vehicle-info {
+    flex-direction: column;
+    gap: 5px;
+  }
 }
