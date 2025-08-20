@@ -8,6 +8,7 @@ import { Contact } from "./Modules/Contact.js";
 import { ChauffeurTrajet } from "./Modules/ChauffeurTrajet.js";
 import { Vehicule } from "./Modules/Vehicule.js";
 import { Profil } from "./Modules/Profil.js";
+import { Avis } from "./Modules/Avis.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("registrationForm")) {
@@ -37,4 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("profilForm")) {
     new Profil();
   }
+
+  if (document.getElementById("avisForm")) {
+    new Avis();
+  }
+
 });

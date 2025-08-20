@@ -1,7 +1,7 @@
 <?php require_once APP_ROOT . '/views/header.php'; ?>
 
 <div class="en-tete">
-    <h1>Bonjour Marie !</h1>
+    <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
     <p>Bienvenue dans votre espace passager</p>
     <div class="user-credits">
         💰 Crédits disponibles : <strong>18</strong>
@@ -116,7 +116,7 @@
                 </a>
             </div>
             <div class="col-md-4 mb-3">
-                <a href="/?controller=user&action=reviews" class="btn btn-outline w-100">
+                <a href="/?controller=avis&action=avis" class="btn btn-outline w-100">
                     ⭐ Mes avis
                 </a>
             </div>

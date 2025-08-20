@@ -44,7 +44,6 @@ export class Contact {
 
     validateField(field) {
         const value = field.value.trim();
-
         // Spécifique au champ téléphone
         if (field === this.inputPhone) {
             const phoneRegex = /^[0-9\s-]{10,}$/;
@@ -53,7 +52,6 @@ export class Contact {
             field.classList.toggle("is-invalid", !isValid);
             return isValid;
         }
-
         // Validation générique pour les autres champs
         if (value === "") {
             field.classList.remove("is-valid");

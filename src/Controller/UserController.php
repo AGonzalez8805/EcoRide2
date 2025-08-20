@@ -18,7 +18,7 @@ class UserController extends Controller
             if (isset($_GET['action'])) {
                 switch ($_GET['action']) {
                     case 'dashboardChauffeur':
-                        // Affiche le tableau de bord Ch
+                        // Affiche le tableau de bord Chauffeur
                         $this->dashboardChauffeur();
                         break;
 
@@ -36,12 +36,12 @@ class UserController extends Controller
                         break;
 
                     case 'dashboardPassager':
-                        // Affiche le tableau de bord utilisateur
+                        // Affiche le tableau de bord Passager
                         $this->dashboardPassager();
                         break;
 
                     case 'dashboardMixte':
-                        // Affiche le tableau de bord utilisateur
+                        // Affiche le tableau de bord Passager/Chauffeur
                         $this->dashboardMixte();
                         break;
 
@@ -199,17 +199,19 @@ class UserController extends Controller
         }
 
         // Récupérer les infos utilisateur stockées en session
-        $user = [
-            'firstName' => $_SESSION['firstName'] ?? 'Utilisateur',
-            'name' => $_SESSION['name'] ?? '',
-            'email' => $_SESSION['email'] ?? ''
-        ];
+        $userRepo = new UserRepository();
+        $user = $userRepo->findById($_SESSION['user_id']);
+
 
         $this->render('user/dashboardPassager', ['user' => $user]);
     }
 
     public function dashboardMixte(): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->render('user/dashboardMixte');
     }
 }

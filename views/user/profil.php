@@ -48,13 +48,13 @@
             <div class="info-item">
                 <span class="label">Pseudo :</span>
                 <div class="pseudo-display" id="pseudoDisplayContainer">
-                    <span class="value"><?= htmlspecialchars($user->getPseudo()) ?></span>
+                    <span class="value"><?= htmlspecialchars($user->getPseudo() ?? '') ?></span>
                     <button type="button" id="editPseudoBtn" class="btn-icon" title="Modifier le pseudo">✏️</button>
                 </div>
                 <form action="/?controller=user&action=updateProfile" method="POST" id="pseudoForm" style="display: none;">
                     <input type="hidden" name="field" value="pseudo">
                     <div class="pseudo-edit">
-                        <input type="text" name="pseudo" id="pseudoInput" value="<?= htmlspecialchars($user->getPseudo()) ?>" required>
+                        <input type="text" name="pseudo" id="pseudoInput" value="<?= htmlspecialchars($user->getPseudo() ?? '') ?>" required>
                         <button type="submit" id="savePseudoBtn" title="Enregistrer" class="btn-small">✅</button>
                         <button type="button" id="cancelPseudoBtn" class="btn-small">❌</button>
                     </div>

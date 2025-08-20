@@ -130,7 +130,7 @@
         </div>
 
         <div class="text-center mt-3">
-            <a href="/?controller=user&action=reviews" class="btn-outline">Voir tous mes avis</a>
+            <a href="/?controller=avis&action=avis" class="btn-outline">Voir tous mes avis</a>
         </div>
     </div>
 

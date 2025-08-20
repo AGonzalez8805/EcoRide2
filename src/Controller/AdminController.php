@@ -127,7 +127,7 @@ class AdminController extends Controller
             return;
         }
 
-        $repo = new \App\Repository\EmployeRepository();
+        $repo = new EmployeRepository();
 
         $employe = $repo->findByEmail($email);
 
