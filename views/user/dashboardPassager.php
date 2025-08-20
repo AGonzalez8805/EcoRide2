@@ -4,7 +4,7 @@
     <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
     <p>Bienvenue dans votre espace passager</p>
     <div class="user-credits">
-        💰 Crédits disponibles : <strong>18</strong>
+        💰 Crédits disponibles : <strong><?= htmlspecialchars($user->getCredit()) ?></strong>
     </div>
 </div>
 

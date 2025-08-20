@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\TrajetRepository;
 use App\Repository\VehiculeRepository;
 use App\Repository\UserRepository;
+use App\Repository\ParticipationRepository;
 
 class UserController extends Controller
 {
@@ -65,6 +66,9 @@ class UserController extends Controller
             throw new \Exception("Utilisateur non connecté.");
         }
 
+        $userRepo = new UserRepository();
+        $user = $userRepo->findById($chauffeurId);
+
         $trajetRepo = new TrajetRepository();
         $trajetsDuJour = $trajetRepo->findTodayByChauffeur($chauffeurId);
 
@@ -72,6 +76,7 @@ class UserController extends Controller
         $vehicules = $vehiculeRepo->findAllByUser($chauffeurId);
 
         $this->render('user/dashboardChauffeur', [
+            'user' => $user,
             'trajetsDuJour' => $trajetsDuJour,
             'vehicules' => $vehicules
         ]);
@@ -198,13 +203,24 @@ class UserController extends Controller
             session_start();
         }
 
-        // Récupérer les infos utilisateur stockées en session
+        $userId = $_SESSION['user_id'] ?? null;
+
+        if (!$userId) {
+            throw new \Exception("Utilisateur non connecté.");
+        }
+
         $userRepo = new UserRepository();
-        $user = $userRepo->findById($_SESSION['user_id']);
+        $user = $userRepo->findById($userId);
 
+        $participationRepo = new ParticipationRepository();
+        $participationDuJour = $participationRepo->findTodayByUser($userId);
 
-        $this->render('user/dashboardPassager', ['user' => $user]);
+        $this->render('user/dashboardPassager', [
+            'user' => $user,
+            'participationDuJour' => $participationDuJour
+        ]);
     }
+
 
     public function dashboardMixte(): void
     {

@@ -2,10 +2,12 @@
 
 <section class="en-tete">
     <div class="container">
-        <h1>Mon espace chauffeur</h1>
         <p class="user-info">
-            Bonjour <strong>Marc</strong>
-            <span class="user-credits">Solde : 35 crédits</span>
+            <strong>
+                <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
+            </strong>
+        <h2>Bienvenue sur ton espace chauffeur</h2>
+        <span class="user-credits">Solde : 35 crédits</span>
         </p>
     </div>
 </section>
