@@ -13,7 +13,6 @@ class AvisController extends Controller
             if (!isset($_GET['action'])) {
                 throw new \Exception("Aucune action détectée");
             }
-
             switch ($_GET['action']) {
                 case 'avis':
                     $this->avis();
@@ -21,7 +20,6 @@ class AvisController extends Controller
                 case 'submit':
                     $this->submit();
                     break;
-
                 default:
                     throw new \Exception("Action avis inconnue");
             }
