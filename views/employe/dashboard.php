@@ -1,15 +1,13 @@
 <?php require_once APP_ROOT . '/views/header.php'; ?>
 
-<div class="en-tete">
+<section class="en-tete">
     <div class="container">
-        <h1>Espace Employé</h1>
-        <div class="user-info">
-            <p> Connecté en tant que : <strong><?= htmlspecialchars($_SESSION['pseudo'] ?? 'Employé') ?></strong></p>
-        </div>
+        <h1>Bonjour <?= htmlspecialchars($employe['pseudo'] ?? '') ?></h1>
+        <p>Bienvenue dans votre espace employé</p>
     </div>
-</div>
+</section>
 
-<section class="admin-stat">
+<section class="employe-stat" id="employeStat">
     <div class="container-fluid">
         <div class="dashboard-grid">
 
@@ -45,8 +43,7 @@
                     </div>
                     <h3 class="card-title">Validation des avis</h3>
                 </div>
-
-                <div class="avis-validation-container">
+                <div class="avis-validation-container" id="avisValidation">
                     <!-- Filtres -->
                     <div class="filters-row mb-3">
                         <div class="row">
@@ -81,51 +78,57 @@
                             <p>Aucun avis en attente.</p>
                         <?php else: ?>
                             <?php foreach ($avisEnAttente as $avis): ?>
-                                <div class="avis-item pending" data-id="<?= $avis['id'] ?>">
+                                <div class="avis-item pending" data-id="<?= $avis->getId() ?>">
                                     <div class="avis-header">
                                         <div class="avis-info">
                                             <div class="chauffeur-name">
                                                 <i class="fas fa-user me-2"></i>
-                                                <strong><?= htmlspecialchars($avis['pseudo']) ?></strong>
+                                                <strong><?= htmlspecialchars($avis->getPseudo()) ?></strong>
                                                 <span class="badge status-pending ms-2">En attente</span>
                                             </div>
                                             <div class="avis-meta">
                                                 <span class="date">
                                                     <i class="fas fa-calendar me-1"></i>
-                                                    <?= $avis['created_at'] ?>
+                                                    <?= $avis->getDatePublication() ? $avis->getDatePublication()->format('d/m/Y H:i') : '' ?>
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="avis-rating">
                                             <div class="stars">
                                                 <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                    <span class="star <?= $i <= $avis['note'] ? 'active' : '' ?>">★</span>
+                                                    <span class="star <?= $i <= $avis->getNote() ? 'active' : '' ?>">★</span>
                                                 <?php endfor; ?>
                                             </div>
-                                            <span class="rating-number"><?= $avis['note'] ?>/5</span>
+                                            <span class="rating-number"><?= $avis->getNote() ?>/5</span>
                                         </div>
                                     </div>
 
                                     <div class="avis-content">
                                         <div class="auteur">
                                             <i class="fas fa-user-circle me-2"></i>
-                                            Par : <strong><?= htmlspecialchars($avis['email']) ?></strong>
+                                            Par : <strong><?= htmlspecialchars($avis->getPseudo()) ?></strong>
                                         </div>
                                         <div class="commentaire">
-                                            "<?= htmlspecialchars($avis['commentaire']) ?>"
+                                            "<?= htmlspecialchars($avis->getCommentaire()) ?>"
                                         </div>
                                     </div>
 
                                     <div class="avis-actions">
-                                        <a class="btn-dashboard btn-valider" href="/?controller=employe&action=valider&id=<?= $avis['id'] ?>">
-                                            <i class="fas fa-check me-1"></i>Valider
-                                        </a>
-                                        <a class="btn-dashboard btn-refuser" href="/?controller=employe&action=refuser&id=<?= $avis['id'] ?>">
-                                            <i class="fas fa-times me-1"></i>Refuser
-                                        </a>
+                                        <?php if ($avis->getStatut() === 'en_attente'): ?>
+                                            <a class="btn-dashboard btn-valider" href="/?controller=employe&action=valider&id=<?= $avis->getId() ?>">
+                                                <i class="fas fa-check me-1"></i>Valider
+                                            </a>
+                                            <a class="btn-dashboard btn-refuser" href="/?controller=employe&action=refuser&id=<?= $avis->getId() ?>">
+                                                <i class="fas fa-times me-1"></i>Refuser
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="badge"><?= ucfirst($avis->getStatut()) ?></span>
+                                        <?php endif; ?>
                                     </div>
+
                                 </div>
                             <?php endforeach; ?>
+
                         <?php endif; ?>
                     </div>
                 </div>
@@ -239,7 +242,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </section>
 

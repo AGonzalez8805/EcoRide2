@@ -8,7 +8,7 @@
 </section>
 
 
-<div class="container admin-stat">
+<div class="container admin-stat" id="adminStat">
     <div class="dashboard-grid">
         <!-- Statistiques -->
         <div class="card">

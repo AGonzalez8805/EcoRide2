@@ -130,4 +130,14 @@ class AvisRepository
 
         return $avisList;
     }
+
+    public function listerParStatut(string $statut): array
+    {
+        $cursor = $this->collection->find(['statut' => $statut], ['sort' => ['created_at' => -1]]);
+        $avisList = [];
+        foreach ($cursor as $doc) {
+            $avisList[] = Avis::fromDocument($doc);
+        }
+        return $avisList;
+    }
 }

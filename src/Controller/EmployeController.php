@@ -28,6 +28,10 @@ class EmployeController extends Controller
                     $this->refuser($_GET['id'] ?? null);
                     break;
 
+                case 'getAvis':
+                    $this->getAvis();
+                    break;
+
                 default:
                     throw new \Exception("Action employé inconnue");
             }
@@ -60,9 +64,14 @@ class EmployeController extends Controller
             'avisTraites' => $avisRepo->countTraitesToday()
         ];
 
+        $employe = [
+            'pseudo' => $_SESSION['pseudo'] ?? ''
+        ];
+
         $this->render('employe/dashboard', [
             'avisEnAttente' => $avisEnAttente,
-            'stats' => $stats
+            'stats' => $stats,
+            'employe' => $employe
         ]);
     }
 
@@ -91,6 +100,51 @@ class EmployeController extends Controller
         $avisRepo->changerStatut($id, 'refuse');
 
         header("Location: /?controller=employe&action=dashboard");
+        exit;
+    }
+
+    public function getAvis(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Vérifie que l'utilisateur est connecté et est employé
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'employe') {
+            header('Content-Type: application/json');
+            http_response_code(403);
+            echo json_encode([]);
+            exit;
+        }
+
+        $statut = $_GET['statut'] ?? ''; // "" / "en_attente" / "valide" / "refuse"
+
+        $db = MongoDb::getInstance()->getDatabase();
+        $avisRepo = new AvisRepository($db);
+
+        // récupère les avis selon le statut
+        if ($statut === '') {
+            // Tous les statuts : en_attente + valide + refuse
+            $avis = array_merge(
+                $avisRepo->listerEnAttente(),
+                $avisRepo->listerParStatut('valide'),
+                $avisRepo->listerParStatut('refuse')
+            );
+        } else {
+            $avis = $avisRepo->listerParStatut($statut);
+        }
+
+        $data = array_map(fn($a) => [
+            'id' => $a->getId(),
+            'pseudo' => $a->getPseudo(),
+            'note' => $a->getNote(),
+            'commentaire' => $a->getCommentaire(),
+            'statut' => $a->getStatut(),
+            'created_at' => $a->getDatePublication() ? $a->getDatePublication()->format('d/m/Y H:i') : ''
+        ], $avis);
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
         exit;
     }
 }

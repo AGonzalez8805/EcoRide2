@@ -77,10 +77,15 @@ class UserController extends Controller
         $vehiculeRepo = new VehiculeRepository();
         $vehicules = $vehiculeRepo->findAllByUser($chauffeurId);
 
+        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
+        $avisValides = $avisRepo->listerValides(); // récupère tous les avis validés
+
+
         $this->render('user/dashboardChauffeur', [
             'user' => $user,
             'trajetsDuJour' => $trajetsDuJour,
-            'vehicules' => $vehicules
+            'vehicules' => $vehicules,
+            'avisValides' => $avisValides
         ]);
     }
 

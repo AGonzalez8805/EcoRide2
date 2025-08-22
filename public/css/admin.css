@@ -18,7 +18,8 @@
   margin-top: 0.5rem;
 }
 
-.admin-stat {
+.admin-stat,
+.employe-stat {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;

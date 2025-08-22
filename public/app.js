@@ -9,6 +9,7 @@ import { ChauffeurTrajet } from "./Modules/ChauffeurTrajet.js";
 import { Vehicule } from "./Modules/Vehicule.js";
 import { Profil } from "./Modules/Profil.js";
 import { Avis } from "./Modules/Avis.js";
+import { EmployeDashboard } from "./Modules/EmployeDashboard.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("registrationForm")) {
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     new Login();
   }
 
-  if (document.querySelector(".admin-stat")) {
+  if (document.getElementById("adminStat")) {
     new AdminDashboard();
   }
 
@@ -41,6 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (document.getElementById("avisForm")) {
     new Avis();
+  }
+
+  if (document.getElementById("employeStat")) {
+    new EmployeDashboard();
   }
 
 });

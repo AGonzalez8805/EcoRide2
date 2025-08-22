@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Db\MongoDb;
 use App\Repository\AvisRepository;
+use App\Models\Avis;
 
 class AvisController extends Controller
 {
@@ -46,8 +47,9 @@ class AvisController extends Controller
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-
+        ob_start();
         header('Content-Type: application/json');
+
 
         $userId = $_SESSION['user_id'] ?? null;
         if (!$userId) {
@@ -65,7 +67,8 @@ class AvisController extends Controller
             $db = MongoDb::getInstance()->getDatabase();
             $avisRepo = new AvisRepository($db);
 
-            $ok = $avisRepo->ajouter($data, $userId);
+            $avis = new Avis($data);
+            $ok = $avisRepo->ajouter($avis, $userId);
 
             if ($ok) {
                 echo json_encode(['success' => true, 'message' => 'Avis enregistré avec succès !']);
@@ -75,6 +78,7 @@ class AvisController extends Controller
         } catch (\Exception $e) {
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
+
         exit; // <-- Important pour bloquer tout autre HTML
     }
 }

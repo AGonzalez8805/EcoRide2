@@ -1,12 +1,17 @@
 <?php require_once APP_ROOT . '/views/header.php'; ?>
 
-<div class="en-tete">
-    <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
-    <p>Bienvenue dans votre espace passager</p>
-    <div class="user-credits">
-        💰 Crédits disponibles : <strong><?= htmlspecialchars($user->getCredit()) ?></strong>
+
+<section class="en-tete">
+    <div class="container">
+        <p class="user-info">
+            <strong>
+                <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
+            </strong>
+        <p>Bienvenue dans votre espace passager</p>
+        <span class="user-credits">Solde : 35 crédits</span>
+        </p>
     </div>
-</div>
+</section>
 
 <div class="dashboard-container">
     <!-- Statistiques rapides -->
@@ -143,6 +148,10 @@
                 <a href="/?controller=user&action=profil" class="btn-profil w-100">
                     👤 Modifier mon profil
                 </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="/?controller=avis&action=avis" class="btn btn-outline w-100">
+                    ⭐ Déposer un avis</a>
             </div>
             <div class="col-md-4 mb-3">
                 <a href="/?controller=pages&action=help" class="btn btn-outline w-100">
