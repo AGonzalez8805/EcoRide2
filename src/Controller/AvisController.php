@@ -28,47 +28,53 @@ class AvisController extends Controller
 
     protected function avis()
     {
-    if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-    if (!isset($_SESSION['user_id'])) {
-        // L'utilisateur n'est pas connecté → redirige vers login
-        header('Location: /?controller=auth&action=login');
-        exit();
-    }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['typeUtilisateur']) || $_SESSION['typeUtilisateur'] !== 'passager') {
+            // L'utilisateur n'est pas connecté → redirige vers login
+            header('Location: /?controller=auth&action=login');
+            exit();
+        }
 
-    // L'utilisateur est connecté → affiche la page déposer un avis
-    $this->render('avis/avis');
-}
+        // L'utilisateur est connecté → affiche la page déposer un avis
+        $this->render('avis/avis');
+    }
 
     public function submit(): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         header('Content-Type: application/json');
 
-        // Récupération des données JSON envoyées par fetch()
-        $data = json_decode(file_get_contents('php://input'), true);
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté']);
+            exit;
+        }
 
+        $data = json_decode(file_get_contents('php://input'), true);
         if (!$data) {
             echo json_encode(['success' => false, 'message' => 'Données invalides']);
             exit;
         }
 
         try {
-            // Connexion MongoDB via ton singleton
             $db = MongoDb::getInstance()->getDatabase();
             $avisRepo = new AvisRepository($db);
 
-            $ok = $avisRepo->ajouter($data);
+            $ok = $avisRepo->ajouter($data, $userId);
 
             if ($ok) {
                 echo json_encode(['success' => true, 'message' => 'Avis enregistré avec succès !']);
-                exit;
             } else {
                 echo json_encode(['success' => false, 'message' => 'Impossible d’enregistrer l’avis.']);
-                exit;
             }
         } catch (\Exception $e) {
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
+        exit; // <-- Important pour bloquer tout autre HTML
     }
 }

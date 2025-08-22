@@ -27,7 +27,7 @@
 
     <!-- Mes prochains trajets -->
     <div class="simple-card">
-        <h2 class="card-title">🚗 Mes prochains trajets</h2>
+        <h2 class="card-title-dash">🚗 Mes prochains trajets</h2>
         <div id="upcoming-trips">
             <div class="trip-item">
                 <div class="trip-info">
@@ -106,6 +106,35 @@
         </div>
     </div>
 
+    <!-- Mes avis -->
+    <div class="simple-card">
+        <h2 class="card-title-dash">⭐ Mes avis</h2>
+        <?php if (!empty($mesAvis)): ?>
+            <ul>
+                <?php foreach ($mesAvis as $avis): ?>
+                    <li>
+                        <strong><?= htmlspecialchars($avis->getPseudo() ?? '') ?></strong> :
+                        <?= htmlspecialchars($avis->getCommentaire() ?? '') ?>
+                        <em>(<?= $avis->getDatePublication() ? $avis->getDatePublication()->format('Y-m-d H:i:s') : '' ?>)</em>
+                        - Note : <?= htmlspecialchars($avis->getNote() ?? '') ?>
+                        - Statut :
+                        <?php if ($avis->getStatut() === 'valide'): ?>
+                            ✅ Validé
+                        <?php elseif ($avis->getStatut() === 'en_attente'): ?>
+                            ⏳ En attente
+                        <?php else: ?>
+                            ❌ <?= htmlspecialchars($avis->getStatut() ?? 'inconnu') ?>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>Vous n'avez encore posté aucun avis.</p>
+        <?php endif; ?>
+    </div>
+
+
+
     <!-- Actions rapides -->
     <div class="simple-card">
         <h2 class="card-title">⚡ Actions rapides</h2>
@@ -113,11 +142,6 @@
             <div class="col-md-4 mb-3">
                 <a href="/?controller=user&action=profil" class="btn-profil w-100">
                     👤 Modifier mon profil
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="/?controller=avis&action=avis" class="btn btn-outline w-100">
-                    ⭐ Mes avis
                 </a>
             </div>
             <div class="col-md-4 mb-3">

@@ -33,7 +33,7 @@ class MongoDb
             $this->dbHost = $url["host"];
             $this->dbUser = $url["user"];
             $this->dbPassword = $url["pass"];
-            $this->dbPort = $url["port"] ?? 3306;
+            $this->dbPort = $url["port"] ?? 27017; // Port par défaut de MongoDB
             $this->dbName = ltrim($url["path"], '/');
         } else {
             // Sinon on charge depuis le fichier ini

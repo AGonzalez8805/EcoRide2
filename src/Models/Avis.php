@@ -2,20 +2,36 @@
 
 namespace App\Models;
 
-class Avis extends Models
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\BSON\ObjectId;
+
+class Avis
 {
-    protected ?int $id = null;
-    protected ?string $commentaire = null;
-    protected ?int $note = null;
-    protected ?string $statut = null;
-    protected ?string $datePublication = null;
-    protected ?int $idUtilisateurs = null;
-    protected ?int $idEmploye = null;
+    private ?string $id = null;
+    private ?string $commentaire = null;
+    private ?int $note = null;
+    private ?string $statut = null;
+    private ?\DateTime $datePublication = null;
+    private ?string $idUtilisateurs = null;
+    private ?string $idEmploye = null;
+    private ?string $pseudo = null;
+
+    public function __construct(array $data = [])
+    {
+        $this->id              = $data['id'] ?? null;
+        $this->commentaire     = $data['commentaire'] ?? null;
+        $this->note            = $data['note'] ?? null;
+        $this->statut          = $data['statut'] ?? null;
+        $this->datePublication = $data['datePublication'] ?? null;
+        $this->idUtilisateurs  = $data['idUtilisateurs'] ?? null;
+        $this->idEmploye       = $data['idEmploye'] ?? null;
+        $this->pseudo          = $data['pseudo'] ?? null;
+    }
 
     /**
      * Get the value of id
      */
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -23,7 +39,7 @@ class Avis extends Models
     /**
      * Set the value of id
      */
-    public function setId(?int $id): self
+    public function setId(?string $id): self
     {
         $this->id = $id;
 
@@ -87,7 +103,7 @@ class Avis extends Models
     /**
      * Get the value of datePublication
      */
-    public function getDatePublication(): ?string
+    public function getDatePublication()
     {
         return $this->datePublication;
     }
@@ -95,7 +111,7 @@ class Avis extends Models
     /**
      * Set the value of datePublication
      */
-    public function setDatePublication(?string $datePublication): self
+    public function setDatePublication($datePublication): self
     {
         $this->datePublication = $datePublication;
 
@@ -105,7 +121,7 @@ class Avis extends Models
     /**
      * Get the value of idUtilisateurs
      */
-    public function getIdUtilisateurs(): ?int
+    public function getIdUtilisateurs(): ?string
     {
         return $this->idUtilisateurs;
     }
@@ -113,7 +129,7 @@ class Avis extends Models
     /**
      * Set the value of idUtilisateurs
      */
-    public function setIdUtilisateurs(?int $idUtilisateurs): self
+    public function setIdUtilisateurs(?string $idUtilisateurs): self
     {
         $this->idUtilisateurs = $idUtilisateurs;
 
@@ -123,7 +139,7 @@ class Avis extends Models
     /**
      * Get the value of idEmploye
      */
-    public function getIdEmploye(): ?int
+    public function getIdEmploye(): ?string
     {
         return $this->idEmploye;
     }
@@ -131,10 +147,67 @@ class Avis extends Models
     /**
      * Set the value of idEmploye
      */
-    public function setIdEmploye(?int $idEmploye): self
+    public function setIdEmploye(?string $idEmploye): self
     {
         $this->idEmploye = $idEmploye;
 
         return $this;
+    }
+
+    /**
+     * Get the value of pseudo
+     */
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    /**
+     * Set the value of pseudo
+     */
+    public function setPseudo(?string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public static function fromDocument(object $doc): self
+    {
+        return new self([
+            'id'              => isset($doc->_id) ? (string)$doc->_id : null,
+            'commentaire'     => $doc->commentaire ?? null,
+            'note'            => $doc->note ?? null,
+            'statut'          => $doc->statut ?? 'en_attente',
+            'datePublication' => isset($doc->created_at) && $doc->created_at instanceof UTCDateTime
+                ? $doc->created_at->toDateTime()
+                : null,
+            'idUtilisateurs'  => isset($doc->user_id) ? (string)$doc->user_id : null,
+            'idEmploye'       => isset($doc->idEmploye) ? (string)$doc->idEmploye : null,
+            'pseudo'          => $doc->pseudo ?? null,
+        ]);
+    }
+
+
+
+    public function toDocument(): array
+    {
+        $doc = [
+            'commentaire'     => $this->commentaire,
+            'note'            => $this->note,
+            'statut'          => $this->statut ?? 'en_attente',
+            'created_at'      => $this->datePublication instanceof UTCDateTime
+                ? $this->datePublication
+                : new UTCDateTime(),
+            'user_id'         => $this->idUtilisateurs ? new ObjectId($this->idUtilisateurs) : null,
+            'idEmploye'       => $this->idEmploye ? new ObjectId($this->idEmploye) : null,
+            'pseudo'          => $this->pseudo,
+        ];
+
+        if ($this->id) {
+            $doc['_id'] = new ObjectId($this->id);
+        }
+
+        return $doc;
     }
 }

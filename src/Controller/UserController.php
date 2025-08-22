@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Db\MongoDb;
 use App\Repository\TrajetRepository;
 use App\Repository\VehiculeRepository;
 use App\Repository\UserRepository;
 use App\Repository\ParticipationRepository;
+use App\Repository\AvisRepository;
 
 class UserController extends Controller
 {
@@ -183,9 +185,6 @@ class UserController extends Controller
         }
     }
 
-
-
-
     public function updateRole(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -249,9 +248,13 @@ class UserController extends Controller
         $participationRepo = new ParticipationRepository();
         $participationDuJour = $participationRepo->findTodayByUser($userId);
 
+        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
+        $mesAvis = $avisRepo->listerAvecStatut($userId);
+
         $this->render('user/dashboardPassager', [
             'user' => $user,
-            'participationDuJour' => $participationDuJour
+            'participationDuJour' => $participationDuJour,
+            'mesAvis' => $mesAvis
         ]);
     }
 
