@@ -28,8 +28,18 @@ class AvisController extends Controller
 
     protected function avis()
     {
-        $this->render('avis/avis');
+    if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+    if (!isset($_SESSION['user_id'])) {
+        // L'utilisateur n'est pas connecté → redirige vers login
+        header('Location: /?controller=auth&action=login');
+        exit();
     }
+
+    // L'utilisateur est connecté → affiche la page déposer un avis
+    $this->render('avis/avis');
+}
 
     public function submit(): void
     {

@@ -50,7 +50,6 @@ services:
   mongodb:
     image: mongo:7.0
     container_name: Ecoride_mongodb
-    restart: unless-stopped #Evite l'arrêt en cas de redémarrage
     ports:
       - "27018:27017"
     environment:
@@ -64,7 +63,6 @@ services:
   mongo-express:
     image: mongo-express
     container_name: Ecoride_mongo_express
-    restart: unless-stopped
     ports:
       - "8090:8081"
     environment:

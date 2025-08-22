@@ -1,21 +1,3 @@
-.profilChauffeur {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin-top: 1rem;
-  font-family: "Fira Code", monospace;
-  font-size: 2rem;
-  text-decoration: underline;
-}
-
-.Chauffeur {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 /* Card principale */
 .info-card {
   background: white;
@@ -26,6 +8,21 @@
 }
 
 /* Layout en-tête avec photo à gauche et nom centré */
+.visually-hidden-file {
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    position: absolute;
+}
+
+.profile-photo-trigger {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+
 .header-layout {
   display: flex;
   align-items: center;
@@ -66,6 +63,7 @@
   border-radius: 50%;
   border: 3px solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .no-photo-header {

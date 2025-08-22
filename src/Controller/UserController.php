@@ -110,19 +110,33 @@ class UserController extends Controller
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $userId = $_SESSION['user_id'] ?? null;
+
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+        // Vérification session
         if (!$userId) {
-            header('Location: /?controller=security&action=login');
-            exit;
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'error' => 'Utilisateur non connecté']);
+                exit;
+            } else {
+                header('Location: /?controller=security&action=login');
+                exit;
+            }
         }
 
         $userRepo = new UserRepository();
         $field = $_POST['field'] ?? '';
+
+        $response = ['success' => false];
 
         switch ($field) {
             case 'pseudo':
                 if (!empty($_POST['pseudo'])) {
                     $newPseudo = trim($_POST['pseudo']);
                     $userRepo->updatePseudo($userId, $newPseudo);
+                    $response['success'] = true;
                 }
                 break;
 
@@ -131,6 +145,9 @@ class UserController extends Controller
                     $newEmail = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
                     if ($newEmail) {
                         $userRepo->updateEmail($userId, $newEmail);
+                        $response['success'] = true;
+                    } else {
+                        $response['error'] = 'Email invalide';
                     }
                 }
                 break;
@@ -141,15 +158,32 @@ class UserController extends Controller
                     $photoExtension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
                     $newPhotoName = uniqid('profile_') . '.' . $photoExtension;
                     $uploadDir = __DIR__ . '/../../public/photos/';
-                    move_uploaded_file($photoTmpPath, $uploadDir . $newPhotoName);
-                    $userRepo->updatePhoto($userId, $newPhotoName);
+
+                    if (move_uploaded_file($photoTmpPath, $uploadDir . $newPhotoName)) {
+                        $userRepo->updatePhoto($userId, $newPhotoName);
+                        $response['success'] = true;
+                        $response['photo'] = '/photos/' . $newPhotoName;
+                    } else {
+                        $response['error'] = 'Impossible d’enregistrer l’image';
+                    }
+                } else {
+                    $response['error'] = 'Aucune image sélectionnée';
                 }
                 break;
         }
 
-        header("Location: /?controller=user&action=profil");
-        exit;
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        } else {
+            // Redirection classique
+            header("Location: /?controller=user&action=profil");
+            exit;
+        }
     }
+
+
 
 
     public function updateRole(): void
