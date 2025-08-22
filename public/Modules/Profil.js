@@ -1,5 +1,6 @@
 export class Profil {
     constructor() {
+        // Formulaires et champs
         this.pseudoForm = document.getElementById("pseudoForm");
         this.pseudoInput = document.getElementById("pseudoInput");
         this.pseudoDisplay = document.getElementById("pseudoDisplayContainer");
@@ -11,13 +12,12 @@ export class Profil {
         this.photoForm = document.getElementById("photoForm");
         this.photoInput = document.getElementById("photoInput");
         this.photoImg = document.querySelector(".profile-photo-header");
-        this.photoContainer = document.querySelector('.header-photo-left');
 
         this.init();
     }
 
     init() {
-        // Pseudo
+        // Gestion du pseudo
         document.getElementById("editPseudoBtn")?.addEventListener("click", () =>
             this.toggleEdit(this.pseudoDisplay, this.pseudoForm, true, this.pseudoInput)
         );
@@ -25,7 +25,7 @@ export class Profil {
             this.toggleEdit(this.pseudoDisplay, this.pseudoForm, false)
         );
 
-        // Email
+        // Gestion de l’email
         document.getElementById("editMailBtn")?.addEventListener("click", () =>
             this.toggleEdit(this.emailDisplay, this.emailForm, true, this.emailInput)
         );
@@ -33,12 +33,11 @@ export class Profil {
             this.toggleEdit(this.emailDisplay, this.emailForm, false)
         );
 
-        // Photo
+        // Gestion de la photo (prévisualisation + upload)
         if (this.photoInput) {
             this.photoInput.addEventListener("change", () => this.handlePhoto());
         }
     }
-
 
     toggleEdit(displayEl, formEl, showForm = true, focusEl = null) {
         displayEl.style.display = showForm ? "none" : "";
@@ -53,24 +52,26 @@ export class Profil {
         if (!file.type.startsWith("image/")) return alert("Veuillez sélectionner une image.");
         if (file.size > 5 * 1024 * 1024) return alert("Image trop lourde (max 5 Mo).");
 
-        // Créer <img> si elle n'existe pas encore
+        // Créer <img> si elle n’existe pas (rare avec le label)
         if (!this.photoImg) {
             const img = document.createElement('img');
             img.className = 'profile-photo-header';
             img.alt = 'Profil';
-            this.photoContainer.innerHTML = ''; // enlever la div 👤
-            this.photoContainer.appendChild(img);
+            const container = document.querySelector('.header-photo-left');
+            container.innerHTML = '';
+            container.appendChild(img);
             this.photoImg = img;
         }
 
-        // Prévisualisation côté client
+        // Prévisualisation
         const reader = new FileReader();
         reader.onload = (e) => this.photoImg.src = e.target.result;
         reader.readAsDataURL(file);
 
-        // Upload
+        // Upload via AJAX
         const formData = new FormData(this.photoForm);
         formData.append("field", "photo");
+
         try {
             const response = await fetch(this.photoForm.action, {
                 method: this.photoForm.method,
@@ -87,7 +88,7 @@ export class Profil {
             }
         } catch (err) {
             console.error(err);
-            alert("Erreur réseau lors de l'envoi de la photo.");
+            alert("Erreur réseau lors de l’envoi de la photo.");
         }
     }
 }
