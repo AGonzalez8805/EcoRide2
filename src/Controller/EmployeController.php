@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Db\Mysql;
 use App\Db\MongoDb;
 use App\Repository\AvisRepository;
 use App\Repository\IncidentRepository;
+use App\Repository\UserRepository;
 
 class EmployeController extends Controller
 {
@@ -58,6 +60,11 @@ class EmployeController extends Controller
         $avisEnAttente = $avisRepo->listerEnAttente();
         $incidents = $incidentRepo->findOuverts();
 
+        // Récupération des chauffeurs
+        $pdo = Mysql::getInstance()->getPDO();
+        $userRepo = new UserRepository($pdo);
+        $chauffeurs = $userRepo->findChauffeurs();
+
         $stats = [
             'avisEnAttente' => count($avisEnAttente),
             'incidentsOuverts' => count($incidents),
@@ -71,7 +78,8 @@ class EmployeController extends Controller
         $this->render('employe/dashboard', [
             'avisEnAttente' => $avisEnAttente,
             'stats' => $stats,
-            'employe' => $employe
+            'employe' => $employe,
+            'chauffeurs' => $chauffeurs
         ]);
     }
 

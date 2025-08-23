@@ -14,6 +14,7 @@ class Avis
     private ?\DateTime $datePublication = null;
     private ?string $idUtilisateurs = null;
     private ?string $idEmploye = null;
+    private ?string $chauffeurId = null;
     private ?string $pseudo = null;
 
     public function __construct(array $data = [])
@@ -25,6 +26,7 @@ class Avis
         $this->datePublication = $data['datePublication'] ?? null;
         $this->idUtilisateurs  = $data['idUtilisateurs'] ?? null;
         $this->idEmploye       = $data['idEmploye'] ?? null;
+        $this->chauffeurId     = $data['chauffeur_id'] ?? null;
         $this->pseudo          = $data['pseudo'] ?? null;
     }
 
@@ -154,6 +156,25 @@ class Avis
         return $this;
     }
 
+
+    /**
+     * Get the value of chauffeurId
+     */
+    public function getChauffeurId(): ?string
+    {
+        return $this->chauffeurId;
+    }
+
+    /**
+     * Set the value of chauffeurId
+     */
+    public function setChauffeurId(?string $chauffeurId): self
+    {
+        $this->chauffeurId = $chauffeurId;
+
+        return $this;
+    }
+
     /**
      * Get the value of pseudo
      */
@@ -184,6 +205,7 @@ class Avis
                 : null,
             'idUtilisateurs'  => isset($doc->user_id) ? (string)$doc->user_id : null,
             'idEmploye'       => isset($doc->idEmploye) ? (string)$doc->idEmploye : null,
+            'chauffeur_id'    => $doc->chauffeur_id ?? null,
             'pseudo'          => $doc->pseudo ?? null,
         ]);
     }
@@ -201,6 +223,7 @@ class Avis
                 : new UTCDateTime(),
             'user_id'         => $this->idUtilisateurs ? new ObjectId($this->idUtilisateurs) : null,
             'idEmploye'       => $this->idEmploye ? new ObjectId($this->idEmploye) : null,
+            'chauffeur_id'    => $this->chauffeurId ? new ObjectId($this->chauffeurId) : null,
             'pseudo'          => $this->pseudo,
         ];
 

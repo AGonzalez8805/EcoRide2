@@ -72,6 +72,8 @@ export class Avis {
     async handleSubmit(e) {
         e.preventDefault();
 
+        // Récupération des champs
+        const selectChauffeur = document.getElementById("chauffeur");
         const isValidPseudo = this.validateField(this.inputPseudo);
         const isValidMail = this.validateEmail(this.inputMail);
         const isValidCommentaire = this.textareaCommentaire.value.trim().length >= 10;
@@ -86,18 +88,28 @@ export class Avis {
             alert("Veuillez donner une note avant de soumettre.");
         }
 
-        if (!isValidPseudo || !isValidMail || !isValidCommentaire || !this.inputRating.value) return;
+        if (!selectChauffeur.value) {
+            alert("Veuillez sélectionner un chauffeur.");
+            selectChauffeur.classList.add("is-invalid");
+            return;
+        } else {
+            selectChauffeur.classList.remove("is-invalid");
+            selectChauffeur.classList.add("is-valid");
+        }
 
-        // Préparer les données
+        // Vérification générale
+        if (!isValidPseudo || !isValidMail || !isValidCommentaire || !this.inputRating.value || !selectChauffeur.value) return;
+
+        // Préparer les données à envoyer
         const data = {
             pseudo: this.inputPseudo.value,
             email: this.inputMail.value,
             rating: this.inputRating.value,
-            commentaire: this.textareaCommentaire.value
+            commentaire: this.textareaCommentaire.value,
+            chauffeur_id: selectChauffeur.value
         };
 
         try {
-            // Exemple d'envoi AJAX vers le backend
             const response = await fetch("/?controller=avis&action=submit", {
                 method: "POST",
                 headers: {
@@ -108,6 +120,7 @@ export class Avis {
             });
 
             const result = await response.json();
+
             if (response.ok && result.success) {
                 this.successMessage.style.display = "block";
                 this.form.reset();
@@ -115,6 +128,7 @@ export class Avis {
                 this.updateCharCounter();
                 this.ratingText.textContent = "Cliquez pour noter votre expérience";
                 this.stars.forEach(star => star.classList.remove("selected"));
+                selectChauffeur.classList.remove("is-valid");
             } else {
                 alert(result.message || "Erreur lors de l'envoi de votre avis.");
             }
@@ -123,5 +137,6 @@ export class Avis {
             alert("Erreur réseau, veuillez réessayer.");
         }
     }
+
 }
 

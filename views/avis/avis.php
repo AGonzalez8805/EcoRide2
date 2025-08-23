@@ -61,6 +61,18 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <label for="chauffeur">Choisir le chauffeur :</label>
+                <select name="chauffeur_id" id="chauffeur" class="form-control">
+                    <option value="">-- Sélectionnez un chauffeur --</option>
+                    <?php foreach ($chauffeurs as $chauffeur): ?>
+                        <option value="<?= htmlspecialchars($chauffeur->getId()) ?>">
+                            <?= htmlspecialchars($chauffeur->getFirstName() . ' ' . $chauffeur->getName()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <!-- Commentaire -->
             <div class="mb-4">
                 <label for="commentaire" class="form-label">

@@ -22,11 +22,15 @@ class AvisRepository
     {
         try {
             $doc = $avis->toDocument();
-            $doc['user_id'] = $userId;
+
+            $doc['user_id'] = new ObjectId($userId);
             $doc['statut'] = 'en_attente';
             $doc['created_at'] = new UTCDateTime();
 
+            error_log("DOC à insérer : " . print_r($doc, true));
+
             $result = $this->collection->insertOne($doc);
+
             if ($result->getInsertedCount() === 1) {
                 $avis->setId((string) $result->getInsertedId());
                 return true;

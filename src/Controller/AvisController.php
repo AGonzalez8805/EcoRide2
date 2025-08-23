@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Db\Mysql;
 use App\Db\MongoDb;
 use App\Repository\AvisRepository;
 use App\Models\Avis;
+use App\Repository\UserRepository;
 
 class AvisController extends Controller
 {
@@ -38,8 +40,15 @@ class AvisController extends Controller
             exit();
         }
 
-        // L'utilisateur est connecté → affiche la page déposer un avis
-        $this->render('avis/avis');
+        // Récupération des chauffeurs
+        $pdo = Mysql::getInstance()->getPDO();
+        $userRepo = new UserRepository($pdo);
+        $chauffeurs = $userRepo->findChauffeurs();
+
+        // Rendu de la vue avec la liste des chauffeurs
+        $this->render('avis/avis', [
+            'chauffeurs' => $chauffeurs
+        ]);
     }
 
     public function submit(): void
@@ -58,8 +67,8 @@ class AvisController extends Controller
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
-        if (!$data) {
-            echo json_encode(['success' => false, 'message' => 'Données invalides']);
+        if (!$data || !isset($data['chauffeur_id'])) {
+            echo json_encode(['success' => false, 'message' => 'Chauffeur non sélectionné']);
             exit;
         }
 

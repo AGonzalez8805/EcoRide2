@@ -75,8 +75,6 @@ export class Login {
   // Gère la logique de connexion
   async handleLogin() {
 
-    console.log("handleLogin appelée");
-
     // Vérifie la validité des champs
     const isMailValid = this.validateEmail(this.inputMail);
     const isPasswordValid = this.validatePassword(this.inputPassword);

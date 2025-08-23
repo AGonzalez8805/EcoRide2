@@ -127,4 +127,19 @@ class UserRepository extends Repository
 
         return $usersArray;
     }
+
+    public function findChauffeurs(): array
+    {
+        $query = $this->pdo->prepare('SELECT * FROM utilisateurs WHERE typeUtilisateur = :role');
+        $query->execute([':role' => 'chauffeur']);
+
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        $chauffeurs = [];
+
+        foreach ($rows as $row) {
+            $chauffeurs[] = $this->hydrate(new User(), $row);
+        }
+
+        return $chauffeurs;
+    }
 }
