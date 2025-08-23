@@ -6,7 +6,6 @@ use App\Models\Avis;
 use MongoDB\Database;
 use MongoDB\Collection;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\BSON\ObjectId;
 
 class AvisRepository
 {
@@ -18,12 +17,13 @@ class AvisRepository
     }
 
     /** Ajouter un nouvel avis */
-    public function ajouter(Avis $avis, string $userId): bool
+    public function ajouter(Avis $avis, int $userId): bool
     {
         try {
             $doc = $avis->toDocument();
 
-            $doc['user_id'] = new ObjectId($userId);
+            // IDs numériques
+            $doc['user_id'] = (int)$userId;
             $doc['statut'] = 'en_attente';
             $doc['created_at'] = new UTCDateTime();
 
@@ -43,10 +43,10 @@ class AvisRepository
     }
 
     /** Lister tous les avis d’un utilisateur */
-    public function lister(string $userId): array
+    public function lister(int $userId): array
     {
         $cursor = $this->collection->find(
-            ['user_id' => $userId],
+            ['user_id' => (int)$userId],
             ['sort' => ['created_at' => -1]]
         );
 
@@ -65,7 +65,7 @@ class AvisRepository
         }
 
         $result = $this->collection->updateOne(
-            ['_id' => new ObjectId($id)],
+            ['_id' => new \MongoDB\BSON\ObjectId($id)],
             ['$set' => [
                 'statut' => $statut,
                 'updated_at' => new UTCDateTime()
@@ -120,10 +120,10 @@ class AvisRepository
     }
 
     /** Lister tous les avis d’un utilisateur avec leur statut */
-    public function listerAvecStatut(string $userId): array
+    public function listerAvecStatut(int $userId): array
     {
         $cursor = $this->collection->find(
-            ['user_id' => $userId],
+            ['user_id' => (int)$userId],
             ['sort' => ['created_at' => -1]]
         );
 
@@ -135,6 +135,23 @@ class AvisRepository
         return $avisList;
     }
 
+    /** Lister tous les avis d’un chauffeur (filtré par statut valide) */
+    public function listerValidesParChauffeur(int $chauffeurId): array
+    {
+        $cursor = $this->collection->find(
+            ['chauffeur_id' => (int)$chauffeurId, 'statut' => 'valide'],
+            ['sort' => ['created_at' => -1]]
+        );
+
+        $avisList = [];
+        foreach ($cursor as $doc) {
+            $avisList[] = Avis::fromDocument($doc);
+        }
+
+        return $avisList;
+    }
+
+    /** Lister par statut (générique) */
     public function listerParStatut(string $statut): array
     {
         $cursor = $this->collection->find(['statut' => $statut], ['sort' => ['created_at' => -1]]);

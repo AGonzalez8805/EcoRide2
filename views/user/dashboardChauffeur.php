@@ -112,22 +112,22 @@
     <!-- Derniers avis -->
     <div class="simple-card">
         <h2 class="card-title-dash">⭐ Derniers avis</h2>
+        <?php if (!empty($avisValides)): ?>
+            <?php foreach ($avisValides as $avis): ?>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        <?= htmlspecialchars($avis->getCommentaire() ?? '') ?>
+                    </p>
+                    <div class="testimonial-author"><?= htmlspecialchars($avis->getPseudo() ?? '') ?></div>
+                    <?php if (!empty($avis->getNote())): ?>
+                        <div class="testimonial-role">Note : <?= htmlspecialchars($avis->getNote()) ?>/5</div>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Aucun avis pour le moment.</p>
+        <?php endif; ?>
     </div>
-    <?php if (!empty($avisValides)): ?>
-        <?php foreach ($avisValides as $avis): ?>
-            <div class="testimonial-card">
-                <p class="testimonial-text">
-                    <?= htmlspecialchars($avis->getCommentaire() ?? '') ?>
-                </p>
-                <div class="testimonial-author"><?= htmlspecialchars($avis->getPseudo() ?? '') ?></div>
-                <?php if (!empty($avis->getNote())): ?>
-                    <div class="testimonial-role">Note : <?= htmlspecialchars($avis->getNote()) ?>/5</div>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>Aucun avis pour le moment.</p>
-    <?php endif; ?>
     <!-- Liens utiles -->
     <div class="simple-card">
         <h3 class="card-title-dash">Liens utiles</h3>

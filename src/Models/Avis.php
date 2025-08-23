@@ -210,27 +210,19 @@ class Avis
         ]);
     }
 
-
-
     public function toDocument(): array
     {
-        $doc = [
-            'commentaire'     => $this->commentaire,
-            'note'            => $this->note,
-            'statut'          => $this->statut ?? 'en_attente',
-            'created_at'      => $this->datePublication instanceof UTCDateTime
-                ? $this->datePublication
-                : new UTCDateTime(),
-            'user_id'         => $this->idUtilisateurs ? new ObjectId($this->idUtilisateurs) : null,
-            'idEmploye'       => $this->idEmploye ? new ObjectId($this->idEmploye) : null,
-            'chauffeur_id'    => $this->chauffeurId ? new ObjectId($this->chauffeurId) : null,
-            'pseudo'          => $this->pseudo,
+        return [
+            'commentaire' => $this->commentaire,
+            'note'        => $this->note,
+            'statut'      => $this->statut ?? 'en_attente',
+            'created_at'  => new UTCDateTime(),
+
+            // IDs numériques
+            'user_id'     => $this->idUtilisateurs !== null ? (int)$this->idUtilisateurs : null,
+            'chauffeur_id' => $this->chauffeurId !== null ? (int)$this->chauffeurId : null,
+
+            'pseudo'      => $this->pseudo,
         ];
-
-        if ($this->id) {
-            $doc['_id'] = new ObjectId($this->id);
-        }
-
-        return $doc;
     }
 }
