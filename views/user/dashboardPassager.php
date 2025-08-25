@@ -120,7 +120,7 @@
                     <li>
                         <strong><?= htmlspecialchars($avis->getPseudo() ?? '') ?></strong> :
                         <?= htmlspecialchars($avis->getCommentaire() ?? '') ?>
-                        <em>(<?= $avis->getDatePublication() ? $avis->getDatePublication()->format('Y-m-d H:i:s') : '' ?>)</em>
+                        <em>(<?= $avis->getDatePublication() ? $avis->getDatePublication()->toDateTime()->format('Y-m-d H:i:s') : '' ?>)</em>
                         - Note : <?= htmlspecialchars($avis->getNote() ?? '') ?>
                         - Statut :
                         <?php if ($avis->getStatut() === 'valide'): ?>
