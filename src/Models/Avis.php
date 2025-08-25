@@ -10,7 +10,7 @@ class Avis
     private ?string $commentaire = null;
     private ?int $note = null;
     private ?string $statut = null;
-    private ?\UTCDateTime $datePublication = null;
+    private ?UTCDateTime $datePublication = null;
     private ?string $idUtilisateurs = null;
     private ?string $idEmploye = null;
     private ?string $chauffeurId = null;
@@ -199,9 +199,7 @@ class Avis
             'commentaire'     => $doc->commentaire ?? null,
             'note'            => $doc->note ?? null,
             'statut'          => $doc->statut ?? 'en_attente',
-            'datePublication' => isset($doc->created_at) && $doc->created_at instanceof UTCDateTime
-                ? $doc->created_at->toDateTime()
-                : null,
+            'datePublication' => $doc->created_at ?? null,
             'idUtilisateurs'  => isset($doc->user_id) ? (string)$doc->user_id : null,
             'idEmploye'       => isset($doc->idEmploye) ? (string)$doc->idEmploye : null,
             'chauffeur_id'    => $doc->chauffeur_id ?? null,

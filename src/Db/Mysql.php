@@ -32,12 +32,12 @@ class Mysql
             $this->dbName = ltrim($url["path"], '/');
         } else {
             // Sinon on charge depuis le fichier ini
-            $dbConf = parse_ini_file(APP_ENV);
-            $this->dbHost = $dbConf["db_host"];
-            $this->dbUser = $dbConf["db_user"];
-            $this->dbPassword = $dbConf["db_password"];
-            $this->dbPort = $dbConf["db_port"];
-            $this->dbName = $dbConf["db_name"];
+            $ini = parse_ini_file(APP_ENV);
+            $this->dbHost = $ini['db_host'];
+            $this->dbUser = $ini['db_user'];
+            $this->dbPassword = $ini['db_password'];
+            $this->dbPort = $ini['db_port'] ?? 3306;
+            $this->dbName = $ini['db_name'];
         }
     }
 
