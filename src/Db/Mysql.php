@@ -20,8 +20,8 @@ class Mysql
     //Constructeur privé pour empêcher l'instanciation directe (pattern Singleton).
     private function __construct()
     {
-        //Récupération de la config depuis DATABASE_URL (pour heroku)
-        $databaseUrl = getenv('DATABASE_URL');
+        //Récupération de la config (pour heroku)
+        $databaseUrl = getenv('DATABASE_URL') ?: getenv('JAWSDB_URL');
 
         if ($databaseUrl) {
             $url = parse_url($databaseUrl);
