@@ -1,0 +1,68 @@
+/* Page de inscription / registration */
+section.login {
+  background-color: #eef5ec;
+  min-height: 100%;
+}
+
+.ecoride-card {
+  background-color: #fdfdfb;
+  border: 1px solid #dcdcdc;
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  width: 100%;
+}
+
+.form-title {
+  color: #457b9d;
+  font-family: "Fira Code", monospace;
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+input.form-control {
+  border-radius: 8px;
+  border: 1px solid #c4c4c4;
+  background-color: #fcfcfa;
+  transition: border-color 0.3s ease;
+}
+
+input.form-control:focus {
+  border-color: #6aaa64;
+  box-shadow: 0 0 5px rgba(106, 170, 100, 0.3);
+}
+
+.ecoride-btn {
+  background-color: #6aaa64;
+  color: white;
+  border: none;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 10px;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.ecoride-btn:hover {
+  background-color: #558e4d;
+  transform: scale(1.02);
+}
+
+.ecoride-card-login {
+  background-color: #fdfdfb;
+  border: 1px solid #dcdcdc;
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .form-title {
+    font-size: 24px;
+  }
+
+  .ecoride-card,
+  .ecoride-card-login {
+    margin: 10px;
+  }
+}

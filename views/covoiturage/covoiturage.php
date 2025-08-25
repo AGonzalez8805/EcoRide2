@@ -92,7 +92,7 @@
         </div>
 
         <div id="trips-list">
-            <!-- Trajet 1 -->
+            <!-- Trajet -->
             <?php foreach ($trajets as $trajet): ?>
                 <section class="trip-card-simple">
                     <div class="trip-main-info">
@@ -107,14 +107,12 @@
                                 <?= !empty($trajet['heureDepart']) ? date('H\hi', strtotime($trajet['heureDepart'])) : '--h--' ?> →
                                 <?= !empty($trajet['heureArrivee']) ? date('H\hi', strtotime($trajet['heureArrivee'])) : '--h--' ?>
                             </div>
-
                         </div>
                         <div class="trip-price-simple">
                             <?= htmlspecialchars($trajet['prixPersonne'] ?? '') ?>€
                             <div class="price-per-person">par personne</div>
                         </div>
                     </div>
-
                     <div class="trip-details-grid">
                         <div class="detail-item">
                             <i class="fas fa-users detail-icon"></i>
@@ -129,7 +127,6 @@
                             <span><?= $trajet['fumeur'] ? 'Fumeur' : 'Non-fumeur' ?></span>
                         </div>
                     </div>
-
                     <div class="driver-section">
                         <div class="driver-info-simple">
                             <div class="driver-avatar-simple">
@@ -137,16 +134,16 @@
                             </div>
                             <div>
                                 <div class="driver-name"><?= $trajet['chauffeur_prenom'] ?> <?= $trajet['chauffeur_nom'] ?></div>
-                                <div class="driver-rating-simple">
-                                    <span class="stars-simple">★★★★★</span>
-                                    <span>4.8 (24 avis)</span>
-                                </div>
                             </div>
                         </div>
                         <div class="trip-actions-simple">
                             <a href="#" class="btn-detail-simple">Détails</a>
-                            <button class="btn-book-simple">Réserver</button>
+                            <form method="POST" action="/participations/reserver">
+                                <input type="hidden" name="id_covoiturage" value="<?= $trajet['id'] ?>">
+                                <button type="submit" class="btn-book-simple">Réserver</button>
+                            </form>
                         </div>
+
                     </div>
                 </section>
             <?php endforeach; ?>

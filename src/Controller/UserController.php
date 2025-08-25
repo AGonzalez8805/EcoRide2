@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Db\MongoDb;
 use App\Repository\TrajetRepository;
 use App\Repository\VehiculeRepository;
 use App\Repository\UserRepository;
+use App\Repository\ParticipationRepository;
+use App\Repository\AvisRepository;
 
 class UserController extends Controller
 {
@@ -18,7 +21,7 @@ class UserController extends Controller
             if (isset($_GET['action'])) {
                 switch ($_GET['action']) {
                     case 'dashboardChauffeur':
-                        // Affiche le tableau de bord Ch
+                        // Affiche le tableau de bord Chauffeur
                         $this->dashboardChauffeur();
                         break;
 
@@ -36,12 +39,12 @@ class UserController extends Controller
                         break;
 
                     case 'dashboardPassager':
-                        // Affiche le tableau de bord utilisateur
+                        // Affiche le tableau de bord Passager
                         $this->dashboardPassager();
                         break;
 
                     case 'dashboardMixte':
-                        // Affiche le tableau de bord utilisateur
+                        // Affiche le tableau de bord Passager/Chauffeur
                         $this->dashboardMixte();
                         break;
 
@@ -65,15 +68,24 @@ class UserController extends Controller
             throw new \Exception("Utilisateur non connecté.");
         }
 
+        $userRepo = new UserRepository();
+        $user = $userRepo->findById($chauffeurId);
+
         $trajetRepo = new TrajetRepository();
         $trajetsDuJour = $trajetRepo->findTodayByChauffeur($chauffeurId);
 
         $vehiculeRepo = new VehiculeRepository();
         $vehicules = $vehiculeRepo->findAllByUser($chauffeurId);
 
+        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
+        $avisValides = $avisRepo->listerValides(); // récupère tous les avis validés
+
+
         $this->render('user/dashboardChauffeur', [
+            'user' => $user,
             'trajetsDuJour' => $trajetsDuJour,
-            'vehicules' => $vehicules
+            'vehicules' => $vehicules,
+            'avisValides' => $avisValides
         ]);
     }
 
@@ -105,19 +117,33 @@ class UserController extends Controller
     {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $userId = $_SESSION['user_id'] ?? null;
+
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+        // Vérification session
         if (!$userId) {
-            header('Location: /?controller=security&action=login');
-            exit;
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'error' => 'Utilisateur non connecté']);
+                exit;
+            } else {
+                header('Location: /?controller=security&action=login');
+                exit;
+            }
         }
 
         $userRepo = new UserRepository();
         $field = $_POST['field'] ?? '';
+
+        $response = ['success' => false];
 
         switch ($field) {
             case 'pseudo':
                 if (!empty($_POST['pseudo'])) {
                     $newPseudo = trim($_POST['pseudo']);
                     $userRepo->updatePseudo($userId, $newPseudo);
+                    $response['success'] = true;
                 }
                 break;
 
@@ -126,6 +152,9 @@ class UserController extends Controller
                     $newEmail = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
                     if ($newEmail) {
                         $userRepo->updateEmail($userId, $newEmail);
+                        $response['success'] = true;
+                    } else {
+                        $response['error'] = 'Email invalide';
                     }
                 }
                 break;
@@ -136,16 +165,30 @@ class UserController extends Controller
                     $photoExtension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
                     $newPhotoName = uniqid('profile_') . '.' . $photoExtension;
                     $uploadDir = __DIR__ . '/../../public/photos/';
-                    move_uploaded_file($photoTmpPath, $uploadDir . $newPhotoName);
-                    $userRepo->updatePhoto($userId, $newPhotoName);
+
+                    if (move_uploaded_file($photoTmpPath, $uploadDir . $newPhotoName)) {
+                        $userRepo->updatePhoto($userId, $newPhotoName);
+                        $response['success'] = true;
+                        $response['photo'] = '/photos/' . $newPhotoName;
+                    } else {
+                        $response['error'] = 'Impossible d’enregistrer l’image';
+                    }
+                } else {
+                    $response['error'] = 'Aucune image sélectionnée';
                 }
                 break;
         }
 
-        header("Location: /?controller=user&action=profil");
-        exit;
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        } else {
+            // Redirection classique
+            header("Location: /?controller=user&action=profil");
+            exit;
+        }
     }
-
 
     public function updateRole(): void
     {
@@ -198,18 +241,35 @@ class UserController extends Controller
             session_start();
         }
 
-        // Récupérer les infos utilisateur stockées en session
-        $user = [
-            'firstName' => $_SESSION['firstName'] ?? 'Utilisateur',
-            'name' => $_SESSION['name'] ?? '',
-            'email' => $_SESSION['email'] ?? ''
-        ];
+        $userId = $_SESSION['user_id'] ?? null;
 
-        $this->render('user/dashboardPassager', ['user' => $user]);
+        if (!$userId) {
+            throw new \Exception("Utilisateur non connecté.");
+        }
+
+        $userRepo = new UserRepository();
+        $user = $userRepo->findById($userId);
+
+        $participationRepo = new ParticipationRepository();
+        $participationDuJour = $participationRepo->findTodayByUser($userId);
+
+        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
+        $mesAvis = $avisRepo->listerAvecStatut($userId);
+
+        $this->render('user/dashboardPassager', [
+            'user' => $user,
+            'participationDuJour' => $participationDuJour,
+            'mesAvis' => $mesAvis
+        ]);
     }
+
 
     public function dashboardMixte(): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->render('user/dashboardMixte');
     }
 }

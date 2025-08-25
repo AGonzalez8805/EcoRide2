@@ -1,54 +1,94 @@
 export class Profil {
     constructor() {
-        // Déplacez les sélecteurs ici.
-        this.pseudoDisplayId = "pseudoDisplayContainer";
-        this.pseudoFormId = "pseudoForm";
-        this.emailDisplayId = "emailDisplayContainer";
-        this.emailFormId = "emailForm";
-        this.mailInputId = "mailInput";
+        // Formulaires et champs
+        this.pseudoForm = document.getElementById("pseudoForm");
+        this.pseudoInput = document.getElementById("pseudoInput");
+        this.pseudoDisplay = document.getElementById("pseudoDisplayContainer");
 
-        // Appelez init() pour initialiser les boutons et les écouteurs.
+        this.emailForm = document.getElementById("emailForm");
+        this.emailInput = document.getElementById("mailInput");
+        this.emailDisplay = document.getElementById("emailDisplayContainer");
+
+        this.photoForm = document.getElementById("photoForm");
+        this.photoInput = document.getElementById("photoInput");
+        this.photoImg = document.querySelector(".profile-photo-header");
+
         this.init();
     }
 
     init() {
-        console.log("Init Profil");
-        console.log("Edit pseudo btn:", document.getElementById("editPseudoBtn"));
-        // Recherche des boutons.
-        // Cette étape est exécutée après le chargement du DOM,
-        // garantissant que les éléments existent.
-        this.editPseudoBtn = document.getElementById("editPseudoBtn");
-        this.cancelPseudoBtn = document.getElementById("cancelPseudoBtn");
-        this.editMailBtn = document.getElementById("editMailBtn");
-        this.cancelMailBtn = document.getElementById("cancelMailBtn");
+        // Gestion du pseudo
+        document.getElementById("editPseudoBtn")?.addEventListener("click", () =>
+            this.toggleEdit(this.pseudoDisplay, this.pseudoForm, true, this.pseudoInput)
+        );
+        document.getElementById("cancelPseudoBtn")?.addEventListener("click", () =>
+            this.toggleEdit(this.pseudoDisplay, this.pseudoForm, false)
+        );
 
-        // Attachement des écouteurs d'événements.
-        if (this.editPseudoBtn) {
-            this.editPseudoBtn.addEventListener("click", () => this.toggleEdit(this.pseudoDisplayId, this.pseudoFormId, true));
-        }
-        if (this.cancelPseudoBtn) {
-            this.cancelPseudoBtn.addEventListener("click", () => this.toggleEdit(this.pseudoDisplayId, this.pseudoFormId, false));
-        }
-        if (this.editMailBtn) {
-            this.editMailBtn.addEventListener("click", () => this.toggleEdit(this.emailDisplayId, this.emailFormId, true, this.mailInputId));
-        }
-        if (this.cancelMailBtn) {
-            this.cancelMailBtn.addEventListener("click", () => this.toggleEdit(this.emailDisplayId, this.emailFormId, false));
+        // Gestion de l’email
+        document.getElementById("editMailBtn")?.addEventListener("click", () =>
+            this.toggleEdit(this.emailDisplay, this.emailForm, true, this.emailInput)
+        );
+        document.getElementById("cancelMailBtn")?.addEventListener("click", () =>
+            this.toggleEdit(this.emailDisplay, this.emailForm, false)
+        );
+
+        // Gestion de la photo (prévisualisation + upload)
+        if (this.photoInput) {
+            this.photoInput.addEventListener("change", () => this.handlePhoto());
         }
     }
 
-    // ... le reste de la méthode toggleEdit() est inchangé
-    toggleEdit(displayId, formId, showForm = true, focusId = null) {
-        const display = document.getElementById(displayId);
-        const form = document.getElementById(formId);
-        if (!display || !form) return;
+    toggleEdit(displayEl, formEl, showForm = true, focusEl = null) {
+        displayEl.style.display = showForm ? "none" : "";
+        formEl.style.display = showForm ? "" : "none";
+        if (focusEl) focusEl.focus();
+    }
 
-        display.style.display = showForm ? "none" : "";
-        form.style.display = showForm ? "" : "none";
+    async handlePhoto() {
+        if (!this.photoInput.files.length) return;
 
-        if (focusId && showForm) {
-            const field = document.getElementById(focusId);
-            field?.focus();
+        const file = this.photoInput.files[0];
+        if (!file.type.startsWith("image/")) return alert("Veuillez sélectionner une image.");
+        if (file.size > 5 * 1024 * 1024) return alert("Image trop lourde (max 5 Mo).");
+
+        // Créer <img> si elle n’existe pas (rare avec le label)
+        if (!this.photoImg) {
+            const img = document.createElement('img');
+            img.className = 'profile-photo-header';
+            img.alt = 'Profil';
+            const container = document.querySelector('.header-photo-left');
+            container.innerHTML = '';
+            container.appendChild(img);
+            this.photoImg = img;
+        }
+
+        // Prévisualisation
+        const reader = new FileReader();
+        reader.onload = (e) => this.photoImg.src = e.target.result;
+        reader.readAsDataURL(file);
+
+        // Upload via AJAX
+        const formData = new FormData(this.photoForm);
+        formData.append("field", "photo");
+
+        try {
+            const response = await fetch(this.photoForm.action, {
+                method: this.photoForm.method,
+                body: formData,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            const data = await response.json();
+            if (data.success && data.photo) {
+                // Forcer le refresh pour éviter le cache
+                this.photoImg.src = data.photo + "?t=" + new Date().getTime();
+            } else {
+                alert("Impossible de mettre à jour la photo.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Erreur réseau lors de l’envoi de la photo.");
         }
     }
 }

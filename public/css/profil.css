@@ -1,0 +1,253 @@
+/* Card principale */
+.info-card {
+  background: white;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Layout en-tête avec photo à gauche et nom centré */
+.visually-hidden-file {
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    position: absolute;
+}
+
+.profile-photo-trigger {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.header-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header-photo-left {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-name-center {
+  flex: 1;
+  text-align: center;
+}
+
+.header-name-center h1 {
+  margin: 0;
+  color: white;
+  font-family: "Fira Code", monospace;
+}
+
+.header-spacer {
+  flex: 0 0 auto;
+  width: 100px; /* Même largeur que la zone photo pour équilibrer */
+}
+
+/* Photo de profil à gauche */
+.profile-photo-header {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.no-photo-header {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+}
+
+/* Formulaire photo compact à gauche */
+.photo-form-header {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.file-input-header {
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+  width: 60px;
+}
+
+.btn-update-header {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 4px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+  min-width: 30px;
+}
+
+.btn-update-header:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Titres des sections */
+.info-card h3 {
+  color: #457b9d;
+  margin-bottom: 20px;
+  font-size: 18px;
+  border-bottom: 2px solid #6aaa64;
+  padding-bottom: 5px;
+}
+
+/* Grille des informations */
+.info-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+.label {
+  font-weight: bold;
+  color: #333;
+}
+
+.value {
+  color: #555;
+}
+/* Pseudo */
+.pseudo-display,
+.email-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.pseudo-edit,
+.email-edit {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.btn-small {
+  padding: 2px 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Badges */
+.credit-badge {
+  background: #457b9d;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.status-good {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-bad {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  /* En-tête mobile : retour en colonne */
+  .header-layout {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .header-spacer {
+    display: none;
+  }
+
+  .header-name-center {
+    order: 2;
+  }
+
+  .header-photo-left {
+    order: 1;
+  }
+
+  .profile-photo-header {
+    width: 70px;
+    height: 70px;
+  }
+
+  .no-photo-header {
+    width: 70px;
+    height: 70px;
+    font-size: 25px;
+  }
+
+  .photo-form-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .file-input-header {
+    width: 120px;
+    font-size: 11px;
+  }
+
+  .info-card {
+    padding: 15px;
+    margin: 15px 0;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .vehicle-info {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

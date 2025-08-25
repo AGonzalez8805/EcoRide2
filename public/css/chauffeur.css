@@ -1,0 +1,76 @@
+.en-tete {
+  background: linear-gradient(135deg, #2d5a2d 0%, #4a7c59 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px 0;
+  text-align: center;
+}
+
+.en-tete h1 {
+  font-family: "Fira Code", monospace;
+  font-size: 33px;
+  margin-bottom: 10px;
+}
+
+.en-tete h2 {
+  font-family: "Fira Code", monospace;
+  font-size: 28px;
+}
+
+.user-info {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 0.5rem;
+}
+
+/* Véhicules */
+.vehicle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.vehicle-box {
+  background: #eef5ec;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #6aaa64;
+}
+
+.vehicle-info {
+  margin-top: 8px;
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.no-vehicle {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 30px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .en-tete h1 {
+    font-size: 24px;
+  }
+
+  .vehicle-info {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .en-tete {
+    padding: 20px 0;
+  }
+
+  .en-tete h1 {
+    font-size: 20px;
+  }
+}

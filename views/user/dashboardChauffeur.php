@@ -2,10 +2,12 @@
 
 <section class="en-tete">
     <div class="container">
-        <h1>Mon espace chauffeur</h1>
         <p class="user-info">
-            Bonjour <strong>Marc</strong>
-            <span class="user-credits">Solde : 35 crédits</span>
+            <strong>
+                <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
+            </strong>
+        <h2>Bienvenue sur ton espace chauffeur</h2>
+        <span class="user-credits">Solde : 35 crédits</span>
         </p>
     </div>
 </section>
@@ -109,31 +111,23 @@
 
     <!-- Derniers avis -->
     <div class="simple-card">
-        <h3 class="card-title-dash">Derniers avis</h3>
-
-        <div class="avis-item">
-            <div class="d-flex justify-content-between">
-                <strong>Marie</strong>
-                <span>⭐⭐⭐⭐⭐</span>
-            </div>
-            <p>"Très bon chauffeur, ponctuel !"</p>
-            <small class="text-muted">Il y a 2 jours</small>
-        </div>
-
-        <div class="avis-item">
-            <div class="d-flex justify-content-between">
-                <strong>Pierre</strong>
-                <span>⭐⭐⭐⭐</span>
-            </div>
-            <p>"Trajet agréable et voiture propre."</p>
-            <small class="text-muted">Il y a 5 jours</small>
-        </div>
-
-        <div class="text-center mt-3">
-            <a href="/?controller=user&action=reviews" class="btn-outline">Voir tous mes avis</a>
-        </div>
+        <h2 class="card-title-dash">⭐ Derniers avis</h2>
+        <?php if (!empty($avisValides)): ?>
+            <?php foreach ($avisValides as $avis): ?>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        <?= htmlspecialchars($avis->getCommentaire() ?? '') ?>
+                    </p>
+                    <div class="testimonial-author"><?= htmlspecialchars($avis->getPseudo() ?? '') ?></div>
+                    <?php if (!empty($avis->getNote())): ?>
+                        <div class="testimonial-role">Note : <?= htmlspecialchars($avis->getNote()) ?>/5</div>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Aucun avis pour le moment.</p>
+        <?php endif; ?>
     </div>
-
     <!-- Liens utiles -->
     <div class="simple-card">
         <h3 class="card-title-dash">Liens utiles</h3>

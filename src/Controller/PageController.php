@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Services\Mailer;
+use App\Db\MongoDb;
+use App\Repository\AvisRepository;
 
 class PageController extends Controller
 {
@@ -40,7 +42,16 @@ class PageController extends Controller
     /*Affiche la page d'accueil */
     protected function home()
     {
-        $this->render('pages/home');
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
+        $avisValides = $avisRepo->listerValides(); // récupère tous les avis validés
+
+        $this->render('pages/home', [
+            'avisValides' => $avisValides
+        ]);
     }
 
     /* Affiche la page des mentions légales */

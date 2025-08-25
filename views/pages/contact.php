@@ -39,7 +39,9 @@
             </div>
             <div class="mb-3">
                 <label for="message" class="form-label">Message</label>
-                <input type="text" style="height: 100px;" class="form-control" id="message" placeholder="Saisez votre message">
+                <textarea style="height: 100px;" id="message" name="commentaire" class="form-control"
+                    placeholder="Saisez votre message"
+                    maxlength="500"></textarea>
                 <div class="invalid-feedback">Veuillez saisir un message.</div>
             </div>
 

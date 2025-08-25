@@ -178,6 +178,9 @@ class AuthController extends Controller
             // Authentification réussie pour un employé
             $_SESSION['user_id'] = $employe->getId();
             $_SESSION['email'] = $employe->getEmail();
+            $_SESSION['pseudo'] = $employe->getPseudo();
+            $_SESSION['firstName'] = $employe->getFirstName();
+            $_SESSION['name'] = $employe->getName();
             $_SESSION['role'] = 'employe';
 
             echo json_encode(["success" => true, "redirect" => "/?controller=employe&action=dashboard"]);

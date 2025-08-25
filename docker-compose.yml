@@ -50,7 +50,6 @@ services:
   mongodb:
     image: mongo:7.0
     container_name: Ecoride_mongodb
-    restart: unless-stopped #Evite l'arrêt en cas de redémarrage
     ports:
       - "27018:27017"
     environment:
@@ -64,12 +63,9 @@ services:
   mongo-express:
     image: mongo-express
     container_name: Ecoride_mongo_express
-    restart: unless-stopped
     ports:
-      - "8090:8081"  # Interface web sur http://localhost:8090
+      - "8090:8081"
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/
       ME_CONFIG_BASICAUTH: "false"
     depends_on:

@@ -8,6 +8,8 @@ class Employe extends Models
     protected ?string $email = null;
     protected ?string $password = null;
     protected ?string $pseudo = null;
+    protected ?string $firstName = null;
+    protected ?string $name = null;
     protected bool $isSuspended = false;
     protected ?int $id_admin = null;
 
@@ -80,6 +82,42 @@ class Employe extends Models
     public function setPseudo(?string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of firstName
+     */
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set the value of firstName
+     */
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of name
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the value of name
+     */
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

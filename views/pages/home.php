@@ -84,35 +84,31 @@
         <h2>Ils nous font confiance</h2>
 
         <div class="testimonial-grid">
-            <div class="testimonial-card">
-                <p class="testimonial-text">
-                    J'ai économisé plus de 200€ par mois sur mes trajets domicile-travail tout en contribuant à la protection de l'environnement.
-                </p>
-                <div class="testimonial-author">Marie L.</div>
-                <div class="testimonial-role">Utilisatrice depuis 8 mois</div>
-            </div>
-
-            <div class="testimonial-card">
-                <p class="testimonial-text">
-                    Super communauté ! J'ai rencontré des personnes formidables et mes trajets Paris-Lyon sont devenus un plaisir.
-                </p>
-                <div class="testimonial-author">Julien M.</div>
-                <div class="testimonial-role">Conducteur régulier</div>
-            </div>
-
-            <div class="testimonial-card">
-                <p class="testimonial-text">
-                    Application très intuitive et service client réactif. Je recommande EcoRide à tous mes collègues !
-                </p>
-                <div class="testimonial-author">Sarah K.</div>
-                <div class="testimonial-role">Passagère occasionnelle</div>
-            </div>
+            <?php if (!empty($avisValides)): ?>
+                <?php foreach ($avisValides as $avis): ?>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">
+                            <?= htmlspecialchars($avis->getCommentaire() ?? '') ?>
+                        </p>
+                        <div class="testimonial-author"><?= htmlspecialchars($avis->getPseudo() ?? '') ?></div>
+                        <?php if (!empty($avis->getNote())): ?>
+                            <div class="testimonial-role">Note : <?= htmlspecialchars($avis->getNote()) ?>/5</div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Aucun avis pour le moment.</p>
+            <?php endif; ?>
         </div>
 
         <div class="text-center">
-            <a href="/?controller=avis&action=avis" class="btn-review">Déposer un avis</a>
+            <?php if (isset($_SESSION['typeUtilisateur']) && $_SESSION['typeUtilisateur'] === 'passager'): ?>
+                <a href="/?controller=avis&action=avis" class="btn-review">⭐ Déposer un avis</a>
+            <?php endif; ?>
         </div>
+
     </div>
 </section>
+
 
 <?php require_once APP_ROOT . '/views/footer.php'; ?>

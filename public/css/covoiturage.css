@@ -1,0 +1,458 @@
+.covoiturage-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+  min-height: calc(100vh - 200px);
+}
+/* Sidebar de recherche et filtres */
+.search-sidebar {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.sidebar-title {
+  font-family: "Fira Code", monospace;
+  color: #457b9d;
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #6aaa64;
+  padding-bottom: 10px;
+}
+
+.search-form-simple {
+  margin-bottom: 30px;
+}
+
+.form-group-simple {
+  margin-bottom: 15px;
+}
+
+.form-group-simple label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 14px;
+}
+
+.form-control-simple {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #fafbfc;
+}
+
+.form-control-simple:focus {
+  outline: none;
+  border-color: #6aaa64;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(106, 170, 100, 0.1);
+}
+
+.btn-search {
+  background: linear-gradient(135deg, #457b9d, #558e4d);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Section filtres dans la sidebar */
+.filters-section-sidebar {
+  border-top: 1px solid #e9ecef;
+  padding-top: 20px;
+}
+
+.filters-title-sidebar {
+  font-weight: 600;
+  color: #457b9d;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.filter-item {
+  margin-bottom: 15px;
+}
+
+.filter-item label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.range-container {
+  position: relative;
+}
+
+.range-input {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.range-value {
+  text-align: center;
+  font-weight: 600;
+  color: #6aaa64;
+  font-size: 14px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6aaa64;
+}
+
+.checkbox-container label {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Zone des résultats */
+.results-area {
+  background: transparent;
+}
+
+.results-header-simple {
+  background: white;
+  padding: 20px 25px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-count-simple {
+  font-family: "Fira Code", monospace;
+  color: #457b9d;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sort-container label {
+  font-size: 14px;
+  color: #666;
+}
+
+.sort-select-simple {
+  padding: 8px 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+}
+
+/* Cartes de covoiturage simplifiées */
+.trip-card-simple {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #6aaa64;
+}
+
+.trip-main-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 15px;
+}
+
+.trip-route-simple {
+  font-family: "Fira Code", monospace;
+  font-size: 20px;
+  color: #457b9d;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.trip-time {
+  color: #666;
+  font-size: 14px;
+}
+
+.trip-price-simple {
+  font-size: 28px;
+  font-weight: bold;
+  color: #6aaa64;
+  text-align: right;
+}
+
+.price-per-person {
+  font-size: 12px;
+  color: #999;
+  font-weight: normal;
+}
+
+.trip-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.detail-icon {
+  color: #457b9d;
+  width: 14px;
+  text-align: center;
+}
+
+.driver-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.driver-info-simple {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.driver-avatar-simple {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6aaa64, #457b9d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.driver-name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.driver-rating-simple {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.stars-simple {
+  color: #ffc107;
+  font-size: 14px;
+}
+
+.trip-actions-simple {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-detail-simple {
+  background: transparent;
+  color: #457b9d;
+  border: 2px solid #457b9d;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-detail-simple:hover {
+  background: #457b9d;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-book-simple {
+  background: #6aaa64;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-book-simple:hover {
+  background: #558e4d;
+  transform: translateY(-1px);
+}
+
+.btn-book-simple:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Badge écologique */
+.eco-badge-simple {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+/* États spéciaux */
+.trip-full {
+  opacity: 0.6;
+  border-left-color: #dc3545;
+}
+
+.full-badge {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Message d'absence de résultats */
+.no-results-simple {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+}
+
+.no-results-simple i {
+  font-size: 64px;
+  color: #e9ecef;
+  margin-bottom: 20px;
+}
+
+.no-results-simple h3 {
+  color: #457b9d;
+  margin-bottom: 10px;
+  font-family: "Fira Code", monospace;
+}
+
+.no-results-simple p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .covoiturage-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .search-sidebar {
+    position: static;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .covoiturage-container {
+    padding: 10px;
+  }
+
+  .search-sidebar {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .trip-main-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .trip-price-simple {
+    text-align: left;
+  }
+
+  .trip-details-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .driver-section {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .results-header-simple {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-card-simple {
+    padding: 15px;
+  }
+
+  .sidebar-title {
+    font-size: 18px;
+  }
+
+  .trip-route-simple {
+    font-size: 18px;
+  }
+
+  .trip-price-simple {
+    font-size: 24px;
+  }
+}

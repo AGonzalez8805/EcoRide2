@@ -8,26 +8,26 @@
             <div class="row">
                 <div class="col">
                     <label for="name" class="form-label">Nom</label>
-                    <input type="text" class="form-control" id="name" placeholder="Bois" aria-label="First name">
+                    <input type="text" class="form-control" id="name" aria-label="First name">
                     <div class="valid-feedback">Saisie correcte</div>
                     <div class="invalid-feedback">Veuillez renseigner votre nom.</div>
                 </div>
                 <div class="col">
                     <label for="firstName" class="form-label">Prenom</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="Jose" aria-label="Last name">
+                    <input type="text" class="form-control" id="firstName" aria-label="Last name">
                     <div class="valid-feedback">Saisie correcte</div>
                     <div class="invalid-feedback">Veuillez renseigner votre prénom.</div>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse email</label>
-                <input type="email" class="form-control" id="email" placeholder="exemple@ecoride.com">
+                <input type="email" class="form-control" id="email">
                 <div class="valid-feedback">Adresse email valide</div>
                 <div class="invalid-feedback">Veuillez saisir une adresse email valide.</div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="password" placeholder="••••••••">
+                <input type="password" class="form-control" id="password">
                 <small class="text-muted" style="text-decoration: underline;">Le mot de passe doit contenir :</small>
                 <ul class="list-unstyled small mt-1 mb-3" id="passwordCriteria">
                     <li id="length" class="text-danger"> Au moins 9 caractères</li>
@@ -39,7 +39,7 @@
             </div>
             <div class="mb-3">
                 <label for="validatePassword" class="form-label">Confirmer votre mot de passe</label>
-                <input type="password" class="form-control" id="validatePassword" placeholder="••••••••">
+                <input type="password" class="form-control" id="validatePassword">
                 <div class="valid-feedback">Mot de passe confirmé</div>
                 <div class="invalid-feedback">Les mots de passe ne correspondent pas.</div>
             </div>

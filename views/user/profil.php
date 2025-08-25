@@ -5,24 +5,25 @@
         <div class="header-layout">
             <!-- Photo de profil à gauche -->
             <div class="header-photo-left">
-                <?php if (!empty($user->getPhoto())): ?>
-                    <!-- Affichage de la photo (cliquable) -->
-                    <form action="/?controller=user&action=updateProfile" method="POST" enctype="multipart/form-data" id="photoForm">
-                        <input type="file" name="photo" id="photoInput" accept="image/*" style="display: none;" onchange="document.getElementById('photoForm').submit();">
-
-                        <label for="photoInput" style="cursor: pointer;">
+                <form action="/?controller=user&action=updateProfile" method="POST" enctype="multipart/form-data" id="photoForm">
+                    <!-- Input caché correctement (pas display:none) -->
+                    <input type="file" name="photo" id="photoInput" accept="image/*" class="visually-hidden-file">
+                    <!-- Label cliquable -->
+                    <label for="photoInput" class="profile-photo-trigger">
+                        <?php if (!empty($user->getPhoto())): ?>
                             <img src="/photos/<?= htmlspecialchars($user->getPhoto()) ?>" alt="Profil" class="profile-photo-header">
-                        </label>
-                    </form>
-                <?php else: ?>
-                    <div class="no-photo-header">👤</div>
-                <?php endif; ?>
+                        <?php else: ?>
+                            <div class="no-photo-header">👤</div>
+                        <?php endif; ?>
+                    </label>
+                </form>
             </div>
+
+
             <!-- Nom centré -->
             <div class="header-name-center">
                 <h1><strong><?= htmlspecialchars($user->getName()) ?> <?= htmlspecialchars($user->getFirstName()) ?></strong></h1>
             </div>
-
             <!-- Espace pour équilibrer (invisible) -->
             <div class="header-spacer"></div>
         </div>
@@ -48,13 +49,13 @@
             <div class="info-item">
                 <span class="label">Pseudo :</span>
                 <div class="pseudo-display" id="pseudoDisplayContainer">
-                    <span class="value"><?= htmlspecialchars($user->getPseudo()) ?></span>
+                    <span class="value"><?= htmlspecialchars($user->getPseudo() ?? '') ?></span>
                     <button type="button" id="editPseudoBtn" class="btn-icon" title="Modifier le pseudo">✏️</button>
                 </div>
                 <form action="/?controller=user&action=updateProfile" method="POST" id="pseudoForm" style="display: none;">
                     <input type="hidden" name="field" value="pseudo">
                     <div class="pseudo-edit">
-                        <input type="text" name="pseudo" id="pseudoInput" value="<?= htmlspecialchars($user->getPseudo()) ?>" required>
+                        <input type="text" name="pseudo" id="pseudoInput" value="<?= htmlspecialchars($user->getPseudo() ?? '') ?>" required>
                         <button type="submit" id="savePseudoBtn" title="Enregistrer" class="btn-small">✅</button>
                         <button type="button" id="cancelPseudoBtn" class="btn-small">❌</button>
                     </div>
@@ -70,7 +71,7 @@
                 <form action="/?controller=user&action=updateProfile" method="POST" id="emailForm" style="display: none;">
                     <input type="hidden" name="field" value="email">
                     <div class="email-edit">
-                        <input type="email" name="email" id="mailInput" value="<?= htmlspecialchars($user->getEmail()) ?>" required>
+                        <input type="email" name="email" id="emailInput" value="<?= htmlspecialchars($user->getEmail()) ?>" required>
                         <button type="submit" id="saveMailBtn" title="Enregistrer" class="btn-small">✅</button>
                         <button type="button" id="cancelMailBtn" class="btn-small">❌</button>
                     </div>
