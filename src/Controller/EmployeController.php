@@ -148,7 +148,7 @@ class EmployeController extends Controller
             'note' => $a->getNote(),
             'commentaire' => $a->getCommentaire(),
             'statut' => $a->getStatut(),
-            'created_at' => $a->getDatePublication() ? $a->getDatePublication()->format('d/m/Y H:i') : ''
+            'created_at' => $a->getDatePublication() ? $a->getDatePublication()->toDateTime()->format('d/m/Y H:i') : ''
         ], $avis);
 
         header('Content-Type: application/json');
