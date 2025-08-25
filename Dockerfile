@@ -10,8 +10,6 @@ RUN apt-get update \
     && docker-php-ext-enable mongodb \
     && rm -rf /var/lib/apt/lists/*
 
-
-
 # Active le module "rewrite" d'Apache (utile pour les routes en PHP/Laravel/Symfony)
 RUN a2enmod rewrite
 

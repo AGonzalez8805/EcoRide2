@@ -27,7 +27,6 @@ class MongoDb
         //Récupération de la config depuis DATABASE_URL (pour heroku)
         $databaseUrl = getenv('DATABASE_URL');
 
-
         if ($databaseUrl) {
             $url = parse_url($databaseUrl);
             $this->dbHost = $url["host"];
@@ -46,7 +45,7 @@ class MongoDb
         }
     }
 
-    //Retourne l'instance unique de Mysql (Singleton)
+    //Retourne l'instance unique de MongoDB (Singleton)
     public static function getInstance(): self
     {
         if (is_null(self::$instance)) {

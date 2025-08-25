@@ -25,7 +25,7 @@ class AvisRepository
             // IDs numériques
             $doc['user_id'] = (int)$userId;
             $doc['statut'] = 'en_attente';
-            $doc['created_at'] = new UTCDateTime();
+            $doc['created_at'] = (new \DateTime())->format(\DateTime::ATOM);
 
             error_log("DOC à insérer : " . print_r($doc, true));
 

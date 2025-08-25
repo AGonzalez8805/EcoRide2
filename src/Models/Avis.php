@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\BSON\ObjectId;
 
 class Avis
 {
@@ -11,7 +10,7 @@ class Avis
     private ?string $commentaire = null;
     private ?int $note = null;
     private ?string $statut = null;
-    private ?\DateTime $datePublication = null;
+    private ?\UTCDateTime $datePublication = null;
     private ?string $idUtilisateurs = null;
     private ?string $idEmploye = null;
     private ?string $chauffeurId = null;
