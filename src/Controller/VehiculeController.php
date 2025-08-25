@@ -30,7 +30,7 @@ class VehiculeController extends Controller
     public function create(): void
     {
         $from = $_GET['from'] ?? null;
-        $this->render('vehicule/create', ['from' => $from]);
+        $this->render('Vehicule/create', ['from' => $from]);
     }
 
     public function store(): void
