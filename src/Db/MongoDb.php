@@ -4,6 +4,7 @@ namespace App\Db;
 
 use MongoDB\Client;
 use MongoDB\Database;
+use Exception;
 
 class MongoDb
 {
@@ -13,30 +14,37 @@ class MongoDb
 
     private function __construct()
     {
+        // Priorité : MONGODB_URI (prod)
         $mongoUrl = getenv('MONGODB_URI');
 
         if ($mongoUrl) {
-            // En prod Heroku, on utilise l'URI tel quel
+            // On utilise directement l'URI fourni
             $this->client = new Client($mongoUrl);
             $this->dbName = ltrim(parse_url($mongoUrl, PHP_URL_PATH), '/');
         } else {
-            // En local, on lit depuis le fichier .db.ini
-            $dbConf = parse_ini_file(APP_ENV);
-            $dbHost = $dbConf["mongo_host"];
-            $dbUser = rawurlencode($dbConf["mongo_user"]);
-            $dbPassword = rawurlencode($dbConf["mongo_password"]);
-            $dbPort = $dbConf["mongo_port"];
-            $this->dbName = $dbConf["mongo_name"];
+            // Fallback local : lecture du fichier .db.ini
+            if (!defined('APP_ENV') || !file_exists(APP_ENV)) {
+                throw new Exception("Le fichier de configuration APP_ENV est introuvable !");
+            }
 
-            $uri = "mongodb://{$dbUser}:{$dbPassword}@{$dbHost}:{$dbPort}/{$this->dbName}?authSource=admin";
-            $this->client = new Client($uri);
+            $dbConf = parse_ini_file(APP_ENV);
+
+            $dbHost = $dbConf["mongo_host"] ?? 'localhost';
+            $dbPort = $dbConf["mongo_port"] ?? 27017;
+            $dbUser = rawurlencode($dbConf["mongo_user"] ?? '');
+            $dbPassword = rawurlencode($dbConf["mongo_password"] ?? '');
+            $this->dbName = $dbConf["mongo_name"] ?? 'test';
+
+            // Construction de l'URI avec authSource=admin
+            $mongoUrl = "mongodb://{$dbUser}:{$dbPassword}@{$dbHost}:{$dbPort}/{$this->dbName}?authSource=admin";
+            $this->client = new Client($mongoUrl);
         }
     }
 
     public static function getInstance(): self
     {
-        if (is_null(self::$instance)) {
-            self::$instance = new MongoDb();
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
         return self::$instance;
     }
