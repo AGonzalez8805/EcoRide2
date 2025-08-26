@@ -9,47 +9,38 @@ class Mailer
 {
     public function sendContactMail($data)
     {
+        if (!is_array($data)) {
+            return [
+                'success' => false,
+                'message' => 'Aucune donnée reçue ou format JSON invalide.'
+            ];
+        }
+
         $mail = new PHPMailer(true);
 
         try {
-            // Chargement du fichier .env
-            $envPath = __DIR__ . '/../../.env';
-            if (!file_exists($envPath)) {
-                throw new \Exception("Fichier .env introuvable.");
-            }
-
-            $config = parse_ini_file($envPath);
-
-            // Vérification minimale
-            if (!$config['MAIL_HOST'] || !$config['MAIL_USERNAME'] || !$config['MAIL_PASSWORD']) {
-                throw new \Exception("Configuration mail incomplète.");
-            }
-
-            // Configuration SMTP
             $mail->isSMTP();
-            $mail->Host = $config['MAIL_HOST'];
-            $mail->SMTPAuth = true;
-            $mail->Username = $config['MAIL_USERNAME'];
-            $mail->Password = $config['MAIL_PASSWORD'];
+            $mail->Host       = $_ENV['MAIL_HOST'] ?? '';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = $_ENV['MAIL_USERNAME'] ?? '';
+            $mail->Password   = $_ENV['MAIL_PASSWORD'] ?? '';
             $mail->SMTPSecure = 'tls';
-            $mail->Port = $config['MAIL_PORT'] ?? 587;
+            $mail->Port       = $_ENV['MAIL_PORT'] ?? 587;
 
-            // Paramètres d'expéditeur et destinataire
-            $mail->setFrom($config['MAIL_FROM'], $config['MAIL_FROM_NAME']);
-            $mail->addAddress($config['MAIL_TO'], 'Support Ecoride');
+            $mail->setFrom($_ENV['MAIL_FROM'] ?? 'default@ecoride.com', $_ENV['MAIL_FROM_NAME'] ?? 'Ecoride Support');
+            $mail->addAddress($_ENV['MAIL_TO'] ?? 'support@ecoride.com', 'Support Ecoride');
 
-            // Contenu
             $mail->isHTML(false);
             $mail->Subject = $data['subject'] ?? 'Sujet non défini';
-            $mail->Body    = "Nom : {$data['name']}\n"
-                . "Prénom : {$data['firstName']}\n"
-                . "Email : {$data['email']}\n"
-                . "Téléphone : {$data['phone']}\n"
-                . "Message :\n{$data['message']}";
+            $mail->Body    = "Nom : " . ($data['name'] ?? '') . "\n"
+                . "Prénom : " . ($data['firstName'] ?? '') . "\n"
+                . "Email : " . ($data['email'] ?? '') . "\n"
+                . "Téléphone : " . ($data['phone'] ?? '') . "\n"
+                . "Message :\n" . ($data['message'] ?? '');
 
             $mail->send();
 
-            return ['success' => true];
+            return ['success' => true, 'message' => 'Message envoyé avec succès !'];
         } catch (\Exception $e) {
             return [
                 'success' => false,

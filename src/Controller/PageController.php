@@ -83,18 +83,34 @@ class PageController extends Controller
     /* Traite l'envoi d'un message via AJAX (données JSON) */
     public function sendMessage()
     {
-        // Récupère les données JSON envoyées en POST
-        $json = file_get_contents("php://input");
-        $data = json_decode($json, true);
+        header('Content-Type: application/json'); // ✅ force JSON
+        http_response_code(200);
 
-        // Utilise le service Mailer pour envoyer le mail de contact
-        $mailer = new Mailer();
-        $result = $mailer->sendContactMail($data);
+        // Debug
+        file_put_contents("/var/www/html/debug_input.log", "sendMessage called\n", FILE_APPEND);
 
-        // Retourne la réponse au format JSON
-        header('Content-Type: application/json');
-        echo json_encode($result);
-        exit;
+        $rawData = file_get_contents("php://input");
+        file_put_contents("/var/www/html/debug_input.log", "Input: " . $rawData . "\n", FILE_APPEND);
+
+        $data = json_decode($rawData, true);
+
+        if (empty($rawData)) {
+            echo json_encode([
+                "success" => false,
+                "message" => "php://input est vide (Apache a peut-être mangé la requête ?)",
+                "headers" => getallheaders(), // <== super utile pour debug
+                "method" => $_SERVER['REQUEST_METHOD']
+            ]);
+            return;
+        }
+
+        // Ici tu peux faire ta validation (ex: champs obligatoires)
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Message reçu",
+            "data" => $data
+        ]);
     }
 
     /* Valide les données du formulaire envoyées en JSON */
@@ -103,47 +119,34 @@ class PageController extends Controller
         header('Content-Type: application/json');
         http_response_code(200);
 
-        // Récupère les données JSON reçues
         $input = json_decode(file_get_contents('php://input'), true);
 
-        // Vérifie que les données existent
-        if (!$input) {
-            echo json_encode(["succes" => false, "message" => "Données invalides"]);
-            exit;
+        if ($input === null) {
+            echo json_encode(["success" => false, "message" => "Données invalides"]);
+            return;
         }
 
-        // Récupération et nettoyage des champs
         $name = trim($input['name'] ?? '');
         $firstName = trim($input['firstName'] ?? '');
         $email = trim($input['email'] ?? '');
         $subject = trim($input['subject'] ?? '');
         $message = trim($input['message'] ?? '');
 
-        // Vérifie que tous les champs sont remplis
         if (!$name || !$firstName || !$email || !$subject || !$message) {
-            echo json_encode(["succes" => false, "message" => "Données invalides"]);
-            exit;
+            echo json_encode(["success" => false, "message" => "Tous les champs sont obligatoires"]);
+            return;
         }
 
-        // Vérifie que l'email est valide
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo json_encode(["succes" => false, "message" => "Email invalide"]);
-            exit;
+            echo json_encode(["success" => false, "message" => "Email invalide"]);
+            return;
         }
 
-        // Vérifie que le message est suffisamment long
         if (strlen($message) < 10) {
-            echo json_encode(["succes" => false, "message" => "Message trop court"]);
-            exit;
+            echo json_encode(["success" => false, "message" => "Message trop court"]);
+            return;
         }
 
-        // Validation réussie, on renvoie un message OK
         echo json_encode(["success" => true, "message" => "Formulaire valide"]);
-        exit;
-
-        // Note : le code d'envoi de mail ici est inutile car placé après exit
-        // $headers = "From: $name <$email>\r\n";
-        // $headers .= "Reply-To: $email\r\n";
-        // $headers .= "X-Mailer: PHP/" . phpversion();
     }
 }
