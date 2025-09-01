@@ -1,4 +1,4 @@
-USE Ecoride;
+-- USE Ecoride;
 
 CREATE TABLE utilisateurs(
     id INT AUTO_INCREMENT PRIMARY KEY,

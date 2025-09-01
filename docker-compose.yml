@@ -1,16 +1,16 @@
 services:
   # Service 'php' : Conteneur pour l'application PHP et le serveur web Apache.
   php:
-    container_name: Ecoride_php 
+    container_name: Ecoride_php
     ports:
-      - "80:80"  
+      - "80:80"
     volumes:
-      - ./:/var/www/html  
+      - ./:/var/www/html
     build:
-      context: .  # Construit depuis ce dossier
-      dockerfile: Dockerfile  # Fichier Docker à utiliser
+      context: .
+      dockerfile: Dockerfile
     networks:
-      - app-network  # Réseau utilisé
+      - app-network
     depends_on:
       - db
       - mongodb
@@ -18,33 +18,33 @@ services:
   # Service 'db' : Conteneur pour la base de données MySQL.
   db:
     image: mysql:latest
-    container_name: Ecoride_mysql 
+    container_name: Ecoride_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} 
-      MYSQL_DATABASE: ${MYSQL_DATABASE}  
-      MYSQL_USER: ${MYSQL_USER}  
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}  
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3307:3306"  
+      - "3307:3306"
     volumes:
-      - Ecoride-data:/var/lib/mysql  # Sauvegarde des données
+      - Ecoride-data:/var/lib/mysql
     networks:
-      - app-network  # Réseau utilisé
+      - app-network
 
   # Service 'phpmyadmin' : Conteneur pour l'interface web de gestion de base de données phpMyAdmin.
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin  
-    container_name: Ecoride_phpmyadmin  
+    image: phpmyadmin/phpmyadmin
+    container_name: Ecoride_phpmyadmin
     environment:
-      PMA_HOST: ${PMA_HOST}  
-      PMA_USER: ${PMA_USER}  
-      PMA_PASSWORD: ${PMA_PASSWORD}  
+      PMA_HOST: ${PMA_HOST}
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
     ports:
-      - "8000:80"  # Accès à phpMyAdmin sur le port 8000
+      - "8000:80"
     depends_on:
-      - db  # Attend que MySQL soit prêt
+      - db
     networks:
-      - app-network  # Réseau utilisé
+      - app-network
 
         # Service 'mongodb' : Conteneur pour la base de données MongoDb.
   mongodb:
@@ -60,13 +60,14 @@ services:
     networks:
       - app-network
 
+      # Service 'mongodb-express' : Conteneur pour l'interface web de gestion de base de données mongodb
   mongo-express:
     image: mongo-express
     container_name: Ecoride_mongo_express
     ports:
       - "8090:8081"
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_EXPRESS_PASSWORD}@mongodb:27017/
       ME_CONFIG_BASICAUTH: "false"
     depends_on:
       - mongodb

@@ -89,7 +89,7 @@
                                             <div class="avis-meta">
                                                 <span class="date">
                                                     <i class="fas fa-calendar me-1"></i>
-                                                    <?= $avis->getDatePublication() ? $avis->getDatePublication()->format('d/m/Y H:i') : '' ?>
+                                                    <?= $avis->getDatePublication() ? $avis->getDatePublication()->toDateTime()->format('d/m/Y H:i') : '' ?>
                                                 </span>
                                             </div>
                                         </div>

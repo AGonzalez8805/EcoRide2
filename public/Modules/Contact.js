@@ -18,20 +18,15 @@ export class Contact {
         this.inputFirstName.addEventListener("input", () =>
             this.validateField(this.inputFirstName)
         );
-
-        // Validation de l'email au format
         this.inputMail.addEventListener("input", () =>
             this.validateEmail(this.inputMail)
         );
-
         this.inputPhone.addEventListener("input", () =>
             this.validateField(this.inputPhone)
         );
-
         this.inputSubject.addEventListener("input", () =>
             this.validateField(this.inputSubject)
         );
-
         this.inputMessage.addEventListener("input", () =>
             this.validateField(this.inputMessage)
         );
@@ -44,7 +39,6 @@ export class Contact {
 
     validateField(field) {
         const value = field.value.trim();
-        // Spécifique au champ téléphone
         if (field === this.inputPhone) {
             const phoneRegex = /^[0-9\s-]{10,}$/;
             const isValid = phoneRegex.test(value);
@@ -52,7 +46,6 @@ export class Contact {
             field.classList.toggle("is-invalid", !isValid);
             return isValid;
         }
-        // Validation générique pour les autres champs
         if (value === "") {
             field.classList.remove("is-valid");
             field.classList.add("is-invalid");
@@ -101,7 +94,8 @@ export class Contact {
 
         try {
             console.log("Envoi du message...", data);
-            const response = await fetch("/?controller=page&action=sendMessage", {
+
+            const response = await fetch("/?controller=pages&action=sendMessage", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -110,7 +104,18 @@ export class Contact {
                 body: JSON.stringify(data),
             });
 
-            const result = await response.json();
+            // Vérif contenu de la réponse
+            const contentType = response.headers.get("content-type");
+            let result;
+            if (contentType && contentType.includes("application/json")) {
+                result = await response.json();
+            } else {
+                const text = await response.text();
+                console.warn("Réponse non JSON :", text);
+                alert("Réponse serveur inattendue : " + text);
+                return;
+            }
+
             if (response.ok && result.success) {
                 alert(result.message || "Message envoyé avec succès !");
                 this.form.reset();

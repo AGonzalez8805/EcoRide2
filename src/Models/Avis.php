@@ -10,7 +10,7 @@ class Avis
     private ?string $commentaire = null;
     private ?int $note = null;
     private ?string $statut = null;
-    private ?\UTCDateTime $datePublication = null;
+    private ?UTCDateTime $datePublication = null;
     private ?string $idUtilisateurs = null;
     private ?string $idEmploye = null;
     private ?string $chauffeurId = null;
@@ -194,20 +194,34 @@ class Avis
 
     public static function fromDocument(object $doc): self
     {
+        $datePublication = null;
+
+        if (isset($doc->created_at)) {
+            if ($doc->created_at instanceof UTCDateTime) {
+                $datePublication = $doc->created_at;
+            } else {
+                // Si c'est une chaîne ou un timestamp, on le convertit en UTCDateTime
+                try {
+                    $datePublication = new UTCDateTime(strtotime($doc->created_at) * 1000);
+                } catch (\Exception $e) {
+                    $datePublication = null;
+                }
+            }
+        }
+
         return new self([
             'id'              => isset($doc->_id) ? (string)$doc->_id : null,
             'commentaire'     => $doc->commentaire ?? null,
             'note'            => $doc->note ?? null,
             'statut'          => $doc->statut ?? 'en_attente',
-            'datePublication' => isset($doc->created_at) && $doc->created_at instanceof UTCDateTime
-                ? $doc->created_at->toDateTime()
-                : null,
+            'datePublication' => $datePublication,  // <--- correction ici
             'idUtilisateurs'  => isset($doc->user_id) ? (string)$doc->user_id : null,
             'idEmploye'       => isset($doc->idEmploye) ? (string)$doc->idEmploye : null,
             'chauffeur_id'    => $doc->chauffeur_id ?? null,
             'pseudo'          => $doc->pseudo ?? null,
         ]);
     }
+
 
     public function toDocument(): array
     {

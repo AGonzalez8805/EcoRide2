@@ -10,6 +10,7 @@ import { Vehicule } from "./Modules/Vehicule.js";
 import { Profil } from "./Modules/Profil.js";
 import { Avis } from "./Modules/Avis.js";
 import { EmployeDashboard } from "./Modules/EmployeDashboard.js";
+import { DashboardMixte } from "./Modules/DashboardMixte.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("registrationForm")) {
@@ -46,6 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (document.getElementById("employeStat")) {
     new EmployeDashboard();
+  }
+
+  if (document.getElementById("dashboardMixte")) {
+    new DashboardMixte();
   }
 
 });

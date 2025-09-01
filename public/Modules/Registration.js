@@ -36,16 +36,16 @@ export class Registration {
       this.validateEmail(this.inputMail)
     );
 
+    // Vérifie la correspondance des mots de passe
+    this.inputValidatePassword.addEventListener("input", () =>
+      this.validatePasswordMatch()
+    );
+
     // Validation dynamique du mot de passe et des critères
     this.inputPassword.addEventListener("input", () => {
       this.updatePasswordCriteria(this.inputPassword.value);
       this.validatePasswordMatch(); // Mise à jour de la confirmation
     });
-
-    // Vérifie la correspondance des mots de passe
-    this.inputValidatePassword.addEventListener("input", () =>
-      this.validatePasswordMatch()
-    );
 
     // Soumission du formulaire
     this.form.addEventListener("submit", (e) => {
@@ -79,12 +79,9 @@ export class Registration {
   validatePasswordMatch() {
     const password = this.inputPassword.value;
     const confirmPassword = this.inputValidatePassword.value;
-
     const match = password === confirmPassword && password !== "";
-
     this.inputValidatePassword.classList.toggle("is-valid", match);
     this.inputValidatePassword.classList.toggle("is-invalid", !match);
-
     return match;
   }
 

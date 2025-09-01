@@ -5,7 +5,7 @@ export class Avis {
         this.inputMail = document.getElementById('email');
         this.textareaCommentaire = document.getElementById("commentaire");
         this.charCounter = document.getElementById("charCounter");
-        this.inputRating = document.getElementById("rating");
+        this.inputNote = document.getElementById("note");
         this.ratingText = document.getElementById("ratingText");
         this.stars = document.querySelectorAll("#starRating .star");
         this.successMessage = document.getElementById("successMessage");
@@ -62,7 +62,7 @@ export class Avis {
     }
 
     setRating(rating) {
-        this.inputRating.value = rating;
+        this.inputNote.value = rating;
         this.stars.forEach(star => {
             star.classList.toggle("selected", star.dataset.rating <= rating);
         });
@@ -84,7 +84,7 @@ export class Avis {
             this.textareaCommentaire.classList.add("is-valid");
         }
 
-        if (!this.inputRating.value) {
+        if (!this.inputNote.value) {
             alert("Veuillez donner une note avant de soumettre.");
         }
 
@@ -98,13 +98,13 @@ export class Avis {
         }
 
         // Vérification générale
-        if (!isValidPseudo || !isValidMail || !isValidCommentaire || !this.inputRating.value || !selectChauffeur.value) return;
+        if (!isValidPseudo || !isValidMail || !isValidCommentaire || !this.inputNote.value || !selectChauffeur.value) return;
 
         // Préparer les données à envoyer
         const data = {
             pseudo: this.inputPseudo.value,
             email: this.inputMail.value,
-            rating: this.inputRating.value,
+            note: this.inputNote.value,
             commentaire: this.textareaCommentaire.value,
             chauffeur_id: selectChauffeur.value
         };

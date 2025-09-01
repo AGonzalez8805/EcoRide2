@@ -195,7 +195,7 @@ class AuthController extends Controller
             // Authentification réussie pour un utilisateur classique
             $_SESSION['user_id'] = $user->getId();
             $_SESSION['email'] = $user->getEmail();
-            $_SESSION['typeUtilisateur'] = $user->getRole();
+            $_SESSION['typeUtilisateur'] = $user->getTypeUtilisateur();
             $_SESSION['firstName'] = $user->getFirstName();
             $_SESSION['name'] = $user->getName();
 

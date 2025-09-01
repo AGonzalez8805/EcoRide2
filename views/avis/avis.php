@@ -57,7 +57,7 @@
                     <div class="rating-text" id="ratingText">
                         Cliquez pour noter votre expérience
                     </div>
-                    <input type="hidden" id="rating" name="rating">
+                    <input type="hidden" id="note" name="note">
                 </div>
             </div>
 
