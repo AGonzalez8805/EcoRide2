@@ -2,13 +2,13 @@
 
 <section class="en-tete">
     <div class="container">
-        <p class="user-info">
+        <div class="user-info">
             <strong>
                 <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
             </strong>
-        <h2>Bienvenue sur ton espace chauffeur</h2>
-        <span class="user-credits">Solde : 35 crédits</span>
-        </p>
+            <h2>Bienvenue sur ton espace chauffeur</h2>
+            <span class="user-credits">Crédit : <?= htmlspecialchars($user->getCredit()) ?></span>
+        </div>
     </div>
 </section>
 

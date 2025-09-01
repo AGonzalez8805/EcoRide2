@@ -1,0 +1,8 @@
+.card-search {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 124, 89, 0.1);
+  margin-top: 20px;
+}

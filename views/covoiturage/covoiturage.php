@@ -17,19 +17,20 @@
         <form id="search-covoiturage" class="search-form-simple" method="get" action="/?controller=covoiturage&action=resultats">
             <input type="hidden" name="controller" value="covoiturage">
             <input type="hidden" name="action" value="resultats">
+
             <div class="form-group-simple">
                 <label for="departure-simple">Ville de départ</label>
-                <input type="text" class="form-control-simple" name="depart" id="departure-simple" placeholder="Ex: Paris" value="Paris">
+                <input type="text" class="form-control-simple" name="depart" id="departure-simple" placeholder="Ex: Paris">
             </div>
 
             <div class="form-group-simple">
                 <label for="arrival-simple">Ville d'arrivée</label>
-                <input type="text" class="form-control-simple" name="arrivee" id="arrival-simple" placeholder="Ex: Lyon" value="Lyon">
+                <input type="text" class="form-control-simple" name="arrivee" id="arrival-simple" placeholder="Ex: Lyon">
             </div>
 
             <div class="form-group-simple">
                 <label for="date-simple">Date de départ</label>
-                <input type="date" class="form-control-simple" name="date" id="date-simple" value="2025-08-05">
+                <input type="date" class="form-control-simple" name="date" id="date-simple">
             </div>
 
             <button type="submit" class="btn-search">

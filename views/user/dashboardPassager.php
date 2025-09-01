@@ -7,8 +7,8 @@
             <strong>
                 <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
             </strong>
-        <p>Bienvenue dans votre espace passager</p>
-        <span class="user-credits">Solde : 35 crédits</span>
+        <h2>Bienvenue dans votre espace passager</h2>
+        <span class="user-credits">Crédit : <?= htmlspecialchars($user->getCredit()) ?></span>
         </p>
     </div>
 </section>
@@ -137,8 +137,6 @@
             <p>Vous n'avez encore posté aucun avis.</p>
         <?php endif; ?>
     </div>
-
-
 
     <!-- Actions rapides -->
     <div class="simple-card">

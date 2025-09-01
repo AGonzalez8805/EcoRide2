@@ -11,10 +11,6 @@ use App\Repository\AvisRepository;
 
 class UserController extends Controller
 {
-    /**
-     * Méthode de routage principale du contrôleur utilisateur.
-     * Elle redirige vers la méthode appropriée en fonction de l'action passée en GET.
-     */
     public function route(): void
     {
         $this->handleRoute(function () {
@@ -23,6 +19,16 @@ class UserController extends Controller
                     case 'dashboardChauffeur':
                         // Affiche le tableau de bord Chauffeur
                         $this->dashboardChauffeur();
+                        break;
+
+                    case 'dashboardPassager':
+                        // Affiche le tableau de bord Passager
+                        $this->dashboardPassager();
+                        break;
+
+                    case 'dashboardMixte':
+                        // Affiche le tableau de bord Passager/Chauffeur
+                        $this->dashboardMixte();
                         break;
 
                     case 'profil':
@@ -36,16 +42,6 @@ class UserController extends Controller
 
                     case 'updateRole':
                         $this->updateRole();
-                        break;
-
-                    case 'dashboardPassager':
-                        // Affiche le tableau de bord Passager
-                        $this->dashboardPassager();
-                        break;
-
-                    case 'dashboardMixte':
-                        // Affiche le tableau de bord Passager/Chauffeur
-                        $this->dashboardMixte();
                         break;
 
                     default:
@@ -88,6 +84,73 @@ class UserController extends Controller
             'avisValides' => $avisValides
         ]);
     }
+
+    public function dashboardPassager(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $userId = $_SESSION['user_id'] ?? null;
+
+        if (!$userId) {
+            throw new \Exception("Utilisateur non connecté.");
+        }
+
+        $userRepo = new UserRepository();
+        $user = $userRepo->findById($userId);
+
+        $participationRepo = new ParticipationRepository();
+        $participationDuJour = $participationRepo->findTodayByUser($userId);
+
+        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
+        $mesAvis = $avisRepo->listerAvecStatut($userId);
+
+        $this->render('user/dashboardPassager', [
+            'user' => $user,
+            'participationDuJour' => $participationDuJour,
+            'mesAvis' => $mesAvis
+        ]);
+    }
+    public function dashboardMixte(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $userId = $_SESSION['user_id'] ?? null;
+
+        if (!$userId) {
+            header('Location: /?controller=security&action=login');
+            exit;
+        }
+
+        // Repositories
+        $userRepo = new UserRepository();
+        $trajetRepo = new TrajetRepository();
+        $vehiculeRepo = new VehiculeRepository();
+        $participationRepo = new ParticipationRepository();
+        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
+
+        // Récupération des données
+        $user = $userRepo->findById($userId);
+        $trajetsDuJour = $trajetRepo->findTodayByChauffeur($userId); // côté chauffeur
+        $vehicules = $vehiculeRepo->findAllByUser($userId);
+        $avisValides = $avisRepo->listerValides(); // derniers avis reçus chauffeur
+        $mesAvis = $avisRepo->listerAvecStatut($userId); // mes avis donnés
+        $participationDuJour = $participationRepo->findTodayByUser($userId); // côté passager
+
+        // Envoi à la vue
+        $this->render('user/dashboardMixte', [
+            'user' => $user,
+            'trajetsDuJour' => $trajetsDuJour,
+            'vehicules' => $vehicules,
+            'avisValides' => $avisValides,
+            'mesAvis' => $mesAvis,
+            'participationDuJour' => $participationDuJour
+        ]);
+    }
+
 
     public function profil(): void
     {
@@ -233,43 +296,5 @@ class UserController extends Controller
                 break;
         }
         exit;
-    }
-
-    public function dashboardPassager(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $userId = $_SESSION['user_id'] ?? null;
-
-        if (!$userId) {
-            throw new \Exception("Utilisateur non connecté.");
-        }
-
-        $userRepo = new UserRepository();
-        $user = $userRepo->findById($userId);
-
-        $participationRepo = new ParticipationRepository();
-        $participationDuJour = $participationRepo->findTodayByUser($userId);
-
-        $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
-        $mesAvis = $avisRepo->listerAvecStatut($userId);
-
-        $this->render('user/dashboardPassager', [
-            'user' => $user,
-            'participationDuJour' => $participationDuJour,
-            'mesAvis' => $mesAvis
-        ]);
-    }
-
-
-    public function dashboardMixte(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $this->render('user/dashboardMixte');
     }
 }

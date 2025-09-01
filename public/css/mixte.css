@@ -1,0 +1,101 @@
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.mode-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mode-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.mode-label.active {
+  color: #16a34a;
+}
+
+.toggle-btn {
+  position: relative;
+  width: 50px;
+  height: 25px;
+  background-color: #e5e7eb;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-btn.active {
+  background-color: #16a34a;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-btn.active .toggle-slider {
+  transform: translateX(25px);
+}
+
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.mode-badge.passager {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.mode-badge.chauffeur {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.mode-content {
+  display: block;
+}
+
+.mode-content.hidden {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .mode-toggle-container {
+    justify-content: center;
+  }
+}
