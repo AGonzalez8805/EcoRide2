@@ -128,6 +128,7 @@ class UserRepository extends Repository
         return $usersArray;
     }
 
+    /** Récupérer uniquement les chauffeurs */
     public function findChauffeurs(): array
     {
         $query = $this->pdo->prepare('SELECT * FROM utilisateurs WHERE typeUtilisateur = :role');

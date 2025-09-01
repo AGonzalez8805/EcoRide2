@@ -40,6 +40,11 @@ class TrajetController extends Controller
                     $this->create();
                     break;
 
+                case 'resultats':
+                    $this->resultats();
+                    break;
+
+
                 default:
                     throw new \Exception("Action covoiturage inconnue : $action", 404);
             }
@@ -188,7 +193,6 @@ class TrajetController extends Controller
         echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
     }
 
-
     public function getApiKey(): void
     {
         header('Content-Type: application/json');
@@ -244,6 +248,23 @@ class TrajetController extends Controller
 
         $this->render('covoiturage/create', [
             'vehicules' => $vehicules
+        ]);
+    }
+
+    public function resultats(): void
+    {
+        $depart = $_GET['depart'] ?? null;
+        $arrivee = $_GET['arrivee'] ?? null;
+        $date = $_GET['date'] ?? null;
+
+        $trajetRepo = new TrajetRepository();
+        $trajets = $trajetRepo->search($depart, $arrivee, $date);
+
+        $this->render('covoiturage/resultats', [
+            'trajets' => $trajets,
+            'depart' => $depart,
+            'arrivee' => $arrivee,
+            'date' => $date
         ]);
     }
 }

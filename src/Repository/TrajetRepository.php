@@ -39,7 +39,6 @@ class TrajetRepository extends Repository
         ]);
     }
 
-
     /** Récupérer les trajets d'un chauffeur */
     public function findByChauffeur(int $chauffeurId): array
     {
@@ -75,29 +74,24 @@ class TrajetRepository extends Repository
         return $trajets;
     }
 
-    /** Recherche de trajets selon critères */
-    public function search(string $depart, string $arrivee, string $date): array
+    /** Rechercher des trajets par lieu de départ, arrivée et date */
+    public function search(?string $lieuDepart = null, ?string $lieuArrivee = null, ?string $date = null): array
     {
-        $sql = "SELECT c.*, v.marque, v.modele, v.fumeur, u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom
-                FROM covoiturage c
-                JOIN vehicule v ON c.id_vehicule = v.id
-                JOIN utilisateurs u ON c.id_utilisateurs = u.id
-                WHERE 1=1";
-
+        $sql = "SELECT * FROM covoiturage WHERE 1=1";
         $params = [];
 
-        if (!empty($depart)) {
-            $sql .= " AND c.lieuDepart LIKE :depart";
-            $params[':depart'] = "%$depart%";
+        if ($lieuDepart) {
+            $sql .= " AND lieuDepart LIKE :depart";
+            $params[':depart'] = "%$lieuDepart%";
         }
 
-        if (!empty($arrivee)) {
-            $sql .= " AND c.lieuArrivee LIKE :arrivee";
-            $params[':arrivee'] = "%$arrivee%";
+        if ($lieuArrivee) {
+            $sql .= " AND lieuArrivee LIKE :arrivee";
+            $params[':arrivee'] = "%$lieuArrivee%";
         }
 
-        if (!empty($date)) {
-            $sql .= " AND c.dateDepart = :date";
+        if ($date) {
+            $sql .= " AND dateDepart = :date";
             $params[':date'] = $date;
         }
 
@@ -108,6 +102,7 @@ class TrajetRepository extends Repository
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $trajets[] = $this->hydrate(new Trajet(), $row);
         }
+
         return $trajets;
     }
 
@@ -124,31 +119,19 @@ class TrajetRepository extends Repository
         $query = $this->pdo->query($sql);
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
-    /**
-     * Récupère un trajet avec son véhicule par l'id du trajet
-     */
+
+    /** Récupère un trajet avec son véhicule par l'id du trajet */
     public function findByIdWithVehicule(int $id): ?Trajet
     {
-        $sql = "
-            SELECT 
-                t.id as trajet_id,
-                t.dateDepart, t.heureDepart, t.lieuDepart,
-                t.dateArrivee, t.heureArrivee, t.lieuArrivee,
-                t.statut, t.nbPlace, t.prixPersonne, t.id_utilisateurs,
-                v.id as vehicule_id,
-                v.marque, v.modele, v.immatriculation, v.energie, v.couleur,
-                v.datePremierImmatriculation, v.nbPlaces, v.preferencesSupplementaires,
-                v.fumeur, v.animaux, v.id_utilisateurs as vehicule_proprietaire_id
-            FROM covoiturage t
-            JOIN vehicule v ON t.id_vehicule = v.id
-            WHERE t.id = :id
-        ";
+        $sql = "SELECT t.*, v.*
+                FROM covoiturage t
+                JOIN vehicule v ON t.id_vehicule = v.id
+                WHERE t.id = :id";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $query = $this->pdo->prepare($sql);
+        $query->execute(['id' => $id]);
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
+        $row = $query->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
             return null; // Trajet non trouvé
         }

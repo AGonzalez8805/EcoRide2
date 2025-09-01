@@ -14,15 +14,17 @@
     <aside class="search-sidebar">
         <h2 class="sidebar-title">Rechercher</h2>
 
-        <form id="search-covoiturage" class="search-form-simple">
+        <form id="search-covoiturage" class="search-form-simple" method="get" action="/?controller=covoiturage&action=resultats">
+            <input type="hidden" name="controller" value="covoiturage">
+            <input type="hidden" name="action" value="resultats">
             <div class="form-group-simple">
                 <label for="departure-simple">Ville de départ</label>
-                <input type="text" class="form-control-simple" name="departure" id="departure-simple" placeholder="Ex: Paris" value="Paris">
+                <input type="text" class="form-control-simple" name="depart" id="departure-simple" placeholder="Ex: Paris" value="Paris">
             </div>
 
             <div class="form-group-simple">
                 <label for="arrival-simple">Ville d'arrivée</label>
-                <input type="text" class="form-control-simple" name="arrival" id="arrival-simple" placeholder="Ex: Lyon" value="Lyon">
+                <input type="text" class="form-control-simple" name="arrivee" id="arrival-simple" placeholder="Ex: Lyon" value="Lyon">
             </div>
 
             <div class="form-group-simple">
