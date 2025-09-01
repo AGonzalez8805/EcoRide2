@@ -76,6 +76,7 @@ class AdminController extends Controller
         $statRepo = new StatistiqueRepository();
         $stats = $statRepo->getAllStats();
 
+        // Affiche la vue correspondante
         $this->render('admin/dashboard', ['stats' => $stats]);
     }
 

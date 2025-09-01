@@ -20,10 +20,6 @@ class TrajetController extends Controller
                     $this->covoiturage();
                     break;
 
-                case 'ajouter':
-                    $this->ajouter();
-                    break;
-
                 case 'store':
                     $this->store();
                     break;
@@ -61,42 +57,12 @@ class TrajetController extends Controller
         ]);
     }
 
-    public function ajouter(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $trajet = new \App\Models\Trajet();
-
-            $trajet->setDateDepart($_POST['dateDepart'] ?? null);
-            $trajet->setHeureDepart($_POST['heureDepart'] ?? null);
-            $trajet->setLieuDepart($_POST['lieuDepart'] ?? null);
-            $trajet->setDateArrivee($_POST['dateArrivee'] ?? null);
-            $trajet->setHeureArrivee($_POST['heureArrivee'] ?? null);
-            $trajet->setLieuArrivee($_POST['lieuArrivee'] ?? null);
-            $trajet->setStatut($_POST['statut'] ?? null);
-            $trajet->setNbPlace(isset($_POST['nbPlace']) ? (int)$_POST['nbPlace'] : null);
-            $trajet->setPrixPersonne(isset($_POST['prixPersonne']) ? (float)$_POST['prixPersonne'] : null);
-            $trajet->setIdUtilisateurs(isset($_POST['idUtilisateurs']) ? (int)$_POST['idUtilisateurs'] : null);
-            $trajet->setIdVehicule(isset($_POST['idVehicule']) ? (int)$_POST['idVehicule'] : null);
-
-            $repo = new TrajetRepository();
-            $repo->save($trajet);
-
-            // Puis rediriger ou afficher un message
-            header('Location: /?controller=trajet&action=ajouter');
-            exit;
-        }
-
-        // Si GET, afficher le formulaire d'ajout
-        $this->render('covoiturage/ajouter');
-    }
-
     public function store(): void
     {
         header('Content-Type: application/json');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-
                 // Récupération des données avec noms de champs HTML
                 $prix = (float) ($_POST['prixPersonne'] ?? 0);
                 $places = (int) ($_POST['nbPlace'] ?? 0);

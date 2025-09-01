@@ -112,6 +112,7 @@ class UserController extends Controller
             'mesAvis' => $mesAvis
         ]);
     }
+
     public function dashboardMixte(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -150,7 +151,6 @@ class UserController extends Controller
             'participationDuJour' => $participationDuJour
         ]);
     }
-
 
     public function profil(): void
     {
