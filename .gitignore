@@ -3,5 +3,5 @@
 /vendor/
 generate-password.php
 log_debug.txt
-
+debug_input.log
 .vscode/
