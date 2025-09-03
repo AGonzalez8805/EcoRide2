@@ -204,6 +204,7 @@
             <div class="simple-card">
                 <h3 class="card-title-dash">Mes trajets aujourd'hui</h3>
                 <?php if (!empty($trajetsDuJour)): ?>
+
                     <?php foreach ($trajetsDuJour as $trajet): ?>
                         <div class="trip-item">
                             <div class="trip-info">

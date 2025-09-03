@@ -59,105 +59,64 @@ class TrajetController extends Controller
 
     public function store(): void
     {
-        header('Content-Type: application/json');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                // Récupération des données avec noms de champs HTML
-                $prix = (float) ($_POST['prixPersonne'] ?? 0);
-                $places = (int) ($_POST['nbPlace'] ?? 0);
-                $depart = $_POST['lieuDepart'] ?? null;
-                $destination = $_POST['lieuArrivee'] ?? null;
-                $dateDepart = $_POST['dateDepart'] ?? null;
-                $heureDepart = $_POST['heureDepart'] ?? null;
-                $dateArrivee = $_POST['dateArrivee'] ?? null;
-                $heureArrivee = $_POST['heureArrivee'] ?? null;
-                $vehiculeId = $_POST['vehicule'] ?? null;
-
-                // Validation basique
-                if ($prix < 2) {
-                    throw new \Exception("Le prix minimum est de 2 crédits par trajet.");
-                }
-                if ($places < 1) {
-                    throw new \Exception("Il doit y avoir au moins une place disponible.");
-                }
-                if (!$dateDepart || !$heureDepart) {
-                    throw new \Exception("La date et l'heure de départ sont manquantes.");
-                }
-                if (!$dateArrivee || !$heureArrivee) {
-                    throw new \Exception("La date et l'heure d'arrivée sont manquantes.");
-                }
-                if (!$depart) {
-                    throw new \Exception("Le lieu de départ est manquant.");
-                }
-                if (!$destination) {
-                    throw new \Exception("Le lieu d'arrivée est manquant.");
-                }
-                if (!$vehiculeId) throw new \Exception("Le choix du véhicule est obligatoire.");
-
-                if ($vehiculeId === 'nouveau') {
-                    echo json_encode([
-                        'success' => false,
-                        'message' => "Veuillez d'abord ajouter un nouveau véhicule avant de créer un trajet."
-                    ]);
-                    return;
-                }
-
-                if (!is_numeric($vehiculeId)) {
-                    echo json_encode([
-                        'success' => false,
-                        'message' => "Identifiant de véhicule invalide."
-                    ]);
-                    return;
-                }
-
-                $vehiculeId = (int) $vehiculeId;
-                $vehiculeRepo = new VehiculeRepository();
-                $vehicule = $vehiculeRepo->findById($vehiculeId);
-
-
-                if (!$vehicule || $vehicule->getIdUtilisateurs() != $_SESSION['user_id']) {
-                    throw new \Exception("Véhicule invalide ou non autorisé.");
-                }
-
-                // Conversion date + heure départ
-                $dateHeureDepart = \DateTime::createFromFormat('Y-m-d H:i', "$dateDepart $heureDepart");
-                if (!$dateHeureDepart) {
-                    throw new \Exception("Format date/heure départ invalide.");
-                }
-
-                // Conversion date + heure arrivée
-                $dateHeureArrivee = \DateTime::createFromFormat('Y-m-d H:i', "$dateArrivee $heureArrivee");
-                if (!$dateHeureArrivee) {
-                    throw new \Exception("Format date/heure arrivée invalide.");
-                }
-
-                $trajet = new Trajet();
-                $trajet->setDateDepart($dateHeureDepart->format('Y-m-d'))
-                    ->setHeureDepart($dateHeureDepart->format('H:i:s'))
-                    ->setLieuDepart($depart)
-                    ->setDateArrivee($dateHeureArrivee->format('Y-m-d'))
-                    ->setHeureArrivee($dateHeureArrivee->format('H:i:s'))
-                    ->setLieuArrivee($destination)
-                    ->setStatut('en_cours')
-                    ->setNbPlace($places)
-                    ->setPrixPersonne($prix)
-                    ->setIdUtilisateurs($_SESSION['user_id'])
-                    ->setIdVehicule($vehiculeId);
-
-                $repository = new TrajetRepository();
-                $repository->save($trajet);
-
-                echo json_encode(['success' => true]);
-                return;
-            } catch (\Exception $e) {
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-                return;
-            }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            throw new \Exception('Méthode non autorisée');
         }
 
-        echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
+        $prix = (float) ($_POST['prixPersonne'] ?? 0);
+        $places = (int) ($_POST['nbPlace'] ?? 0);
+        $depart = $_POST['lieuDepart'] ?? null;
+        $destination = $_POST['lieuArrivee'] ?? null;
+        $dateDepart = $_POST['dateDepart'] ?? null;
+        $heureDepart = $_POST['heureDepart'] ?? null;
+        $dateArrivee = $_POST['dateArrivee'] ?? null;
+        $heureArrivee = $_POST['heureArrivee'] ?? null;
+        $vehiculeId = $_POST['vehicule'] ?? null;
+
+        if ($prix < 2) throw new \Exception("Le prix minimum est de 2 crédits par trajet.");
+        if ($places < 1) throw new \Exception("Il doit y avoir au moins une place disponible.");
+        if (!$depart || !$destination) throw new \Exception("Lieu de départ ou d'arrivée manquant.");
+        if (!$dateDepart || !$heureDepart) throw new \Exception("Date/heure départ manquante.");
+        if (!$dateArrivee || !$heureArrivee) throw new \Exception("Date/heure arrivée manquante.");
+        if (!$vehiculeId) throw new \Exception("Le choix du véhicule est obligatoire.");
+        if ($vehiculeId === 'nouveau') throw new \Exception("Veuillez ajouter un nouveau véhicule avant de créer un trajet.");
+
+        if (!is_numeric($vehiculeId)) throw new \Exception("Identifiant de véhicule invalide.");
+
+        $vehiculeRepo = new VehiculeRepository();
+        $vehicule = $vehiculeRepo->findById((int)$vehiculeId);
+
+        if (!$vehicule || $vehicule->getIdUtilisateurs() != $_SESSION['user_id']) {
+            throw new \Exception("Véhicule invalide ou non autorisé.");
+        }
+
+        $dateHeureDepart = \DateTime::createFromFormat('Y-m-d H:i', "$dateDepart $heureDepart");
+        if (!$dateHeureDepart) throw new \Exception("Format date/heure départ invalide.");
+
+        $dateHeureArrivee = \DateTime::createFromFormat('Y-m-d H:i', "$dateArrivee $heureArrivee");
+        if (!$dateHeureArrivee) throw new \Exception("Format date/heure arrivée invalide.");
+
+        $trajet = (new Trajet())
+            ->setDateDepart($dateHeureDepart->format('Y-m-d'))
+            ->setHeureDepart($dateHeureDepart->format('H:i:s'))
+            ->setLieuDepart($depart)
+            ->setDateArrivee($dateHeureArrivee->format('Y-m-d'))
+            ->setHeureArrivee($dateHeureArrivee->format('H:i:s'))
+            ->setLieuArrivee($destination)
+            ->setStatut('en_cours')
+            ->setNbPlace($places)
+            ->setPrixPersonne($prix)
+            ->setIdUtilisateurs($_SESSION['user_id'])
+            ->setIdVehicule((int)$vehiculeId);
+
+        $repository = new TrajetRepository();
+        $repository->save($trajet);
+
+        // Pour AJAX, handleRoute() va gérer le JSON si on throw une exception
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
     }
+
 
     public function getApiKey(): void
     {
@@ -169,7 +128,6 @@ class TrajetController extends Controller
             echo json_encode(['error' => 'Clé API manquante']);
             return;
         }
-
 
         echo json_encode(['key' => $key]);
     }

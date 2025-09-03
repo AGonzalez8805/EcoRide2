@@ -89,44 +89,42 @@ class AdminController extends Controller
      */
     public function createEmploye(): void
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-            header('Location: /?controller=auth&action=login');
-            exit;
+        if ($_SESSION['role'] !== 'admin') {
+            throw new \Exception("Accès refusé");
         }
-        $message = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $pseudo = $_POST['pseudo'] ?? '';
             $password = $_POST['password'] ?? '';
 
-            if (!empty($email) && !empty($pseudo) && !empty($password)) {
+            if (!$email || !$pseudo || !$password) throw new \Exception("Tous les champs sont requis.");
 
-                $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $created = $this->employeRepository->create([
+                'email' => $email,
+                'pseudo' => $pseudo,
+                'password' => $hashedPassword,
+                'id_admin' => $_SESSION['user_id']
+            ]);
 
-                // Création dans le repository
-                $created = $this->employeRepository->create([
-                    'email' => $email,
-                    'pseudo' => $pseudo,
-                    'password' => $hashedPassword,
-                    'id_admin' => $_SESSION['user_id']
-                ]);
+            if (!$created) throw new \Exception("Erreur lors de la création de l'employé.");
 
-                $message = $created ? 'Employé créé avec succès.' : 'Erreur lors de la création.';
-            } else {
-                $message = 'Tous les champs sont requis.';
+            if (
+                isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+            ) {
+                echo json_encode(['success' => true]);
+                return;
             }
 
-            // Réponse AJAX si nécessaire
-            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-                echo $message;
-                exit;
-            }
+            $this->render('admin/createEmploye', ['message' => 'Employé créé avec succès.']);
+            return;
         }
 
-        // Affichage de la vue création employé
-        $this->render('admin/createEmploye', ['message' => $message]);
+        $this->render('admin/createEmploye');
     }
+
 
     /**
      * Active/désactive le statut d’un employé (suspendu ou non).

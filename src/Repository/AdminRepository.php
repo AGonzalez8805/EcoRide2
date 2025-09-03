@@ -47,8 +47,6 @@ class AdminRepository extends Repository
 
     /**
      * Créer un admin
-     * ⚠ Ne pas utiliser depuis un formulaire public
-     * Réservé aux scripts internes ou installation initiale
      */
     protected function create(array $data): bool
     {
