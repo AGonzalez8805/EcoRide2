@@ -230,11 +230,8 @@ class Avis
             'note'        => $this->note,
             'statut'      => $this->statut ?? 'en_attente',
             'created_at'  => new UTCDateTime(),
-
-            // IDs numériques
             'user_id'     => $this->idUtilisateurs !== null ? (int)$this->idUtilisateurs : null,
             'chauffeur_id' => $this->chauffeurId !== null ? (int)$this->chauffeurId : null,
-
             'pseudo'      => $this->pseudo,
         ];
     }

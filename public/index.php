@@ -35,7 +35,6 @@ $mysql = Mysql::getInstance()->getPDO();
 $mongo = MongoDb::getInstance();
 $dbMongo = $mongo->getDatabase();
 
-
 // Lancer le contrôleur principal
 use App\Controller\Controller;
 

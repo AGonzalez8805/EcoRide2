@@ -7,7 +7,9 @@
     <!-- Configuration du viewport pour que le site soit responsive sur mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Brève description du site (utile pour le SEO et le partage sur les réseaux) -->
-    <meta name="description" content="site de covoiturage">
+    <meta name="description" content="Covoiturage écologique facile et rapide. Partagez vos trajets, économisez de l'argent et réduisez votre empreinte carbone.">
+    <!-- Nom de l'auteur -->
+    <meta name="author" content="Amelie">
     <!-- Icône affichée dans l’onglet du navigateur -->
     <link rel="shortcut icon" href="/images/LOGO EcoRide  avec une voiture écologie.jpg" type="image/x-icon">
     <!-- Optimisation du chargement en préconnectant aux serveurs de Google Fonts -->
