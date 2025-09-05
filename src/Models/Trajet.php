@@ -17,6 +17,11 @@ class Trajet extends Models
     protected ?int $idUtilisateurs = null;
     protected ?int $idVehicule = null;
 
+    private Vehicule $vehicule;
+    private string $chauffeurNom;
+    private string $chauffeurPrenom;
+    private ?string $chauffeurPhoto;
+
     /**
      * Get the value of id
      */
@@ -229,6 +234,78 @@ class Trajet extends Models
     public function setIdVehicule(?int $idVehicule): self
     {
         $this->idVehicule = $idVehicule;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of vehicule
+     */
+    public function getVehicule(): Vehicule
+    {
+        return $this->vehicule;
+    }
+
+    /**
+     * Set the value of vehicule
+     */
+    public function setVehicule(Vehicule $vehicule): self
+    {
+        $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of chauffeurNom
+     */
+    public function getChauffeurNom(): string
+    {
+        return $this->chauffeurNom;
+    }
+
+    /**
+     * Set the value of chauffeurNom
+     */
+    public function setChauffeurNom(string $chauffeurNom): self
+    {
+        $this->chauffeurNom = $chauffeurNom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of chauffeurPrenom
+     */
+    public function getChauffeurPrenom(): string
+    {
+        return $this->chauffeurPrenom;
+    }
+
+    /**
+     * Set the value of chauffeurPrenom
+     */
+    public function setChauffeurPrenom(string $chauffeurPrenom): self
+    {
+        $this->chauffeurPrenom = $chauffeurPrenom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of chauffeurPhoto
+     */
+    public function getChauffeurPhoto(): ?string
+    {
+        return $this->chauffeurPhoto;
+    }
+
+    /**
+     * Set the value of chauffeurPhoto
+     */
+    public function setChauffeurPhoto(?string $chauffeurPhoto): self
+    {
+        $this->chauffeurPhoto = $chauffeurPhoto;
 
         return $this;
     }

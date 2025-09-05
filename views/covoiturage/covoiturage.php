@@ -3,18 +3,14 @@
 $jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 ?>
-<!-- En-tête de la page -->
 <section class="en-tete">
     <div class="container">
         <h1>Trouvez votre covoiturage</h1>
-        <p class="user-info">
-            Voyagez écologique, économique et convivial
-        </p>
+        <p class="user-info">Voyagez écologique, économique et convivial</p>
     </div>
 </section>
 
 <section class="covoiturage-container">
-    <!-- Sidebar de recherche et filtres -->
     <aside class="search-sidebar">
         <h2 class="sidebar-title">Rechercher</h2>
         <form id="search-covoiturage" class="search-form-simple" method="get" action="/?controller=covoiturage&action=resultats">
@@ -32,51 +28,10 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
                 <label for="date-simple">Date de départ</label>
                 <input type="date" class="form-control-simple" name="date" id="date-simple">
             </div>
-            <button type="submit" class="btn-search">
-                Rechercher
-            </button>
+            <button type="submit" class="btn-search">Rechercher</button>
         </form>
-
-        <div class="filters-section-sidebar">
-            <h3 class="filters-title-sidebar">🎛️ Filtres</h3>
-
-            <div class="filter-item">
-                <label>Prix maximum</label>
-                <div class="range-container">
-                    <input type="range" class="range-input" min="0" max="100" value="50" id="price-range">
-                    <div class="range-value" id="price-display">50€</div>
-                </div>
-            </div>
-
-            <div class="filter-item">
-                <label>Durée maximum</label>
-                <select class="form-control-simple" id="duration-filter">
-                    <option value="">Toutes</option>
-                    <option value="2">2h maximum</option>
-                    <option value="4">4h maximum</option>
-                    <option value="6">6h maximum</option>
-                </select>
-            </div>
-
-            <div class="filter-item">
-                <label>Note minimum</label>
-                <select class="form-control-simple" id="rating-filter">
-                    <option value="">Toutes</option>
-                    <option value="4">4+ étoiles</option>
-                    <option value="4.5">4.5+ étoiles</option>
-                </select>
-            </div>
-
-            <div class="filter-item">
-                <div class="checkbox-container">
-                    <input type="checkbox" id="eco-only">
-                    <label for="eco-only">Véhicules électriques uniquement</label>
-                </div>
-            </div>
-        </div>
     </aside>
 
-    <!-- Zone des résultats -->
     <section class="results-area">
         <div class="results-header-simple">
             <div class="results-count-simple">
@@ -95,17 +50,17 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
         </div>
 
         <div id="trips-list">
-            <!-- Trajet -->
             <?php foreach ($trajets as $trajet): ?>
                 <section class="trip-card-simple">
                     <div class="trip-main-info">
                         <div>
                             <div class="trip-route-simple">
-                                <?= htmlspecialchars($trajet['lieuDepart'] ?? '') ?> → <?= htmlspecialchars($trajet['lieuArrivee'] ?? '') ?>
+                                <?= htmlspecialchars($trajet->getLieuDepart()) ?> → <?= htmlspecialchars($trajet->getLieuArrivee()) ?>
                             </div>
                             <div class="trip-date">
-                                <?php if (!empty($trajet['heureDepart'])):
-                                    $timestamp = strtotime($trajet['heureDepart']);
+                                <?php if (!empty($trajet->getHeureDepart())):
+                                    $datetime = $trajet->getDateDepart() . ' ' . $trajet->getHeureDepart();
+                                    $timestamp = strtotime($datetime);
                                 ?>
                                     <?= $jours[date('w', $timestamp)] ?> <?= date('d', $timestamp) ?> <?= $mois[date('n', $timestamp)] ?> <?= date('Y', $timestamp) ?>
                                 <?php else: ?>
@@ -113,50 +68,51 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
                                 <?php endif; ?>
                             </div>
                             <div class="trip-hours">
-                                <?= !empty($trajet['heureDepart']) ? date('H:i', strtotime($trajet['heureDepart'])) : '--h--' ?> →
-                                <?= !empty($trajet['heureArrivee']) ? date('H:i', strtotime($trajet['heureArrivee'])) : '--h--' ?>
+                                <?= !empty($trajet->getHeureDepart()) ? date('H:i', strtotime($trajet->getHeureDepart())) : '--h--' ?> →
+                                <?= !empty($trajet->getHeureArrivee()) ? date('H:i', strtotime($trajet->getHeureArrivee())) : '--h--' ?>
                             </div>
                         </div>
                         <div class="trip-price-simple">
-                            <?= htmlspecialchars($trajet['prixPersonne'] ?? '') ?>€
+                            <?= htmlspecialchars($trajet->getPrixPersonne()) ?>€
                             <div class="price-per-person">par personne</div>
                         </div>
                     </div>
+
                     <div class="trip-details-grid">
                         <div class="detail-item">
                             <i class="fas fa-users detail-icon"></i>
-                            <span><?= htmlspecialchars($trajet['nbPlace'] ?? '') ?> places libres</span>
+                            <span><?= htmlspecialchars($trajet->getNbPlace()) ?> places libres</span>
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-car detail-icon"></i>
-                            <span><?= htmlspecialchars($trajet['marque']) ?> <?= htmlspecialchars($trajet['modele'] ?? '') ?></span>
+                            <span><?= htmlspecialchars($trajet->getVehicule()->getMarque()) ?> <?= htmlspecialchars($trajet->getVehicule()->getModele()) ?></span>
                         </div>
                         <div class="detail-item">
-                            <i class="fas fa-smoking<?= $trajet['fumeur'] ? '' : '-ban' ?> detail-icon"></i>
-                            <span><?= $trajet['fumeur'] ? 'Fumeur' : 'Non-fumeur' ?></span>
+                            <i class="fas fa-smoking<?= $trajet->getVehicule()->isFumeur() ? '' : '-ban' ?> detail-icon"></i>
+                            <span><?= $trajet->getVehicule()->isFumeur() ? 'Fumeur' : 'Non-fumeur' ?></span>
                         </div>
                     </div>
+
                     <div class="driver-section">
                         <div class="driver-info-simple">
                             <div class="driver-avatar-simple">
-                                <?php if (!empty($trajet['chauffeur_photo'])): ?>
-                                    <img src="/photos/<?= htmlspecialchars($trajet['chauffeur_photo']) ?>" class="profile-photo-header" alt="Profil<?= htmlspecialchars($trajet['chauffeur_prenom']) ?>">
+                                <?php if (!empty($trajet->getChauffeurPhoto())): ?>
+                                    <img src="/photos/<?= htmlspecialchars($trajet->getChauffeurPhoto()) ?>" class="profile-photo-header" alt="Profil <?= htmlspecialchars($trajet->getChauffeurPrenom()) ?>">
                                 <?php else: ?>
-                                    <?= strtoupper(substr($trajet['chauffeur_prenom'], 0, 1)) ?>
+                                    <?= strtoupper(substr($trajet->getChauffeurPrenom(), 0, 1)) ?>
                                 <?php endif; ?>
                             </div>
                             <div>
                                 <div class="driver-name">
-                                    <?= htmlspecialchars($trajet['chauffeur_prenom'] . ' ' . $trajet['chauffeur_nom']) ?>
+                                    <?= htmlspecialchars($trajet->getChauffeurPrenom() . ' ' . $trajet->getChauffeurNom()) ?>
                                 </div>
                             </div>
                         </div>
 
-
                         <div class="trip-actions-simple">
                             <a href="#" class="btn-detail-simple">Détails</a>
                             <form method="POST" action="/participations/reserver">
-                                <input type="hidden" name="id_covoiturage" value="<?= $trajet['id'] ?>">
+                                <input type="hidden" name="id_covoiturage" value="<?= $trajet->getId() ?>">
                                 <button type="submit" class="btn-book-simple">Participer</button>
                             </form>
                         </div>
@@ -165,7 +121,6 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
             <?php endforeach; ?>
         </div>
 
-        <!-- Message d'absence de résultats (caché par défaut) -->
         <section class="no-results-simple" id="no-results" style="display: none;">
             <i class="fas fa-search"></i>
             <h3>Aucun trajet trouvé</h3>

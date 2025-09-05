@@ -110,15 +110,120 @@ class TrajetRepository extends Repository
     public function findAllWithDetails(): array
     {
         $sql = "
-        SELECT t.*, v.marque, v.modele, v.fumeur,
-        u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom, u.photo AS chauffeur_photo
-        FROM covoiturage t
-        JOIN vehicule v ON t.id_vehicule = v.id
-        JOIN utilisateurs u ON t.id_utilisateurs = u.id";
+        SELECT t.id AS trajet_id, t.dateDepart, t.heureDepart, t.lieuDepart,
+                t.dateArrivee, t.heureArrivee, t.lieuArrivee,
+                t.statut, t.nbPlace, t.prixPersonne,
+                v.id AS vehicule_id, v.marque, v.modele, v.fumeur,
+                u.id AS chauffeur_id, u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom, u.photo AS chauffeur_photo
+                FROM covoiturage t
+                JOIN vehicule v ON t.id_vehicule = v.id
+                JOIN utilisateurs u ON t.id_utilisateurs = u.id
+                WHERE t.statut = 'en_cours'
+                ORDER BY t.dateDepart ASC, t.heureDepart ASC
+            ";
 
         $query = $this->pdo->query($sql);
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        $trajets = [];
+
+        foreach ($rows as $row) {
+            $vehicule = new Vehicule();
+            $vehicule->setId((int)$row['vehicule_id'])
+                ->setMarque($row['marque'])
+                ->setModele($row['modele'])
+                ->setFumeur((bool)$row['fumeur']);
+
+            $trajet = new Trajet();
+            $trajet->setId((int)$row['trajet_id'])
+                ->setDateDepart($row['dateDepart'])
+                ->setHeureDepart($row['heureDepart'])
+                ->setLieuDepart($row['lieuDepart'])
+                ->setDateArrivee($row['dateArrivee'])
+                ->setHeureArrivee($row['heureArrivee'])
+                ->setLieuArrivee($row['lieuArrivee'])
+                ->setStatut($row['statut'])
+                ->setNbPlace((int)$row['nbPlace'])
+                ->setPrixPersonne((float)$row['prixPersonne'])
+                ->setIdVehicule((int)$row['vehicule_id'])
+                ->setIdUtilisateurs((int)$row['chauffeur_id'])
+                ->setVehicule($vehicule)
+                ->setChauffeurNom($row['chauffeur_nom'])
+                ->setChauffeurPrenom($row['chauffeur_prenom'])
+                ->setChauffeurPhoto($row['chauffeur_photo']);
+
+            $trajets[] = $trajet;
+        }
+
+        return $trajets;
     }
+
+    public function searchWithDetails(?string $lieuDepart = null, ?string $lieuArrivee = null, ?string $date = null): array
+    {
+        $sql = "
+        SELECT t.id AS trajet_id, t.dateDepart, t.heureDepart, t.lieuDepart,
+               t.dateArrivee, t.heureArrivee, t.lieuArrivee,
+               t.statut, t.nbPlace, t.prixPersonne,
+               v.id AS vehicule_id, v.marque, v.modele, v.fumeur,
+               u.id AS chauffeur_id, u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom, u.photo AS chauffeur_photo
+        FROM covoiturage t
+        JOIN vehicule v ON t.id_vehicule = v.id
+        JOIN utilisateurs u ON t.id_utilisateurs = u.id
+        WHERE 1=1
+    ";
+
+        $params = [];
+
+        if ($lieuDepart) {
+            $sql .= " AND t.lieuDepart LIKE :depart";
+            $params[':depart'] = "%$lieuDepart%";
+        }
+        if ($lieuArrivee) {
+            $sql .= " AND t.lieuArrivee LIKE :arrivee";
+            $params[':arrivee'] = "%$lieuArrivee%";
+        }
+        if ($date) {
+            $sql .= " AND t.dateDepart = :date";
+            $params[':date'] = $date;
+        }
+
+        $sql .= " ORDER BY t.dateDepart ASC, t.heureDepart ASC";
+
+        $query = $this->pdo->prepare($sql);
+        $query->execute($params);
+
+        $trajets = [];
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $vehicule = (new Vehicule())
+                ->setId((int)$row['vehicule_id'])
+                ->setMarque($row['marque'])
+                ->setModele($row['modele'])
+                ->setFumeur((bool)$row['fumeur']);
+
+            $trajet = (new Trajet())
+                ->setId((int)$row['trajet_id'])
+                ->setDateDepart($row['dateDepart'])
+                ->setHeureDepart($row['heureDepart'])
+                ->setLieuDepart($row['lieuDepart'])
+                ->setDateArrivee($row['dateArrivee'])
+                ->setHeureArrivee($row['heureArrivee'])
+                ->setLieuArrivee($row['lieuArrivee'])
+                ->setStatut($row['statut'])
+                ->setNbPlace((int)$row['nbPlace'])
+                ->setPrixPersonne((float)$row['prixPersonne'])
+                ->setIdVehicule((int)$row['vehicule_id'])
+                ->setIdUtilisateurs((int)$row['chauffeur_id'])
+                ->setVehicule($vehicule)
+                ->setChauffeurNom($row['chauffeur_nom'])
+                ->setChauffeurPrenom($row['chauffeur_prenom'])
+                ->setChauffeurPhoto($row['chauffeur_photo']);
+
+            $trajets[] = $trajet;
+        }
+
+        return $trajets;
+    }
+
 
     /** Récupère un trajet avec son véhicule par l'id du trajet */
     public function findByIdWithVehicule(int $id): ?Trajet

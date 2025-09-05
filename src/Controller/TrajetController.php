@@ -40,7 +40,6 @@ class TrajetController extends Controller
                     $this->resultats();
                     break;
 
-
                 default:
                     throw new \Exception("Action covoiturage inconnue : $action", 404);
             }
@@ -181,7 +180,7 @@ class TrajetController extends Controller
         $date = $_GET['date'] ?? null;
 
         $trajetRepo = new TrajetRepository();
-        $trajets = $trajetRepo->search($depart, $arrivee, $date);
+        $trajets = $trajetRepo->searchWithDetails($depart, $arrivee, $date);
 
         $this->render('covoiturage/resultats', [
             'trajets' => $trajets,
