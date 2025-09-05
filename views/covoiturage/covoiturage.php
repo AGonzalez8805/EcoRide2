@@ -1,4 +1,8 @@
 <?php require_once APP_ROOT . '/views/header.php'; ?>
+<?php
+$jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+$mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+?>
 <!-- En-tête de la page -->
 <section class="en-tete">
     <div class="container">
@@ -13,26 +17,21 @@
     <!-- Sidebar de recherche et filtres -->
     <aside class="search-sidebar">
         <h2 class="sidebar-title">Rechercher</h2>
-
         <form id="search-covoiturage" class="search-form-simple" method="get" action="/?controller=covoiturage&action=resultats">
             <input type="hidden" name="controller" value="covoiturage">
             <input type="hidden" name="action" value="resultats">
-
             <div class="form-group-simple">
                 <label for="departure-simple">Ville de départ</label>
                 <input type="text" class="form-control-simple" name="depart" id="departure-simple" placeholder="Ex: Paris">
             </div>
-
             <div class="form-group-simple">
                 <label for="arrival-simple">Ville d'arrivée</label>
                 <input type="text" class="form-control-simple" name="arrivee" id="arrival-simple" placeholder="Ex: Lyon">
             </div>
-
             <div class="form-group-simple">
                 <label for="date-simple">Date de départ</label>
                 <input type="date" class="form-control-simple" name="date" id="date-simple">
             </div>
-
             <button type="submit" class="btn-search">
                 Rechercher
             </button>
@@ -81,7 +80,8 @@
     <section class="results-area">
         <div class="results-header-simple">
             <div class="results-count-simple">
-                <i class="fas fa-map-marker-alt"></i> 6 trajets trouvés
+                <i class="fas fa-map-marker-alt"></i>
+                <?= count($trajets) ?> trajet<?= count($trajets) > 1 ? 's' : '' ?> trouvé<?= count($trajets) > 1 ? 's' : '' ?>
             </div>
             <div class="sort-container">
                 <label for="sort-by">Trier par:</label>
@@ -104,11 +104,17 @@
                                 <?= htmlspecialchars($trajet['lieuDepart'] ?? '') ?> → <?= htmlspecialchars($trajet['lieuArrivee'] ?? '') ?>
                             </div>
                             <div class="trip-date">
-                                <?= !empty($trajet['heureDepart']) ? date('l j F Y', strtotime($trajet['heureDepart'])) : 'Date inconnue' ?>
+                                <?php if (!empty($trajet['heureDepart'])):
+                                    $timestamp = strtotime($trajet['heureDepart']);
+                                ?>
+                                    <?= $jours[date('w', $timestamp)] ?> <?= date('d', $timestamp) ?> <?= $mois[date('n', $timestamp)] ?> <?= date('Y', $timestamp) ?>
+                                <?php else: ?>
+                                    Date inconnue
+                                <?php endif; ?>
                             </div>
                             <div class="trip-hours">
-                                <?= !empty($trajet['heureDepart']) ? date('H\hi', strtotime($trajet['heureDepart'])) : '--h--' ?> →
-                                <?= !empty($trajet['heureArrivee']) ? date('H\hi', strtotime($trajet['heureArrivee'])) : '--h--' ?>
+                                <?= !empty($trajet['heureDepart']) ? date('H:i', strtotime($trajet['heureDepart'])) : '--h--' ?> →
+                                <?= !empty($trajet['heureArrivee']) ? date('H:i', strtotime($trajet['heureArrivee'])) : '--h--' ?>
                             </div>
                         </div>
                         <div class="trip-price-simple">
@@ -133,20 +139,27 @@
                     <div class="driver-section">
                         <div class="driver-info-simple">
                             <div class="driver-avatar-simple">
-                                <?= strtoupper(substr($trajet['chauffeur_prenom'], 0, 1)) ?>
+                                <?php if (!empty($trajet['chauffeur_photo'])): ?>
+                                    <img src="/photos/<?= htmlspecialchars($trajet['chauffeur_photo']) ?>" class="profile-photo-header" alt="Profil<?= htmlspecialchars($trajet['chauffeur_prenom']) ?>">
+                                <?php else: ?>
+                                    <?= strtoupper(substr($trajet['chauffeur_prenom'], 0, 1)) ?>
+                                <?php endif; ?>
                             </div>
                             <div>
-                                <div class="driver-name"><?= $trajet['chauffeur_prenom'] ?> <?= $trajet['chauffeur_nom'] ?></div>
+                                <div class="driver-name">
+                                    <?= htmlspecialchars($trajet['chauffeur_prenom'] . ' ' . $trajet['chauffeur_nom']) ?>
+                                </div>
                             </div>
                         </div>
+
+
                         <div class="trip-actions-simple">
                             <a href="#" class="btn-detail-simple">Détails</a>
                             <form method="POST" action="/participations/reserver">
                                 <input type="hidden" name="id_covoiturage" value="<?= $trajet['id'] ?>">
-                                <button type="submit" class="btn-book-simple">Réserver</button>
+                                <button type="submit" class="btn-book-simple">Participer</button>
                             </form>
                         </div>
-
                     </div>
                 </section>
             <?php endforeach; ?>

@@ -1,16 +1,16 @@
 <?php require_once APP_ROOT . '/views/header.php'; ?>
 
-<section class="en-tete">
-    <div class="container">
-        <div class="user-info">
-            <strong>
-                <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
-            </strong>
-            <h2>Bienvenue sur ton espace chauffeur</h2>
-            <span class="user-credits">Crédit : <?= htmlspecialchars($user->getCredit()) ?></span>
-        </div>
-    </div>
-</section>
+    <section class="en-tete">
+        <div class="container">
+            <img src="/photos/<?= htmlspecialchars($user->getPhoto()) ?>" alt="Profil" class="profile-photo-header">
+            <div class="user-info">
+                <strong>
+                    <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
+                </strong>
+                <h2 id="welcome-message">Bienvenue sur ton espace chauffeur</h2>
+                <span class="user-credits">Crédit : <?= htmlspecialchars($user->getCredit()) ?></span>
+            </div>
+    </section>
 
 <div class="dashboard-container">
     <!-- Boutons principaux -->

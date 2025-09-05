@@ -117,7 +117,6 @@ class TrajetController extends Controller
         echo json_encode(['success' => true]);
     }
 
-
     public function getApiKey(): void
     {
         header('Content-Type: application/json');

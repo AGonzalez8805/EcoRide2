@@ -10,11 +10,12 @@
   font-family: "Fira Code", monospace;
   font-size: 33px;
   margin-bottom: 10px;
+  text-decoration: underline;
 }
 
 .en-tete h2 {
   font-family: "Fira Code", monospace;
-  font-size: 28px;
+  font-size: 20px;
 }
 
 .user-info {

@@ -7,7 +7,7 @@
                 <strong>
                     <h1>Bonjour <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getName()) ?></h1>
                 </strong>
-                <p id="welcome-message">Bienvenue dans votre espace mixte</p>
+                <h2 id="welcome-message">Bienvenue dans votre espace mixte</h2>
                 <span class="user-credits">Crédit : <?= htmlspecialchars($user->getCredit()) ?></span>
             </div>
 

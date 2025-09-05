@@ -111,7 +111,7 @@ class TrajetRepository extends Repository
     {
         $sql = "
         SELECT t.*, v.marque, v.modele, v.fumeur,
-        u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom
+        u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom, u.photo AS chauffeur_photo
         FROM covoiturage t
         JOIN vehicule v ON t.id_vehicule = v.id
         JOIN utilisateurs u ON t.id_utilisateurs = u.id";
