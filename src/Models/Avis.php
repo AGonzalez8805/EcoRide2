@@ -214,7 +214,7 @@ class Avis
             'commentaire'     => $doc->commentaire ?? null,
             'note'            => $doc->note ?? null,
             'statut'          => $doc->statut ?? 'en_attente',
-            'datePublication' => $datePublication,  // <--- correction ici
+            'datePublication' => $datePublication,
             'idUtilisateurs'  => isset($doc->user_id) ? (string)$doc->user_id : null,
             'idEmploye'       => isset($doc->idEmploye) ? (string)$doc->idEmploye : null,
             'chauffeur_id'    => $doc->chauffeur_id ?? null,

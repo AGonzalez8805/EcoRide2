@@ -107,18 +107,6 @@ class AvisRepository
         return $avisList;
     }
 
-    /** Compte le nombre d’avis traités aujourd’hui */
-    public function countTraitesToday(): int
-    {
-        $start = new UTCDateTime(strtotime('today') * 1000);
-        $end   = new UTCDateTime(strtotime('tomorrow') * 1000);
-
-        return $this->collection->countDocuments([
-            'statut' => ['$in' => ['valide', 'refuse']],
-            'updated_at' => ['$gte' => $start, '$lt' => $end]
-        ]);
-    }
-
     /** Lister tous les avis d’un utilisateur avec leur statut */
     public function listerAvecStatut(int $userId): array
     {
@@ -133,6 +121,18 @@ class AvisRepository
         }
 
         return $avisList;
+    }
+
+    /** Compte le nombre d’avis traités aujourd’hui */
+    public function countTraitesToday(): int
+    {
+        $start = new UTCDateTime(strtotime('today') * 1000);
+        $end   = new UTCDateTime(strtotime('tomorrow') * 1000);
+
+        return $this->collection->countDocuments([
+            'statut' => ['$in' => ['valide', 'refuse']],
+            'updated_at' => ['$gte' => $start, '$lt' => $end]
+        ]);
     }
 
     /** Lister tous les avis d’un chauffeur (filtré par statut valide) */
