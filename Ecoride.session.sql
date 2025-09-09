@@ -126,6 +126,9 @@ CREATE TABLE avis (
     FOREIGN KEY (id_employe) REFERENCES employe(id)
 );
 
+ALTER TABLE participation
+ADD COLUMN nbPlace INT NOT NULL DEFAULT 1;
+
 CREATE TABLE transaction (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_utilisateurs INT,

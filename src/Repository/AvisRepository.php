@@ -161,4 +161,35 @@ class AvisRepository
         }
         return $avisList;
     }
+
+    /** Lister uniquement les avis validés pour un chauffeur */
+    public function listerValidesByChauffeur(int $chauffeurId): array
+    {
+        $cursor = $this->collection->find(
+            ['chauffeur_id' => (int)$chauffeurId, 'statut' => 'valide'],
+            ['sort' => ['created_at' => -1]]
+        );
+
+        $avisList = [];
+        foreach ($cursor as $doc) {
+            $avisList[] = Avis::fromDocument($doc);
+        }
+
+        return $avisList;
+    }
+
+    /** Calculer la note moyenne d’un chauffeur */
+    public function moyenneByChauffeur(int $chauffeurId): float
+    {
+        $pipeline = [
+            ['$match' => ['chauffeur_id' => (int)$chauffeurId, 'statut' => 'valide']],
+            ['$group' => ['_id' => null, 'moyenne' => ['$avg' => '$note']]]
+        ];
+
+        $result = $this->collection->aggregate($pipeline)->toArray();
+
+        return (!empty($result) && $result[0]['moyenne'] !== null)
+            ? round($result[0]['moyenne'], 1)
+            : 0.0;
+    }
 }

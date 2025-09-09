@@ -161,16 +161,16 @@ class TrajetRepository extends Repository
     public function searchWithDetails(?string $lieuDepart = null, ?string $lieuArrivee = null, ?string $date = null): array
     {
         $sql = "
-        SELECT t.id AS trajet_id, t.dateDepart, t.heureDepart, t.lieuDepart,
-               t.dateArrivee, t.heureArrivee, t.lieuArrivee,
-               t.statut, t.nbPlace, t.prixPersonne,
-               v.id AS vehicule_id, v.marque, v.modele, v.fumeur,
-               u.id AS chauffeur_id, u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom, u.photo AS chauffeur_photo
+        SELECT  t.id AS trajet_id, t.dateDepart, t.heureDepart, t.lieuDepart,
+                t.dateArrivee, t.heureArrivee, t.lieuArrivee,
+                t.statut, t.nbPlace, t.prixPersonne,
+                v.id AS vehicule_id, v.marque, v.modele, v.fumeur,
+                u.id AS chauffeur_id, u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom, u.photo AS chauffeur_photo
         FROM covoiturage t
         JOIN vehicule v ON t.id_vehicule = v.id
         JOIN utilisateurs u ON t.id_utilisateurs = u.id
         WHERE 1=1
-    ";
+            ";
 
         $params = [];
 
@@ -224,7 +224,6 @@ class TrajetRepository extends Repository
         return $trajets;
     }
 
-
     /** Récupère un trajet avec son véhicule par l'id du trajet */
     public function findByIdWithVehicule(int $id): ?Trajet
     {
@@ -272,5 +271,32 @@ class TrajetRepository extends Repository
             ->setIdVehicule((int)$row['vehicule_id']);
 
         return $trajet;
+    }
+
+    /** Compter le nombre de trajets d’un chauffeur dans le mois courant */
+    public function countByMonth(int $chauffeurId): int
+    {
+        $sql = "SELECT COUNT(*) 
+            FROM covoiturage 
+            WHERE id_utilisateurs = :chauffeurId
+            AND MONTH(dateDepart) = MONTH(CURDATE())
+            AND YEAR(dateDepart) = YEAR(CURDATE())";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':chauffeurId' => $chauffeurId]);
+        return (int)$stmt->fetchColumn();
+    }
+
+    /** Compter le nombre total de passagers transportés par un chauffeur */
+    public function countPassagersTransportes(int $chauffeurId): int
+    {
+        $sql = "SELECT COALESCE(SUM(pr.nbPlace),0)
+            FROM participation pr
+            JOIN covoiturage t ON pr.id_covoiturage = t.id
+            WHERE t.id_utilisateurs = :chauffeurId";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':chauffeurId' => $chauffeurId]);
+        return (int)$stmt->fetchColumn();
     }
 }

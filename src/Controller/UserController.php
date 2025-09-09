@@ -74,14 +74,21 @@ class UserController extends Controller
         $vehicules = $vehiculeRepo->findAllByUser($chauffeurId);
 
         $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
-        $avisValides = $avisRepo->listerValides(); // récupère tous les avis validés
+        $avisValides = $avisRepo->listerValidesByChauffeur($chauffeurId);
 
+        //  Statistiques
+        $trajetsCeMois = $trajetRepo->countByMonth($chauffeurId);
+        $noteMoyenne = $avisRepo->moyenneByChauffeur($chauffeurId);
+        $nbPassagers = $trajetRepo->countPassagersTransportes($chauffeurId);
 
         $this->render('user/dashboardChauffeur', [
             'user' => $user,
             'trajetsDuJour' => $trajetsDuJour,
             'vehicules' => $vehicules,
-            'avisValides' => $avisValides
+            'avisValides' => $avisValides,
+            'trajetsCeMois' => $trajetsCeMois,
+            'noteMoyenne' => $noteMoyenne,
+            'nbPassagers' => $nbPassagers
         ]);
     }
 
