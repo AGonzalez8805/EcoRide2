@@ -8,18 +8,19 @@ use PHPMailer\PHPMailer\Exception;
 class Mailer
 {
     protected PHPMailer $mail;
-
     public function __construct(bool $debug = false)
     {
         $this->mail = new PHPMailer(true);
 
-        // --- Debug SMTP ---
+        // --- Debug SMTP pour Heroku ---
         $this->mail->SMTPDebug = $debug ? 2 : 0; // 0=off, 2=client+server
-        $this->mail->Debugoutput = 'error_log';
+        $this->mail->Debugoutput = function ($str, $level) {
+            // Affiche directement dans les logs Heroku
+            error_log("SMTP Debug level $level: $str");
+        };
 
         $this->setupSMTP();
     }
-
     protected function setupSMTP(): void
     {
         $mail = $this->mail;

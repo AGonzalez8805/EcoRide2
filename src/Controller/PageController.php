@@ -117,7 +117,7 @@ class PageController extends Controller
         }
 
         // Instancie Mailer
-        $mailer = new Mailer();
+        $mailer = new Mailer(true);
 
         $result = $mailer->sendContactMail([
             'name' => $name,
