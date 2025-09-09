@@ -83,34 +83,59 @@ class PageController extends Controller
     /* Traite l'envoi d'un message via AJAX (données JSON) */
     public function sendMessage()
     {
-        header('Content-Type: application/json'); // ✅ force JSON
-        http_response_code(200);
-
-        // Debug
-        file_put_contents("/var/www/html/debug_input.log", "sendMessage called\n", FILE_APPEND);
+        header('Content-Type: application/json');
 
         $rawData = file_get_contents("php://input");
-        file_put_contents("/var/www/html/debug_input.log", "Input: " . $rawData . "\n", FILE_APPEND);
-
         $data = json_decode($rawData, true);
 
-        if (empty($rawData)) {
+        if (!$data) {
+            http_response_code(400);
             echo json_encode([
                 "success" => false,
-                "message" => "php://input est vide (Apache a peut-être mangé la requête ?)",
-                "headers" => getallheaders(), // <== super utile pour debug
-                "method" => $_SERVER['REQUEST_METHOD']
+                "message" => "Données JSON invalides",
             ]);
             return;
         }
 
-        // Ici tu peux faire ta validation (ex: champs obligatoires)
+        // Validation basique
+        $name = trim($data['name'] ?? '');
+        $firstName = trim($data['firstName'] ?? '');
+        $email = trim($data['email'] ?? '');
+        $subject = trim($data['subject'] ?? '');
+        $messageContent = trim($data['message'] ?? '');
 
-        echo json_encode([
-            "success" => true,
-            "message" => "Message reçu",
-            "data" => $data
+        if (!$name || !$firstName || !$email || !$subject || !$messageContent) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Tous les champs sont obligatoires"]);
+            return;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Email invalide"]);
+            return;
+        }
+
+        // Instancie Mailer
+        $mailer = new Mailer();
+
+        $result = $mailer->sendContactMail([
+            'name' => $name,
+            'firstName' => $firstName,
+            'email' => $email,
+            'subject' => $subject,
+            'message' => $messageContent,
+            'phone' => $data['phone'] ?? ''
         ]);
+
+        // Renvoie le résultat JSON
+        if ($result['success']) {
+            http_response_code(200);
+        } else {
+            http_response_code(500);
+        }
+
+        echo json_encode($result);
     }
 
     /* Valide les données du formulaire envoyées en JSON */
