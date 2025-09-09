@@ -20,23 +20,52 @@ class Mailer
 
         try {
             $mail->isSMTP();
-            $mail->Host       = $_ENV['MAIL_HOST'] ?? '';
+            $mail->Host       = $_ENV['MAIL_HOST'] ?? 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = $_ENV['MAIL_USERNAME'] ?? '';
             $mail->Password   = $_ENV['MAIL_PASSWORD'] ?? '';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port       = $_ENV['MAIL_PORT'] ?? 587;
 
-            $mail->setFrom($_ENV['MAIL_FROM'] ?? 'default@ecoride.com', $_ENV['MAIL_FROM_NAME'] ?? 'Ecoride Support');
-            $mail->addAddress($_ENV['MAIL_TO'] ?? 'support@ecoride.com', 'Support Ecoride');
+            // Choix du chiffrement et du port selon le provider
+            if (strpos($mail->Host, 'mailtrap') !== false) {
+                // Mailtrap
+                $mail->Port       = (int)($_ENV['MAIL_PORT'] ?? 2525);
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                // Gmail ou autre SMTP
+                $mail->Port       = (int)($_ENV['MAIL_PORT'] ?? 587);
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
+                // Options SSL (utile sur Heroku)
+                $mail->SMTPOptions = [
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    ]
+                ];
+            }
+
+            // Expéditeur
+            $mail->setFrom(
+                $_ENV['MAIL_FROM'] ?? 'default@ecoride.com',
+                $_ENV['MAIL_FROM_NAME'] ?? 'Ecoride Support'
+            );
+
+            // Destinataire
+            $mail->addAddress(
+                $_ENV['MAIL_TO'] ?? 'support@ecoride.com',
+                'Support Ecoride'
+            );
+
+            // Contenu du mail
             $mail->isHTML(false);
             $mail->Subject = $data['subject'] ?? 'Sujet non défini';
-            $mail->Body    = "Nom : " . ($data['name'] ?? '') . "\n"
-                . "Prénom : " . ($data['firstName'] ?? '') . "\n"
-                . "Email : " . ($data['email'] ?? '') . "\n"
-                . "Téléphone : " . ($data['phone'] ?? '') . "\n"
-                . "Message :\n" . ($data['message'] ?? '');
+            $mail->Body =
+                "Nom : " . ($data['name'] ?? '') . "\n" .
+                "Prénom : " . ($data['firstName'] ?? '') . "\n" .
+                "Email : " . ($data['email'] ?? '') . "\n" .
+                "Téléphone : " . ($data['phone'] ?? '') . "\n" .
+                "Message :\n" . ($data['message'] ?? '');
 
             $mail->send();
 
