@@ -58,14 +58,16 @@ class Mailer
             );
 
             // Contenu du mail
-            $mail->isHTML(false);
-            $mail->Subject = $data['subject'] ?? 'Sujet non défini';
-            $mail->Body =
-                "Nom : " . ($data['name'] ?? '') . "\n" .
-                "Prénom : " . ($data['firstName'] ?? '') . "\n" .
-                "Email : " . ($data['email'] ?? '') . "\n" .
-                "Téléphone : " . ($data['phone'] ?? '') . "\n" .
-                "Message :\n" . ($data['message'] ?? '');
+            $mail->isHTML(true);
+            $mail->Body = "<p><strong>Nom:</strong> {$data['name']}</p>"
+                . "<p><strong>Prénom:</strong> {$data['firstName']}</p>"
+                . "<p><strong>Email:</strong> {$data['email']}</p>"
+                . "<p><strong>Téléphone:</strong> {$data['phone']}</p>"
+                . "<p><strong>Message:</strong><br>" . nl2br($data['message']) . "</p>";
+
+            // Debug SMTP
+            $mail->SMTPDebug = 2;
+            $mail->Debugoutput = 'error_log';
 
             $mail->send();
 
