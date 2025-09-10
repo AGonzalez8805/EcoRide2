@@ -34,4 +34,53 @@ class ParticipationRepository extends Repository
 
         return $participations;
     }
+
+    /** Récupérer le nombre de places déjà réservées pour un trajet */
+    public function countPlacesByTrajet(int $trajetId): int
+    {
+        $sql = "SELECT COALESCE(SUM(nbPlace), 0) AS total FROM participation WHERE id_covoiturage = :trajetId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':trajetId' => $trajetId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    /** Enregistrer une participation */
+    public function save(Participation $participation): bool
+    {
+        $sql = "INSERT INTO participation 
+            (id_utilisateurs, id_covoiturage, nbPlace, statut, dateInscription)
+            VALUES (:userId, :trajetId, :nbPlace, :statut, :dateInscription)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':userId' => $participation->getIdUtilisateurs(),
+            ':trajetId' => $participation->getIdCovoiturage(),
+            ':nbPlace' => $participation->getNbPlace(),
+            ':statut' => $participation->getStatut(),
+            ':dateInscription' => $participation->getDateInscription()
+        ]);
+    }
+
+    public function userHasParticipation(int $userId, int $trajetId): bool
+    {
+        $sql = "SELECT COUNT(*) FROM participation 
+            WHERE id_utilisateurs = :userId AND id_covoiturage = :trajetId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':userId' => $userId,
+            ':trajetId' => $trajetId
+        ]);
+        return (int)$stmt->fetchColumn() > 0;
+    }
+
+    public function deleteByUserAndTrajet(int $userId, int $trajetId): bool
+    {
+        $sql = "DELETE FROM participation 
+            WHERE id_utilisateurs = :userId 
+                AND id_covoiturage = :trajetId";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':userId' => $userId,
+            ':trajetId' => $trajetId
+        ]);
+    }
 }

@@ -115,27 +115,27 @@ class TrajetRepository extends Repository
                 t.statut, t.nbPlace, t.prixPersonne,
                 v.id AS vehicule_id, v.marque, v.modele, v.fumeur,
                 u.id AS chauffeur_id, u.name AS chauffeur_nom, u.firstName AS chauffeur_prenom, u.photo AS chauffeur_photo
-                FROM covoiturage t
-                JOIN vehicule v ON t.id_vehicule = v.id
-                JOIN utilisateurs u ON t.id_utilisateurs = u.id
-                WHERE t.statut = 'en_cours'
-                ORDER BY t.dateDepart ASC, t.heureDepart ASC
+        FROM covoiturage t
+        JOIN vehicule v ON t.id_vehicule = v.id
+        JOIN utilisateurs u ON t.id_utilisateurs = u.id
+        WHERE t.statut = 'en_cours'
+            AND (t.dateDepart > CURDATE() OR (t.dateDepart = CURDATE() AND t.heureDepart >= CURTIME()))
+        ORDER BY t.dateDepart ASC, t.heureDepart ASC
             ";
 
         $query = $this->pdo->query($sql);
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
         $trajets = [];
-
         foreach ($rows as $row) {
-            $vehicule = new Vehicule();
-            $vehicule->setId((int)$row['vehicule_id'])
+            $vehicule = (new Vehicule())
+                ->setId((int)$row['vehicule_id'])
                 ->setMarque($row['marque'])
                 ->setModele($row['modele'])
                 ->setFumeur((bool)$row['fumeur']);
 
-            $trajet = new Trajet();
-            $trajet->setId((int)$row['trajet_id'])
+            $trajet = (new Trajet())
+                ->setId((int)$row['trajet_id'])
                 ->setDateDepart($row['dateDepart'])
                 ->setHeureDepart($row['heureDepart'])
                 ->setLieuDepart($row['lieuDepart'])
@@ -158,10 +158,11 @@ class TrajetRepository extends Repository
         return $trajets;
     }
 
+
     public function searchWithDetails(?string $lieuDepart = null, ?string $lieuArrivee = null, ?string $date = null): array
     {
         $sql = "
-        SELECT  t.id AS trajet_id, t.dateDepart, t.heureDepart, t.lieuDepart,
+        SELECT t.id AS trajet_id, t.dateDepart, t.heureDepart, t.lieuDepart,
                 t.dateArrivee, t.heureArrivee, t.lieuArrivee,
                 t.statut, t.nbPlace, t.prixPersonne,
                 v.id AS vehicule_id, v.marque, v.modele, v.fumeur,
@@ -169,8 +170,9 @@ class TrajetRepository extends Repository
         FROM covoiturage t
         JOIN vehicule v ON t.id_vehicule = v.id
         JOIN utilisateurs u ON t.id_utilisateurs = u.id
-        WHERE 1=1
-            ";
+        WHERE t.statut = 'en_cours'
+            AND (t.dateDepart > CURDATE() OR (t.dateDepart = CURDATE() AND t.heureDepart >= CURTIME()))
+        ";
 
         $params = [];
 
@@ -224,13 +226,22 @@ class TrajetRepository extends Repository
         return $trajets;
     }
 
+
     /** Récupère un trajet avec son véhicule par l'id du trajet */
     public function findByIdWithVehicule(int $id): ?Trajet
     {
-        $sql = "SELECT t.*, v.*
-                FROM covoiturage t
-                JOIN vehicule v ON t.id_vehicule = v.id
-                WHERE t.id = :id";
+        $sql = "SELECT 
+            t.id AS trajet_id, t.dateDepart, t.heureDepart, t.lieuDepart,
+            t.dateArrivee, t.heureArrivee, t.lieuArrivee,
+            t.statut, t.nbPlace, t.prixPersonne, t.id_utilisateurs,
+            v.id AS vehicule_id, v.marque, v.modele, v.immatriculation, 
+            v.energie, v.couleur, v.datePremierImmatriculation, 
+            v.nbPlaces, v.preferencesSupplementaires, v.fumeur, v.animaux, 
+            v.id_utilisateurs AS vehicule_proprietaire_id
+        FROM covoiturage t
+        JOIN vehicule v ON t.id_vehicule = v.id
+        WHERE t.id = :id";
+
 
         $query = $this->pdo->prepare($sql);
         $query->execute(['id' => $id]);
@@ -298,5 +309,35 @@ class TrajetRepository extends Repository
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':chauffeurId' => $chauffeurId]);
         return (int)$stmt->fetchColumn();
+    }
+
+    public function findById(int $id): ?Trajet
+    {
+        $sql = "SELECT c.*, u.firstName AS chauffeurPrenom, u.name AS chauffeurNom, u.photo AS chauffeurPhoto
+            FROM covoiturage c
+            JOIN utilisateurs u ON c.id_utilisateurs = u.id
+            WHERE c.id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        if ($row) {
+            $trajet = new Trajet();
+            $trajet->setId($row['id']);
+            $trajet->setLieuDepart($row['lieuDepart']);
+            $trajet->setLieuArrivee($row['lieuArrivee']);
+            $trajet->setDateDepart($row['dateDepart']);
+            $trajet->setHeureDepart($row['heureDepart']);
+            $trajet->setPrixPersonne($row['prixPersonne']);
+            $trajet->setIdUtilisateurs($row['id_utilisateurs']);
+
+            // 👇 On enrichit avec les infos chauffeur
+            $trajet->setChauffeurPrenom($row['chauffeurPrenom']);
+            $trajet->setChauffeurNom($row['chauffeurNom']);
+
+            return $trajet;
+        }
+
+        return null;
     }
 }

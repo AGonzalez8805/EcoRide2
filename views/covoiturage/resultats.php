@@ -3,13 +3,11 @@
 <?php
 $jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-?>
 
-<section class="en-tete">
-    <div class="container">
-        <h1>Résultats</h1>
-    </div>
-</section>
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$participationRepo = new \App\Repository\ParticipationRepository();
+?>
 
 <section class="container">
     <?php if (empty($trajets)) : ?>
@@ -19,27 +17,18 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
             <div class="card-search">
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <p>
-                            <strong>Départ :</strong> <?= htmlspecialchars($trajet->getLieuDepart()) ?>
-                            le <?= !empty($trajet->getDateDepart()) ? date('d/m/Y', strtotime($trajet->getDateDepart())) : 'Date inconnue' ?>
-                            à <?= !empty($trajet->getHeureDepart()) ? date('H:i', strtotime($trajet->getHeureDepart())) : '--h--' ?>
-                        </p>
+                        <strong>Départ :</strong> <?= htmlspecialchars($trajet->getLieuDepart()) ?>
+                        le <?= !empty($trajet->getDateDepart()) ? date('d/m/Y', strtotime($trajet->getDateDepart())) : 'Date inconnue' ?>
+                        à <?= !empty($trajet->getHeureDepart()) ? date('H:i', strtotime($trajet->getHeureDepart())) : '--h--' ?>
                     </li>
                     <li class="list-group-item">
-                        <p>
-                            <strong>Arrivée :</strong> <?= htmlspecialchars($trajet->getLieuArrivee()) ?>
-                            le <?= !empty($trajet->getDateArrivee()) ? date('d/m/Y', strtotime($trajet->getDateArrivee())) : 'Date inconnue' ?>
-                            à <?= !empty($trajet->getHeureArrivee()) ? date('H:i', strtotime($trajet->getHeureArrivee())) : '--h--' ?>
-                        </p>
+                        <strong>Arrivée :</strong> <?= htmlspecialchars($trajet->getLieuArrivee()) ?>
+                        le <?= !empty($trajet->getDateArrivee()) ? date('d/m/Y', strtotime($trajet->getDateArrivee())) : 'Date inconnue' ?>
+                        à <?= !empty($trajet->getHeureArrivee()) ? date('H:i', strtotime($trajet->getHeureArrivee())) : '--h--' ?>
                     </li>
                     <li class="list-group-item">
-                        <p>
-                            <strong>Places restantes :</strong> <?= $trajet->getNbPlace() ?> |
-                            <strong>Prix :</strong> <?= $trajet->getPrixPersonne() ?> crédits
-                        </p>
-                    </li>
-                    <li class="list-group-item">
-                        <p><strong>Statut :</strong> <?= htmlspecialchars($trajet->getStatut()) ?></p>
+                        <strong>Places restantes :</strong> <?= $trajet->getNbPlace() ?> |
+                        <strong>Prix :</strong> <?= $trajet->getPrixPersonne() ?> €
                     </li>
                 </ul>
 
@@ -52,10 +41,8 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
                                 <?= strtoupper(substr($trajet->getChauffeurPrenom(), 0, 1)) ?>
                             <?php endif; ?>
                         </div>
-                        <div>
-                            <div class="driver-name">
-                                <?= htmlspecialchars($trajet->getChauffeurPrenom() . ' ' . $trajet->getChauffeurNom()) ?>
-                            </div>
+                        <div class="driver-name">
+                            <?= htmlspecialchars($trajet->getChauffeurPrenom() . ' ' . $trajet->getChauffeurNom()) ?>
                         </div>
                     </div>
 
@@ -76,10 +63,23 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
 
                     <div class="trip-actions-simple">
                         <a href="#" class="btn-detail-simple">Détails</a>
-                        <form method="POST" action="/participations/reserver">
-                            <input type="hidden" name="id_covoiturage" value="<?= $trajet->getId() ?>">
-                            <button type="submit" class="btn-book-simple">Participer</button>
-                        </form>
+
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <?php if ($participationRepo->userHasParticipation($_SESSION['user_id'], $trajet->getId())): ?>
+                                <form method="POST" action="/?controller=participer&action=annuler">
+                                    <input type="hidden" name="id_covoiturage" value="<?= $trajet->getId() ?>">
+                                    <button type="submit" class="btn-book-simple cancel">Annuler ma participation</button>
+                                </form>
+                            <?php else: ?>
+                                <form method="POST" action="/?controller=participer&action=participer">
+                                    <input type="hidden" name="id_covoiturage" value="<?= $trajet->getId() ?>">
+                                    <input type="number" name="nb_place" min="1" max="<?= $trajet->getNbPlace() ?>" value="1">
+                                    <button type="submit" class="btn-book-simple">Participer</button>
+                                </form>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <a href="/?controller=auth&action=login" class="btn-book-simple">Se connecter pour participer</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

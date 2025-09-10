@@ -73,6 +73,16 @@ class Controller
                         $controller->route();
                         break;
 
+                    case 'participer':
+                        $controller = new ParticiperController();
+                        $controller->route();
+                        break;
+
+                    case 'trajet':
+                        $controller = new TrajetController();
+                        $controller->route();
+                        break;
+
                     default:
                         throw new \Exception("Le contrôleur '{$_GET['controller']}' n'existe pas", 404);
                 }

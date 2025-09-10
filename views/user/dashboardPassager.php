@@ -1,10 +1,4 @@
 <?php require_once APP_ROOT . '/views/header.php'; ?>
-<?php
-// Valeurs par défaut si le contrôleur n'a pas passé ces variables
-$participationDuJour = $participationDuJour ?? [];
-$historiqueTrajets   = $historiqueTrajets   ?? [];
-$mesAvis             = $mesAvis             ?? [];
-?>
 
 <section class="en-tete">
     <div class="container">
@@ -27,7 +21,7 @@ $mesAvis             = $mesAvis             ?? [];
             <div class="stat-label">Trajets aujourd'hui</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number"><?= count($historiqueTrajets ?? []) ?></div>
+            <div class="stat-number"><?= count($historiqueTrajets) ?></div>
             <div class="stat-label">Trajets passés</div>
         </div>
         <div class="stat-card">
@@ -35,7 +29,6 @@ $mesAvis             = $mesAvis             ?? [];
             <div class="stat-label">Crédits dépensés</div>
         </div>
     </div>
-
 
     <!-- Mes prochains trajets -->
     <div class="simple-card">
@@ -94,7 +87,7 @@ $mesAvis             = $mesAvis             ?? [];
         </div>
     </div>
 
-    <!-- Mes avis -->
+    <!-- Avis  -->
     <div class="simple-card">
         <h2 class="card-title-dash">⭐ Mes avis</h2>
         <?php if (!empty($mesAvis)): ?>
@@ -121,26 +114,22 @@ $mesAvis             = $mesAvis             ?? [];
         <?php endif; ?>
     </div>
 
-    <!-- Actions rapides -->
+    <!-- Actions rapides Passager -->
     <div class="simple-card">
         <h2 class="card-title-dash"> 🔗 Liens utiles</h2>
         <div class="row" style="margin: 15px;">
             <div class="col-md-4 mb-3">
-                <a href="/?controller=user&action=profil" class="btn-profil w-100">
-                    👤 Modifier mon profil
-                </a>
+                <a href="/?controller=user&action=profil" class="btn-profil w-100">👤 Modifier mon profil</a>
             </div>
             <div class="col-md-4 mb-3">
-                <a href="/?controller=avis&action=avis" class="btn btn-outline w-100">
-                    ⭐ Déposer un avis</a>
+                <a href="/?controller=avis&action=avis" class="btn btn-outline w-100">⭐ Déposer un avis</a>
             </div>
             <div class="col-md-4 mb-3">
-                <a href="/?controller=pages&action=help" class="btn btn-outline w-100">
-                    ❓ Aide
-                </a>
+                <a href="/?controller=pages&action=help" class="btn btn-outline w-100">❓ Aide</a>
             </div>
         </div>
     </div>
 </div>
+
 
 <?php require_once APP_ROOT . '/views/footer.php'; ?>

@@ -11,6 +11,7 @@ class Participation extends Models
     protected ?int $idCovoiturage = null;
     protected ?string $dateInscription = null;
     protected ?string $statut = null;
+    protected ?string $nbPlace = null;
 
     /**
      * Get the value of id
@@ -98,6 +99,24 @@ class Participation extends Models
     public function setStatut(?string $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nbPlace
+     */
+    public function getNbPlace(): ?string
+    {
+        return $this->nbPlace;
+    }
+
+    /**
+     * Set the value of nbPlace
+     */
+    public function setNbPlace(?string $nbPlace): self
+    {
+        $this->nbPlace = $nbPlace;
 
         return $this;
     }

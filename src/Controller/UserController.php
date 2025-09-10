@@ -101,14 +101,27 @@ class UserController extends Controller
         $userId = $_SESSION['user_id'] ?? null;
 
         if (!$userId) {
-            throw new \Exception("Utilisateur non connecté.");
+            header('Location: /?controller=auth&action=login');
+            exit;
         }
 
         $userRepo = new UserRepository();
         $user = $userRepo->findById($userId);
 
         $participationRepo = new ParticipationRepository();
-        $participationDuJour = $participationRepo->findTodayByUser($userId);
+        $trajetRepo = new TrajetRepository();
+
+        $participations = $participationRepo->findTodayByUser($userId);
+
+        $historiqueTrajets = [];
+
+        $participationDuJour = [];
+        foreach ($participations as $participation) {
+            $trajet = $trajetRepo->findById($participation->getIdCovoiturage());
+            if ($trajet) {
+                $participationDuJour[] = $trajet; // juste le trajet
+            }
+        }
 
         $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
         $mesAvis = $avisRepo->listerAvecStatut($userId);
@@ -116,16 +129,14 @@ class UserController extends Controller
         $this->render('user/dashboardPassager', [
             'user' => $user,
             'participationDuJour' => $participationDuJour,
+            'historiqueTrajets' => $historiqueTrajets,
             'mesAvis' => $mesAvis
         ]);
     }
 
     public function dashboardMixte(): void
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
+        if (session_status() === PHP_SESSION_NONE) session_start();
         $userId = $_SESSION['user_id'] ?? null;
 
         if (!$userId) {
@@ -133,31 +144,44 @@ class UserController extends Controller
             exit;
         }
 
-        // Repositories
         $userRepo = new UserRepository();
         $trajetRepo = new TrajetRepository();
         $vehiculeRepo = new VehiculeRepository();
         $participationRepo = new ParticipationRepository();
         $avisRepo = new AvisRepository(MongoDb::getInstance()->getDatabase());
 
-        // Récupération des données
         $user = $userRepo->findById($userId);
-        $trajetsDuJour = $trajetRepo->findTodayByChauffeur($userId); // côté chauffeur
-        $vehicules = $vehiculeRepo->findAllByUser($userId);
-        $avisValides = $avisRepo->listerValides(); // derniers avis reçus chauffeur
-        $mesAvis = $avisRepo->listerAvecStatut($userId); // mes avis donnés
-        $participationDuJour = $participationRepo->findTodayByUser($userId); // côté passager
 
-        // Envoi à la vue
+        // 🚗 Partie Chauffeur
+        $trajetsDuJour = $trajetRepo->findTodayByChauffeur($userId);
+        $vehicules = $vehiculeRepo->findAllByUser($userId);
+        $avisValides = $avisRepo->listerValides();
+
+        // 🧑‍🤝‍🧑 Partie Passager
+        $participations = $participationRepo->findTodayByUser($userId);
+        $participationDuJour = [];
+        foreach ($participations as $participation) {
+            $trajet = $trajetRepo->findById($participation->getIdCovoiturage());
+            if ($trajet) {
+                $participationDuJour[] = $trajet;
+            }
+        }
+
+        $historiqueTrajets = []; // TODO : à remplir plus tard si tu veux
+        $mesAvis = $avisRepo->listerAvecStatut($userId);
+
+        // ✅ On passe tout à la vue
         $this->render('user/dashboardMixte', [
             'user' => $user,
             'trajetsDuJour' => $trajetsDuJour,
             'vehicules' => $vehicules,
             'avisValides' => $avisValides,
-            'mesAvis' => $mesAvis,
-            'participationDuJour' => $participationDuJour
+            'participationDuJour' => $participationDuJour,
+            'historiqueTrajets' => $historiqueTrajets,
+            'mesAvis' => $mesAvis
         ]);
     }
+
 
     public function profil(): void
     {

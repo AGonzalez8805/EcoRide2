@@ -111,7 +111,7 @@ $mois = [1 => 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 
 
                         <div class="trip-actions-simple">
                             <a href="#" class="btn-detail-simple">Détails</a>
-                            <form method="POST" action="/participations/reserver">
+                            <form method="POST" action="/?controller=participer&action=participer">
                                 <input type="hidden" name="id_covoiturage" value="<?= $trajet->getId() ?>">
                                 <button type="submit" class="btn-book-simple">Participer</button>
                             </form>
